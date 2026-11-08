@@ -355,10 +355,10 @@ if(tab==='finance-groups'){
    const values=[['Oy','Guruh ID','Guruh','Kurs ID','O‘quvchilar','To‘lovlar soni','Tushum (so‘m)','Qaytarim (so‘m)','Sof tushum (so‘m)','Xodim ID','Xodim','Lavozim','Ulush (%)','Xodim oyligi (so‘m)','Akademiya ulushi (so‘m)']];
    for(const x of rows){
      if(!x.allocations?.length){values.push([selected,x.group_id,x.group_name,x.course_id,x.paying_students,x.approved_payments,x.gross_uzs,x.refund_uzs,x.net_uzs,'','Ustoz ulushi belgilanmagan','',0,0,x.academy_uzs]);continue;}
-     x.allocations.forEach((y,j)=>values.push([selected,x.group_id,x.group_name,x.course_id,j===0?x.paying_students:'',j===0?x.approved_payments:'',j===0?x.gross_uzs:'',j===0?x.refund_uzs:'',j===0?x.net_uzs:y.staff_id,y.full_name,y.role,y.share_bps/100,y.amount_uzs,j===0?x.academy_uzs:'']));
+     x.allocations.forEach((y,j)=>values.push([selected,x.group_id,x.group_name,x.course_id,j===0?x.paying_students:'',j===0?x.approved_payments:'',j===0?x.gross_uzs:'',j===0?x.refund_uzs:'',j===0?x.net_uzs:'',y.staff_id,y.full_name,y.role,y.share_bps/100,y.amount_uzs,j===0?x.academy_uzs:'']));
    }
    const escapeCsv=v=>`"${String(v??'').replace(/"/g,'""')}"`;
-   const csv='\\uFEFF'+values.map(x=>x.map(escapeCsv).join(';')).join('\\r\\n');
+   const csv='\uFEFF'+values.map(x=>x.map(escapeCsv).join(';')).join('\r\n');
    const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
    const link=document.createElement('a');const href=URL.createObjectURL(blob);link.href=href;link.download='QADAM_guruh_oyliklari_'+selected+'.csv';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(href),1000);
  };
