@@ -128,7 +128,7 @@ async function enter(staff){state.user=staff;$('who').textContent=staff.full_nam
 if(['owner','director'].includes(staff.role))items.push(['salary-supervision','Oyliklar nazorati']);
 items.push(['salary-confirm','Oylik tasdig‘i']);if(['owner','accountant','director'].includes(staff.role))items.push(['finance-dashboard','Moliya dashboard']);
 if(['owner','accountant'].includes(staff.role))items.push(['salary-bulk','Ommaviy oylik']);
-items.push(['chat','Ichki chat'],['notifications','Xabarlar'],['profile','Profil']);$('nav').innerHTML=items.map(([id,label])=>`<button type="button" data-nav="${id}" aria-label="${label}"><span class="nav-ico">${navIcon(id)}</span><span>${label}</span></button>`).join('');$('nav').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.nav)));if(staff.role!=='owner'){
+if(['owner','accountant'].includes(staff.role))items.push(['salary-import','Excel import']);items.push(['chat','Ichki chat'],['notifications','Xabarlar'],['profile','Profil']);$('nav').innerHTML=items.map(([id,label])=>`<button type="button" data-nav="${id}" aria-label="${label}"><span class="nav-ico">${navIcon(id)}</span><span>${label}</span></button>`).join('');$('nav').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.nav)));if(staff.role!=='owner'){
  try{const check=await api('/staff/ops/profile-status');state.profileRequired=check.required&&!check.complete;}
  catch(e){state.profileRequired=true;notify('Profil tekshirilmadi. Shaxsiy profilni oching.');}
 }else state.profileRequired=false;
@@ -142,6 +142,122 @@ const wrapper=(title,html)=>`<div class="row"><h2 class="title">${esc(title)}</h
 function inject(title,body){$('section').innerHTML=wrapper(title,body);$('refresh').onclick=()=>navigate(state.current)}
 function list(rows,template,empty='Hozircha ma’lumot yo‘q'){return Array.isArray(rows)&&rows.length?rows.map(x=>`<div class="entry">${template(x)}</div>`).join(''):`<div class="empty">${esc(empty)}</div>`}
 function formHandler(id,fn){const el=$(id);if(el)el.addEventListener('submit',e=>submit(e,async()=>{await fn(new FormData(el));await navigate(state.current);notify('Amal bajarildi','good')}))}
+
+function qadamCsvParse(text){
+ const input=String(text).replace(/^\uFEFF/,'');const first=input.split(/\r?\n/,1)[0]||'';
+ const delimiter=[';',',','\t'].sort((a,b)=>first.split(b).length-first.split(a).length)[0];
+ const rows=[];let row=[],field='',quote=false;
+ for(let i=0;i<input.length;i++){
+   const ch=input[i];
+   if(quote){if(ch==='"'&&input[i+1]==='"'){field+='"';i++}else if(ch==='"'){quote=false}else field+=ch}
+   else if(ch==='"'){quote=true}
+   else if(ch===delimiter){row.push(field);field=''}
+   else if(ch==='\n'){row.push(field.replace(/\r$/,''));if(row.some(x=>x.trim()))rows.push(row);row=[];field=''}
+   else field+=ch;
+ }
+ if(quote)throw Error('CSV ichida yopilmagan qo‘shtirnoq bor');
+ row.push(field.replace(/\r$/,''));if(row.some(x=>x.trim()))rows.push(row);
+ return rows;
+}
+async function qadamXlsxParse(buffer){
+ const bytes=new Uint8Array(buffer),view=new DataView(buffer);const td=new TextDecoder();
+ const u16=p=>view.getUint16(p,true),u32=p=>view.getUint32(p,true);
+ let eocd=-1;for(let p=bytes.length-22;p>=Math.max(0,bytes.length-65557);p--)if(u32(p)===0x06054b50){eocd=p;break}
+ if(eocd<0)throw Error('Excel ZIP fayli noto‘g‘ri');
+ const entries=u16(eocd+10);if(entries>1000)throw Error('Fayl juda murakkab');
+ const files=new Map();let cur=u32(eocd+16);
+ for(let i=0;i<entries;i++){
+   if(u32(cur)!==0x02014b50)throw Error('Excel ZIP ro‘yxati noto‘g‘ri');
+   const method=u16(cur+10),size=u32(cur+20),nameLen=u16(cur+28),extra=u16(cur+30),comment=u16(cur+32),local=u32(cur+42);
+   const name=td.decode(bytes.slice(cur+46,cur+46+nameLen));
+   if(name.startsWith('xl/'))files.set(name,{method,size,local});
+   cur+=46+nameLen+extra+comment;
+ }
+ const read=async name=>{
+   const x=files.get(name);if(!x)return null;
+   if(x.size>6e6)throw Error('Excel varag‘i juda katta');
+   if(u32(x.local)!==0x04034b50)throw Error('Excel ZIP yozuvi buzilgan');
+   const start=x.local+30+u16(x.local+26)+u16(x.local+28);
+   const compressed=bytes.slice(start,start+x.size);
+   if(x.method===0)return td.decode(compressed);
+   if(x.method!==8||!('DecompressionStream' in window))throw Error('XLSXni ochib bo‘lmadi, CSV formatiga saqlang');
+   const ds=new DecompressionStream('deflate-raw');
+   const stream=new Blob([compressed]).stream().pipeThrough(ds);
+   const expanded=await new Response(stream).arrayBuffer();
+   if(expanded.byteLength>12e6)throw Error('Excel jadvali hajmi katta');
+   return td.decode(expanded);
+ };
+ const xml=t=>{const doc=new DOMParser().parseFromString(t,'application/xml');if(doc.getElementsByTagName('parsererror').length)throw Error('Excel XML noto‘g‘ri');return doc};
+ const sharedText=await read('xl/sharedStrings.xml');const shared=[];
+ if(sharedText){const d=xml(sharedText);for(const s of d.getElementsByTagName('si'))shared.push([...s.getElementsByTagName('t')].map(t=>t.textContent||'').join(''))}
+ const colIndex=letters=>[...letters.toUpperCase()].reduce((n,ch)=>n*26+ch.charCodeAt(0)-64,0)-1;
+ const names=[...files.keys()].filter(n=>/^xl\/worksheets\/sheet\d+\.xml$/.test(n)).sort((a,b)=>Number(a.match(/sheet(\d+)/)[1])-Number(b.match(/sheet(\d+)/)[1]));
+ for(const filename of names.slice(0,40)){
+   const data=await read(filename);if(!data)continue;
+   const doc=xml(data),out=[];
+   for(const node of doc.getElementsByTagName('row')){
+     const row=[];for(const cell of node.getElementsByTagName('c')){
+       const addr=cell.getAttribute('r')||'A1',index=colIndex(addr.match(/^[A-Z]+/i)?.[0]||'A');if(index>120)continue;
+       const type=cell.getAttribute('t'),v=cell.getElementsByTagName('v')[0]?.textContent||'';
+       row[index]=type==='s'?shared[Number(v)]||'':type==='inlineStr'?[...cell.getElementsByTagName('t')].map(x=>x.textContent||'').join(''):v;
+     }
+     if(row.some(v=>String(v||'').trim()))out.push(row);
+     if(out.length>270)break;
+   }
+   if(out.some(r=>r.some(v=>String(v||'').trim().toLowerCase()==='employee_code')))return out;
+ }
+ throw Error('Excel varag‘ida employee_code ustuni topilmadi. Namuna fayldan foydalaning.');
+}
+function qadamSalaryRows(matrix){
+ const clean=x=>String(x??'').trim().toLowerCase().replace(/[\s\-_()%.]+/g,'');
+ const aliases={
+   employee_code:['employee_code','xodim kodi','xodim id','код сотрудника'],
+   salary_type:['salary_type','oylik turi','тип оплаты'],
+   base_salary_uzs:['base_salary_uzs','asosiy oylik','asosiy maosh','оклад'],
+   commission_percent:['commission_percent','commission_pct','foiz','foiz %','комиссия %'],
+   commission_bps:['commission_bps'],
+   kpi_target:['kpi_target','kpi maqsad'],
+   kpi_bonus_uzs:['kpi_bonus_uzs','kpi bonus'],
+   effective_on:['effective_on','amal qilish sanasi','sana']
+ };
+ const hdr=matrix.findIndex(row=>Array.isArray(row)&&row.some(x=>clean(x)==='employeecode'));
+ if(hdr<0)throw Error('employee_code sarlavhasi topilmadi. Namuna fayldan foydalaning.');
+ const headers=matrix[hdr].map(clean),indexes={};
+ for(const [k,names] of Object.entries(aliases)){
+   indexes[k]=headers.findIndex(h=>names.some(n=>clean(n)===h));
+ }
+ for(const required of ['employee_code','salary_type','base_salary_uzs','effective_on'])
+   if(indexes[required]<0)throw Error(required+' ustuni kerak');
+ if(indexes.commission_percent<0&&indexes.commission_bps<0)throw Error('commission_percent yoki commission_bps ustuni kerak');
+ const result=[],toNumber=x=>{
+   const s=String(x??'').trim().replace(/\s/g,'').replace(',','.');
+   return s===''?0:Number(s);
+ };
+ const date=x=>{
+   const s=String(x??'').trim();
+   if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
+   if(/^\d{2}\.\d{2}\.\d{4}$/.test(s)){const [d,m,y]=s.split('.');return y+'-'+m+'-'+d}
+   const n=Number(s);
+   if(Number.isInteger(n)&&n>20000&&n<100000)return new Date(Date.UTC(1899,11,30+n)).toISOString().slice(0,10);
+   return s;
+ };
+ for(let i=hdr+1;i<matrix.length;i++){
+   const cells=matrix[i]||[],get=k=>indexes[k]<0?'':String(cells[indexes[k]]??'').trim();
+   if(!cells.some(x=>String(x??'').trim()))continue;
+   const pct=indexes.commission_bps>=0?toNumber(get('commission_bps')):toNumber(get('commission_percent'))*100;
+   const record={employee_code:get('employee_code').toUpperCase(),salary_type:get('salary_type').toLowerCase(),
+      base_salary_uzs:toNumber(get('base_salary_uzs')),commission_bps:Math.round(pct),
+      kpi_target:toNumber(get('kpi_target')),kpi_bonus_uzs:toNumber(get('kpi_bonus_uzs')),
+      effective_on:date(get('effective_on'))};
+   if(!record.employee_code)throw Error('Excel '+(i+1)+'-qator: xodim kodi bo‘sh');
+   for(const key of ['base_salary_uzs','commission_bps','kpi_target','kpi_bonus_uzs'])
+     if(!Number.isFinite(record[key]))throw Error('Excel '+(i+1)+'-qator: '+key+' raqam emas');
+   result.push(record);
+ }
+ if(result.length<1||result.length>250)throw Error('1–250 ta xodim qatori bo‘lishi kerak');
+ return result;
+}
+
 async function render(tab){const owner=state.user.role==='owner';
 if(tab==='chat'){
  const r=await api('/staff/ops/chat-threads');
@@ -395,6 +511,44 @@ if(tab==='salary-bulk'){
    if(!confirm('Hisobot oyini butunlay yopasizmi? Barcha xodimlar tasdig‘i va cheklar mavjudligini tekshiring.'))return;
    const r=await api('/finance/salary-period-close',{period_month:period,note:$('closeSalaryNote').value});
    await navigate('salary-bulk');notify(r.message,'good');
+ });
+ return;
+}
+
+if(tab==='salary-import'){
+ if(!['owner','accountant'].includes(state.user.role))throw Error('Excel importi uchun huquq yo‘q');
+ const staff=(await api('/finance/salary-cards-list')).staff||[];
+ const names=new Map(staff.map(x=>[String(x.employee_code).toUpperCase(),x.full_name]));
+ const lines=state.v86ExcelRows||[],preview=state.v86ExcelPreview;
+ inject('Excel import — maosh rejalari',`<div class="card"><h3>XLSX yoki CSV orqali import</h3><p class="sub">Faqat maosh rejalarini yangilaydi. Cheklar, to‘lov kartalari va to‘langan oyliklar import qilinmaydi. 1–250 qatorni tanlang, avval tekshiring, keyin bazaga saqlang.</p><button type="button" class="btn alt" id="excelTemplate">Namuna CSV — xodim kodlari bilan</button><div style="margin-top:16px"><label>Excel (.xlsx) yoki CSV fayl</label><input class="input" type="file" id="salaryExcelFile" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></div><div class="notice">Ustunlar: employee_code, salary_type, base_salary_uzs, commission_percent, kpi_target, kpi_bonus_uzs, effective_on. Sana: YYYY-MM-DD. Foiz 50 yozilsa 50% deb olinadi.</div></div>`+
+ `<div class="card"><h3>Tekshiruv — ${lines.length} qator</h3>${lines.length?`<button type="button" class="btn" id="validateExcel">1. Bazada tekshirish</button>`:'<p class="sub">Import uchun fayl tanlang.</p>'}${preview?`<div class="grid">${count(preview.valid||0,'To‘g‘ri')}${count(preview.invalid||0,'Xato')}</div>${list(preview.errors||[],x=>`<strong>Qator ${esc(x.row)} — ${esc(x.employee_code)}</strong><div class="sub">${esc(x.reason)}</div>`)}${preview.invalid===0?`<button class="btn" type="button" id="applyExcel">2. Maosh rejalarini bazaga saqlash</button>`:''}`:''}${list(lines.slice(0,15),x=>`<strong>${esc(x.employee_code)} — ${esc(names.get(x.employee_code)||'Xodim kodi tekshiriladi')}</strong><div class="sub">${esc(x.salary_type)} · ${Number(x.base_salary_uzs).toLocaleString('uz-UZ')} so‘m · ${(x.commission_bps/100).toLocaleString('uz-UZ')}% · ${esc(x.effective_on)}</div>`)}${lines.length>15?'<p class="sub">Dastlabki 15 qator ko‘rsatildi.</p>':''}</div>`);
+ $('excelTemplate').onclick=()=>{
+   const entries=staff.filter(x=>x.is_active).map(x=>[x.employee_code,'fixed',x.role==='sales'?2000000:0,0,0,0,new Date().toISOString().slice(0,10)]);
+   const table=[['employee_code','salary_type','base_salary_uzs','commission_percent','kpi_target','kpi_bonus_uzs','effective_on'],...entries];
+   const csv='\uFEFF'+table.map(row=>row.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(';')).join('\r\n');
+   const file=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(file);
+   const a=document.createElement('a');a.href=url;a.download='QADAM_oylik_import_namuna.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ };
+ $('salaryExcelFile').onchange=async()=>{
+   const file=$('salaryExcelFile').files?.[0];if(!file)return;
+   if(file.size>5000000)throw Error('Excel fayl hajmi 5 MB dan oshmasin');
+   try{
+     const matrix=file.name.toLowerCase().endsWith('.xlsx')?
+       await qadamXlsxParse(await file.arrayBuffer()):qadamCsvParse(await file.text());
+     state.v86ExcelRows=qadamSalaryRows(matrix);
+     state.v86ExcelPreview=null;
+     await navigate('salary-import');
+   }catch(e){notify(e.message||'Excelni ochib bo‘lmadi','bad')}
+ };
+ if($('validateExcel'))$('validateExcel').onclick=()=>submit({preventDefault(){}},async()=>{
+    state.v86ExcelPreview=await api('/finance/salary-import-plans',{rows:state.v86ExcelRows,preview:true});
+    await navigate('salary-import');
+ });
+ if($('applyExcel'))$('applyExcel').onclick=()=>submit({preventDefault(){}},async()=>{
+   if(!state.v86ExcelPreview||state.v86ExcelPreview.invalid)throw Error('Avval tekshiruvni muvaffaqiyatli o‘tkazing');
+   if(!confirm(state.v86ExcelRows.length+' ta maosh rejasini bazaga yozasizmi?'))return;
+   const result=await api('/finance/salary-import-plans',{rows:state.v86ExcelRows,preview:false});
+   state.v86ExcelRows=[];state.v86ExcelPreview=null;await navigate('salary-import');notify(result.message,'good');
  });
  return;
 }
