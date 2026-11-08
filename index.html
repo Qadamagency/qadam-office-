@@ -126,7 +126,9 @@ $('backLogin').addEventListener('click',()=>{state.pending=null;show('auth');aut
 $('logout').addEventListener('click',()=>submit({preventDefault(){}},async()=>{await api('/app-logout');state.user=null;show('auth');authTab('login')}));
 async function enter(staff){state.user=staff;$('who').textContent=staff.full_name||'Kabinet';$('role').textContent=(roles[staff.role]||staff.role)+' • '+staff.employee_code;show('cabinet');const items=staff.role==='owner'?menu:staff.role==='director'?[menu[0],menu[1],menu[3],menu[4],menu[7]]:staff.role==='administrator'?[menu[0],menu[3],menu[4],menu[7]]:staff.role==='education_manager'?[menu[0],menu[4],menu[3],menu[7]]:staff.role==='hr'?[menu[0],menu[1],menu[3],menu[7]]:staff.role==='accountant'?[menu[0],menu[5],menu[7]]:staff.role==='sales'?[menu[0],menu[2],menu[3],menu[7]]:staff.role==='marketing'||staff.role==='editor'||staff.role==='targetologist'?[menu[0],menu[6],menu[3],menu[7]]:[menu[0],menu[3],menu[4],menu[7]];if(['owner','accountant'].includes(staff.role))items.push(['finance-groups','Guruhlar moliyasi']);if(['owner','accountant'].includes(staff.role))items.push(['salary-accounting','Oylik va cheklar']);
 if(['owner','director'].includes(staff.role))items.push(['salary-supervision','Oyliklar nazorati']);
-items.push(['salary-confirm','Oylik tasdig‘i']);items.push(['chat','Ichki chat'],['notifications','Xabarlar'],['profile','Profil']);$('nav').innerHTML=items.map(([id,label])=>`<button type="button" data-nav="${id}" aria-label="${label}"><span class="nav-ico">${navIcon(id)}</span><span>${label}</span></button>`).join('');$('nav').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.nav)));if(staff.role!=='owner'){
+items.push(['salary-confirm','Oylik tasdig‘i']);if(['owner','accountant','director'].includes(staff.role))items.push(['finance-dashboard','Moliya dashboard']);
+if(['owner','accountant'].includes(staff.role))items.push(['salary-bulk','Ommaviy oylik']);
+items.push(['chat','Ichki chat'],['notifications','Xabarlar'],['profile','Profil']);$('nav').innerHTML=items.map(([id,label])=>`<button type="button" data-nav="${id}" aria-label="${label}"><span class="nav-ico">${navIcon(id)}</span><span>${label}</span></button>`).join('');$('nav').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.nav)));if(staff.role!=='owner'){
  try{const check=await api('/staff/ops/profile-status');state.profileRequired=check.required&&!check.complete;}
  catch(e){state.profileRequired=true;notify('Profil tekshirilmadi. Shaxsiy profilni oching.');}
 }else state.profileRequired=false;
@@ -365,6 +367,35 @@ if(tab==='salary-supervision'){
    window.open(v.url,'_blank','noopener,noreferrer');
  }));
  document.querySelectorAll('[data-director-salary]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{const v=await api('/staff/ops/salary-director-review',{payroll_id:btn.dataset.directorSalary,status:btn.dataset.review});await navigate('salary-supervision');notify(v.message,'good')}));
+ return;
+}
+
+if(tab==='finance-dashboard'){
+ if(!['owner','accountant','director'].includes(state.user.role))throw Error('Moliya huquqi kerak');
+ const today=new Date(),defaultMonth=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-01';
+ const period=state.v86Period||defaultMonth,endpoint=state.user.role==='director'?'/staff/ops/financial-dashboard':'/finance/financial-dashboard';
+ const result=await api(endpoint,{period_month:period});
+ const money=x=>Number(x||0).toLocaleString('uz-UZ')+' so‘m';
+ inject('Moliyaviy boshqaruv',`<div class="hero"><h1>${state.user.role==='director'?'Direktor — moliyaviy nazorat':'Moliyaviy dashboard'}</h1><p class="lead">Tasdiqlangan tushumlar, xarajatlar, oylik majburiyatlari va nizolar</p></div><div class="card"><form id="dashboardMonth" class="stack"><label>Hisobot oyi</label><input type="month" class="input" name="period" value="${esc(period.slice(0,7))}" required><button class="btn alt">Yangilash</button></form></div><div class="grid">${count(money(result.approved_payment_uzs),'Tasdiqlangan kurs to‘lovlari')}${count(money(result.approved_other_income_uzs),'Boshqa tasdiqlangan kirim')}${count(money(result.approved_finance_expense_uzs),'Tasdiqlangan xarajat')}${count(money(result.approved_refunds_uzs),'Qaytarilgan to‘lovlar')}${count(money(result.recorded_salary_paid_uzs),'To‘langan deb qayd etilgan oylik')}${count(money(result.recorded_salary_unpaid_uzs),'To‘lov kutilayotgan oylik')}${count(result.outstanding_disputes,'Oylik nizolari')}${count(result.unconfirmed_paid_salaries,'Xodim tasdig‘i kutilmoqda')}</div><div class="card"><h3>Hisoblangan operatsion qoldiq</h3><h2>${money(result.preliminary_cash_flow_before_salary_reconciliation_uzs)}</h2><p class="sub">Bu bankdagi qoldiq yoki sof foyda emas. Moliyaviy yozuvlarda oylik xarajati bo‘lsa, uni ikki marta ayirmaslik uchun oyliklar alohida ko‘rsatilgan.</p><p><strong>Davr:</strong> ${esc(period)} · ${result.period_closed?'Yopilgan':'Ochiq'}</p></div><div class="notice">${esc(result.warning)}${result.truncated?' Ma’lumotlar soni cheklangan — katta hajmli hisobotni tekshiring.':''}</div>`);
+ $('dashboardMonth').addEventListener('submit',event=>submit(event,async()=>{state.v86Period=String(new FormData($('dashboardMonth')).get('period'))+'-01';await navigate('finance-dashboard')}));
+ return;
+}
+if(tab==='salary-bulk'){
+ if(!['owner','accountant'].includes(state.user.role))throw Error('Oyliklarni boshqarish huquqi yo‘q');
+ const today=new Date(),period=state.v86Period||today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-01';
+ const [preview,closeState]=await Promise.all([api('/finance/salary-bulk-preview',{period_month:period}),api('/finance/salary-period-status',{period_month:period})]);
+ const rows=preview.rows||[],eligible=rows.filter(x=>x.eligible);
+ inject('Ommaviy oylik hisoblash',`<div class="card"><h3>Davr va hisob-kitoblar</h3><form id="bulkMonth" class="stack"><input type="month" name="period" class="input" required value="${esc(period.slice(0,7))}"><button class="btn alt">Davrni tanlash</button></form><div class="grid">${count(preview.ready,'Hisoblashga tayyor')}${count(preview.skipped,'E’tibor talab qiladi')}${count(closeState.payroll_count,'Oyliklar')}${count(closeState.incomplete,'Tasdiq kutilmoqda')}</div></div><div class="card"><h3>Xodimlar holati</h3>${list(rows,x=>`<strong>${esc(x.full_name)} · ${esc(roles[x.role]||x.role)}</strong><div class="sub">${x.eligible?'Hisoblashga tayyor':esc(x.reason)} · Ustoz guruhlar ulushi: ${Number(x.group_commission_uzs||0).toLocaleString('uz-UZ')} so‘m</div>`)}</div><div class="card"><h3>Oylik loyihalarini yaratish</h3><p class="sub">Har bir faol xodimning maosh rejasiga ko‘ra hisoblanadi. Ustozlar guruh sof tushumidagi foiz asosida. Sotuvchilar uchun ushbu ommaviy amalda sotuv tushumi va KPI qiymati kiritilmasa 0 olinadi. Noto‘g‘ri summani Owner tasdiqlashidan oldin tuzatish mumkin.</p><button class="btn" type="button" id="bulkGenerate" ${eligible.length&&!preview.closed?'':'disabled'}>Ommaviy hisoblashni boshlash</button></div>`+
+ (state.user.role==='owner'?`<div class="card"><h3>Hisobot oyini yopish</h3><p class="sub">Barcha faol xodimlarning oyligi yaratilgan, cheki yuklangan, xodim «Oldim» deb tasdiqlagan va nizo ochiq bo‘lmasligi kerak. Yopilgach oylik summalari qulflanadi.</p><textarea class="input" id="closeSalaryNote" maxlength="1000" placeholder="Yakuniy izoh"></textarea><button type="button" class="btn alt" id="closeSalaryPeriod" ${closeState.closed?'disabled':''}>Oyni yopish</button><div class="sub">${closeState.closed?'Yopilgan davr: '+esc(closeState.closed.closed_at):'Davr ochiq'}</div></div>`:''));
+ $('bulkMonth').addEventListener('submit',event=>submit(event,async()=>{state.v86Period=String(new FormData($('bulkMonth')).get('period'))+'-01';await navigate('salary-bulk')}));
+ $('bulkGenerate').onclick=()=>submit({preventDefault(){}},async()=>{if(!confirm(eligible.length+' nafar xodim uchun oylik loyihasini yaratasizmi?'))return;
+   const r=await api('/finance/salary-bulk-create',{period_month:period,commission_inputs:{},kpi_inputs:{}});
+   await navigate('salary-bulk');notify((r.result?.created||0)+' ta oylik loyihasi yaratildi','good')});
+ if(state.user.role==='owner')$('closeSalaryPeriod').onclick=()=>submit({preventDefault(){}},async()=>{
+   if(!confirm('Hisobot oyini butunlay yopasizmi? Barcha xodimlar tasdig‘i va cheklar mavjudligini tekshiring.'))return;
+   const r=await api('/finance/salary-period-close',{period_month:period,note:$('closeSalaryNote').value});
+   await navigate('salary-bulk');notify(r.message,'good');
+ });
  return;
 }
 if(tab==='salary-accounting'){
