@@ -124,22 +124,106 @@ $('activationRequestForm').addEventListener('submit',e=>submit(e,async()=>{const
 $('activateForm').addEventListener('submit',e=>submit(e,async()=>{const f=new FormData(e.target);const v=await api('/activate',{code:String(f.get('code')).trim().toUpperCase(),activation:String(f.get('activation')||'').trim().toUpperCase(),password:f.get('password')});e.target.reset();authTab('login');notify(v.message||'Xodim faollashtirildi','good')}));
 $('backLogin').addEventListener('click',()=>{state.pending=null;show('auth');authTab('login')});
 $('logout').addEventListener('click',()=>submit({preventDefault(){}},async()=>{await api('/app-logout');state.user=null;show('auth');authTab('login')}));
-async function enter(staff){state.user=staff;$('who').textContent=staff.full_name||'Kabinet';$('role').textContent=(roles[staff.role]||staff.role)+' • '+staff.employee_code;show('cabinet');const items=staff.role==='owner'?menu:staff.role==='director'?[menu[0],menu[1],menu[3],menu[4],menu[7]]:staff.role==='administrator'?[menu[0],menu[3],menu[4],menu[7]]:staff.role==='education_manager'?[menu[0],menu[4],menu[3],menu[7]]:staff.role==='hr'?[menu[0],menu[1],menu[3],menu[7]]:staff.role==='accountant'?[menu[0],menu[5],menu[7]]:staff.role==='sales'?[menu[0],menu[2],menu[3],menu[7]]:staff.role==='marketing'||staff.role==='editor'||staff.role==='targetologist'?[menu[0],menu[6],menu[3],menu[7]]:[menu[0],menu[3],menu[4],menu[7]];if(['owner','accountant'].includes(staff.role))items.push(['finance-groups','Guruhlar moliyasi']);if(['owner','accountant'].includes(staff.role))items.push(['salary-accounting','Oylik va cheklar']);
-if(['owner','director'].includes(staff.role))items.push(['salary-supervision','Oyliklar nazorati']);
-items.push(['salary-confirm','Oylik tasdig‘i']);if(['owner','accountant','director'].includes(staff.role))items.push(['finance-dashboard','Moliya dashboard']);
-if(['owner','accountant'].includes(staff.role))items.push(['salary-bulk','Ommaviy oylik']);
-if(['owner','accountant'].includes(staff.role))items.push(['salary-import','Excel import']);items.push(['chat','Ichki chat'],['notifications','Xabarlar'],['profile','Profil']);$('nav').innerHTML=items.map(([id,label])=>`<button type="button" data-nav="${id}" aria-label="${label}"><span class="nav-ico">${navIcon(id)}</span><span>${label}</span></button>`).join('');$('nav').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.nav)));if(staff.role!=='owner'){
- try{const check=await api('/staff/ops/profile-status');state.profileRequired=check.required&&!check.complete;}
- catch(e){state.profileRequired=true;notify('Profil tekshirilmadi. Shaxsiy profilni oching.');}
-}else state.profileRequired=false;
-await navigate(state.profileRequired?'profile':'home');}
+
+const MENU_GROUPS=[
+ {id:'finance',title:'Moliya',desc:'Oylik, to‘lovlar, chek va Excel',icon:'finance',
+  items:[['finance-dashboard','Moliyaviy dashboard','Kirim, chiqim va qarzdorlik'],['finance','Oyliklarni tasdiqlash','Owner uchun hisob-kitoblar'],['salary-accounting','Oylik va cheklar','Rekvisit, chek va to‘lovlar'],['finance-groups','Guruhlar moliyasi','Ustozlar va yordamchilar ulushi'],['salary-bulk','Ommaviy oylik','Barcha xodimlar oyligi'],['salary-import','Excel import','Excel orqali maosh rejalari'],['salary-supervision','Oyliklar nazorati','Direktor tekshiruvi'],['salary-confirm','Mening oyligim','Oylikni oldim/olmadim']]},
+ {id:'people',title:'Xodimlar',desc:'Jamoa, kadrlar va vazifalar',icon:'employees',
+  items:[['employees','Xodimlar','Xodimlar kartasi va roli'],['tasks','Vazifalar','Topshiriqlarni boshqarish'],['attendance','Davomat','Xodimlar ishtiroki']]},
+ {id:'education',title:'O‘quv jarayoni',desc:'Guruhlar, darslar va ustozlar',icon:'education',
+  items:[['education','Guruhlar va darslar','O‘quv jarayonini boshqarish']]},
+ {id:'sales',title:'Sotuv va CRM',desc:'Mijozlar, savdo va kuzatuv',icon:'crm',
+  items:[['crm','CRM va sotuv','Mijoz va sotuv amallari']]},
+ {id:'marketing',title:'Marketing',desc:'Kontent, reklama va natijalar',icon:'marketing',
+  items:[['marketing','Marketing kabineti','Kampaniyalar va kontent']]},
+ {id:'communication',title:'Aloqa',desc:'Xabarlar va ichki muloqot',icon:'tasks',
+  items:[['chat','Ichki chat','Xodimlar o‘rtasidagi muloqot'],['notifications','Bildirishnomalar','Yangi xabar va eslatmalar']]},
+ {id:'management',title:'Boshqaruv',desc:'Audit va muhim tekshiruvlar',icon:'audit',
+  items:[['audit','Tizim auditi','Lavozimlar va harakatlar']]}
+];
+function roleRoutes(role){
+ const base=['home','sections','profile','chat','notifications','salary-confirm','tasks'];
+ const staff=['director','administrator','education_manager','hr','accountant','teacher','assistant_teacher','sales','marketing','editor','targetologist'];
+ if(role==='owner')return new Set([...base,'employees','employee-card','crm','education','group-members','finance','marketing','attendance','audit','salary-accounting','salary-supervision','finance-dashboard','salary-bulk','salary-import','finance-groups']);
+ if(role==='director')return new Set([...base,'employees','education','salary-supervision','finance-dashboard']);
+ if(role==='administrator')return new Set([...base,'education','group-members']);
+ if(role==='education_manager')return new Set([...base,'education']);
+ if(role==='hr')return new Set([...base,'employees']);
+ if(role==='accountant')return new Set([...base,'finance','salary-accounting','finance-groups','finance-dashboard','salary-bulk','salary-import']);
+ if(role==='sales')return new Set([...base,'crm']);
+ if(['marketing','editor','targetologist'].includes(role))return new Set([...base,'marketing']);
+ if(['teacher','assistant_teacher'].includes(role))return new Set([...base,'education','attendance']);
+ return new Set(base);
+}
+function visibleGroups(){return MENU_GROUPS.map(group=>({...group,items:group.items.filter(([route])=>state.allowedRoutes?.has(route))})).filter(group=>group.items.length);}
+function routeCategory(route){return visibleGroups().find(group=>group.items.some(([id])=>id===route))?.id||null;}
+function directoryButtons(items){
+ return '<div class="hub-grid">'+items.map(item=>`<button type="button" class="hub-card" data-hub="${esc(item.id)}"><span class="hub-icon">${navIcon(item.icon||'home')}</span><span class="hub-card-body"><strong>${esc(item.title)}</strong><small>${esc(item.desc||'')}</small></span><span class="hub-chevron">›</span></button>`).join('')+'</div>';
+}
+function bindDirectoryButtons(){document.querySelectorAll('[data-hub]').forEach(button=>button.addEventListener('click',()=>navigate(button.dataset.hub)));}
+function quickRoutes(){
+ const role=state.user?.role;
+ const priorities={
+ owner:['finance-dashboard','salary-supervision','employees','tasks','audit','crm'],
+ director:['salary-supervision','finance-dashboard','tasks','employees'],
+ administrator:['education','tasks','notifications'],
+ education_manager:['education','tasks','notifications'],
+ hr:['employees','tasks','notifications'],
+ accountant:['salary-accounting','salary-bulk','finance-dashboard','finance-groups'],
+ teacher:['education','tasks','salary-confirm'],
+ assistant_teacher:['education','tasks','salary-confirm'],
+ sales:['crm','tasks','salary-confirm'],
+ marketing:['marketing','tasks','notifications'],
+ editor:['marketing','tasks','notifications'],
+ targetologist:['marketing','tasks','notifications']
+ };
+ const labels={finance:'Moliya',employees:'Xodimlar',tasks:'Vazifalar',education:'Ta’lim',crm:'CRM',marketing:'Marketing',audit:'Audit','salary-supervision':'Oylik nazorati','finance-dashboard':'Moliyaviy hisobot','salary-accounting':'Oylik va cheklar','salary-bulk':'Oylik hisoblash','finance-groups':'Guruhlar moliyasi','salary-confirm':'Oylik tasdig‘i',notifications:'Xabarlar'};
+ const icons={'finance-dashboard':'finance','salary-supervision':'finance','salary-accounting':'finance','salary-bulk':'finance','finance-groups':'finance','salary-confirm':'finance',notifications:'tasks'};
+ return (priorities[role]||['tasks','salary-confirm']).filter(id=>state.allowedRoutes.has(id)).slice(0,4)
+   .map(id=>({id,title:labels[id]||id,desc:visibleGroups().find(g=>g.items.some(x=>x[0]===id))?.title||'Tezkor kirish',icon:icons[id]||id}));
+}
+function renderMainNav(){
+ const nav=[['home','Bosh sahifa'],['sections','Bo‘limlar'],['notifications','Xabarlar'],['profile','Profil']];
+ $('nav').innerHTML=nav.map(([id,label])=>`<button type="button" data-nav="${id}" aria-label="${label}"><span class="nav-ico">${navIcon(id)}</span><span>${label}</span></button>`).join('');
+ $('nav').querySelectorAll('[data-nav]').forEach(button=>button.addEventListener('click',()=>navigate(button.dataset.nav)));
+}
+async function enter(staff){
+ state.user=staff;
+ state.allowedRoutes=roleRoutes(staff.role);
+ $('who').textContent=staff.full_name||'Kabinet';
+ $('role').textContent=(roles[staff.role]||staff.role)+' • '+staff.employee_code;
+ show('cabinet');
+ renderMainNav();
+ if(staff.role!=='owner'){
+   try{const check=await api('/staff/ops/profile-status');state.profileRequired=check.required&&!check.complete;}
+   catch(e){state.profileRequired=true;notify('Profil tekshirilmadi. Shaxsiy profilni oching.');}
+ }else state.profileRequired=false;
+ await navigate(state.profileRequired?'profile':'home');
+}
 async function navigate(tab){
+ if(!state.allowedRoutes?.has(tab)&&tab!=='sections'&&!tab.startsWith('group:')){
+   const isGroup=tab.startsWith('group:')&&visibleGroups().some(g=>g.id===tab.slice(6));
+   if(!isGroup&&!['employee-card','group-members'].includes(tab)){notify('Ushbu bo‘lim sizning lavozimingiz uchun ochilmagan');return}
+ }
+
 if(state.user?.role!=='owner'&&state.profileRequired&&tab!=='profile'){
  tab='profile';
-}const seq=++state.navSeq;state.current=tab;document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===tab));$('section').innerHTML='<div class="card"><span class="spin"></span> Ma’lumotlar yuklanmoqda...</div>';clearMessage();try{await render(tab)}catch(e){if(seq!==state.navSeq)return;$('section').innerHTML=`<div class="card"><h2 class="title">Ma’lumotlar ochilmadi</h2><div class="notice error">${esc(e.message||String(e))}</div><button class="btn" id="retry">Qayta urinish</button></div>`;$('retry').onclick=()=>navigate(tab)}}
+}const seq=++state.navSeq;state.current=tab;document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===(tab==='home'?'home':tab==='profile'?'profile':tab==='notifications'?'notifications':'sections')));$('section').innerHTML='<div class="card"><span class="spin"></span> Ma’lumotlar yuklanmoqda...</div>';clearMessage();try{await render(tab)}catch(e){if(seq!==state.navSeq)return;$('section').innerHTML=`<div class="card"><h2 class="title">Ma’lumotlar ochilmadi</h2><div class="notice error">${esc(e.message||String(e))}</div><button class="btn" id="retry">Qayta urinish</button></div>`;$('retry').onclick=()=>navigate(tab)}}
 const count=(n,label)=>`<div class="metric"><span>${esc(label)}</span><strong>${esc(n??0)}</strong></div>`;
-const wrapper=(title,html)=>`<div class="row"><h2 class="title">${esc(title)}</h2><button class="btn alt small" id="refresh">↻ Yangilash</button></div>${html}`;
-function inject(title,body){$('section').innerHTML=wrapper(title,body);$('refresh').onclick=()=>navigate(state.current)}
+const wrapper=(title,html)=>{
+ const category=routeCategory(state.current);
+ const back=state.current==='home'||state.current==='profile'||state.current==='sections'?'':state.current.startsWith('group:')?
+   '<button class="hub-back" type="button" id="hubBack">‹ Barcha bo‘limlar</button>':
+   '<button class="hub-back" type="button" id="hubBack">‹ '+esc(category?MENU_GROUPS.find(g=>g.id===category)?.title||'Bo‘limlar':'Bo‘limlar')+'</button>';
+ return back+`<div class="row"><h2 class="title">${esc(title)}</h2><button class="btn alt small" id="refresh">↻ Yangilash</button></div>${html}`;
+};
+function inject(title,body){
+ const quick=state.current==='home'?'<div class="card"><h3>Tezkor kirish</h3><p class="sub">Eng muhim amallar bir joyda</p>'+directoryButtons(quickRoutes())+'</div>':'';
+ $('section').innerHTML=wrapper(title,quick+body);
+ $('refresh').onclick=()=>navigate(state.current);
+ if($('hubBack'))$('hubBack').onclick=()=>navigate(state.current.startsWith('group:')?'sections':routeCategory(state.current)?'group:'+routeCategory(state.current):'sections');
+ if(state.current==='home')bindDirectoryButtons();
+}
 function list(rows,template,empty='Hozircha ma’lumot yo‘q'){return Array.isArray(rows)&&rows.length?rows.map(x=>`<div class="entry">${template(x)}</div>`).join(''):`<div class="empty">${esc(empty)}</div>`}
 function formHandler(id,fn){const el=$(id);if(el)el.addEventListener('submit',e=>submit(e,async()=>{await fn(new FormData(el));await navigate(state.current);notify('Amal bajarildi','good')}))}
 
@@ -259,6 +343,17 @@ function qadamSalaryRows(matrix){
 }
 
 async function render(tab){const owner=state.user.role==='owner';
+ if(tab==='sections'){
+  inject('Barcha bo‘limlar','<div class="hero"><h1>QADAM OFFICE</h1><p class="lead">Kerakli yo‘nalishni tanlang. Sizga faqat lavozimingizga tegishli bo‘limlar ko‘rsatiladi.</p></div>'+directoryButtons(visibleGroups().map(g=>({id:'group:'+g.id,title:g.title,desc:g.desc,icon:g.icon}))));
+  bindDirectoryButtons();return;
+ }
+ if(tab.startsWith('group:')){
+  const key=tab.slice(6),group=visibleGroups().find(g=>g.id===key);
+  if(!group)throw Error('Ushbu bo‘lim uchun ruxsat yo‘q');
+  inject(group.title,'<div class="hero"><h1>'+esc(group.title)+'</h1><p class="lead">'+esc(group.desc)+'</p></div>'+directoryButtons(group.items.map(([id,title,desc])=>({id,title,desc,icon:group.icon}))));
+  bindDirectoryButtons();return;
+ }
+
 if(tab==='chat'){
  const r=await api('/staff/ops/chat-threads');
  const threads=r.threads||[];
