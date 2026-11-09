@@ -384,6 +384,13 @@ function qadamSalaryRows(matrix){
  return result;
 }
 
+async function showPublicStaffProfile(staffId,host){
+ const r=await api('/staff/ops/office-staff-public-profile',{staff_id:staffId});
+ const e=r.employee||{},p=r.profile||{};
+ const el=document.createElement('div');el.className='card msg-public-profile';
+ el.innerHTML='<div class="msg-grouphead">'+(r.photo_signed_url?'<img src="'+esc(r.photo_signed_url)+'" alt="Profil rasmi" style="width:66px;height:66px;border-radius:50%;object-fit:cover">':'<div class="msg-avatar">'+esc(String(e.full_name||'?').slice(0,1))+'</div>')+'<div><h3>'+esc(e.full_name||'Xodim')+'</h3><p class="sub">'+esc(roles[e.role]||e.role)+' · '+esc(e.employee_code||'')+'</p></div></div><p class="sub">'+esc(p.position_title||'')+' '+esc(p.department||'')+'</p><p>'+esc(p.biography||'O‘zi haqida ma’lumot kiritilmagan')+'</p>';
+ const old=host.querySelector('.msg-public-profile');if(old)old.remove();host.append(el);
+}
 async function render(tab){const owner=state.user.role==='owner';
  if(tab==='sections'){
   inject('Barcha bo‘limlar','<div class="hero"><h1>QADAM OFFICE</h1><p class="lead">Kerakli yo‘nalishni tanlang. Sizga faqat lavozimingizga tegishli bo‘limlar ko‘rsatiladi.</p></div>'+directoryButtons(visibleGroups().map(g=>({id:'group:'+g.id,title:g.title,desc:g.desc,icon:g.icon}))));
@@ -411,7 +418,7 @@ if(tab==='messenger'){
    $('groupMembersBtn').onclick=()=>{$('groupManage').style.display=$('groupManage').style.display==='none'?'block':'none'};
    if($('saveGroupSettings'))$('saveGroupSettings').onclick=()=>submit({preventDefault(){}},async()=>{await api('/staff/ops/office-chat-settings-save',{owner_only_post:$('onlyOwnerPosts').checked});await navigate('messenger')});
    document.querySelectorAll('[data-member-mute]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{await api('/staff/ops/office-chat-member-post-save',{staff_id:btn.dataset.memberMute,can_post:btn.dataset.canPost==='true'});await navigate('messenger')}));
-   document.querySelectorAll('[data-group-profile]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{const r=await api('/staff/ops/office-staff-search',{query:btn.dataset.groupProfile});const p=(r.staff||[]).find(x=>x.employee_code===btn.dataset.groupProfile);if(!p)throw Error('Profil topilmadi');const panel=$('groupMemberProfile')||document.createElement('div');panel.id='groupMemberProfile';panel.className='card';panel.innerHTML='<h3>'+esc(p.full_name)+'</h3><p class="sub">'+esc(roles[p.role]||p.role)+' · '+esc(p.employee_code)+'</p><p>'+esc(p.position_title||'')+'</p><p class="sub">'+esc(p.biography||'Profil haqida ma’lumot kiritilmagan')+'</p>';if(!$('groupMemberProfile'))$('groupManage').appendChild(panel)}));
+   document.querySelectorAll('[data-group-profile]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{const worker=(settings.members||[]).find(x=>x.employee_code===btn.dataset.groupProfile);if(!worker)throw Error('Xodim topilmadi');await showPublicStaffProfile(worker.id,$('groupManage'))}));
 
    if($('staffGroupSend'))formHandler('staffGroupSend',async d=>{await api('/staff/ops/chat-send',{channel:'general',requester_staff_id:null,message:String(d.get('message')||'').trim()})});
  }else{
@@ -429,7 +436,7 @@ if(tab==='messenger'){
    document.querySelectorAll('[data-contact]').forEach(btn=>btn.onclick=()=>{state.directStaffId=btn.dataset.contact;navigate('messenger')});
    $('contactSearch').oninput=e=>{const q=e.target.value.toLocaleLowerCase('uz').trim();document.querySelectorAll('[data-contact]').forEach(btn=>{const p=people.find(x=>x.id===btn.dataset.contact);btn.style.display=p&&[p.full_name,p.employee_code].some(v=>String(v||'').toLocaleLowerCase('uz').includes(q))?'flex':'none'})};
    if($('dmForm'))formHandler('dmForm',async d=>{await api('/staff/ops/office-direct-send',{staff_id:chosen.id,message:String(d.get('message')||'').trim()})});
-   if($('contactProfileBtn'))$('contactProfileBtn').onclick=()=>submit({preventDefault(){}},async()=>{const data=await api('/staff/ops/office-staff-search',{query:chosen.employee_code});const p=(data.staff||[]).find(x=>x.id===chosen.id);if(!p)throw Error('Profil topilmadi');alert(p.full_name+'\n'+(roles[p.role]||p.role)+'\n'+(p.position_title||'')+'\n'+(p.biography||''))});
+   if($('contactProfileBtn'))$('contactProfileBtn').onclick=()=>submit({preventDefault(){}},async()=>{await showPublicStaffProfile(chosen.id,$('contactProfileBtn').closest('.card'))});
  }
  $('modePrivate').onclick=()=>{state.messengerMode='private';navigate('messenger')};
  $('modeGroup').onclick=()=>{state.messengerMode='group';navigate('messenger')};
