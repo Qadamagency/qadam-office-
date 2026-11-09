@@ -165,7 +165,7 @@ const MENU_GROUPS=[
  {id:'people',title:'Xodimlar',desc:'Jamoa, kadrlar va vazifalar',icon:'employees',
   items:[['employees','Xodimlar','Xodimlar kartasi va roli'],['tasks','Vazifalar','Topshiriqlarni boshqarish'],['my-attendance','Mening davomatim','Kelish va ketishni belgilash'],['attendance','Jamoa davomati','Xodimlar ishtiroki'],['hr-attendance','Kechikish va kelmaganlar','Jadval asosidagi davomat nazorati'],['my-leaves','Mening ta’tilim','Ta’tilga ariza yuborish'],['leave-management','Ta’til so‘rovlari','HR tavsiyasi va Owner qarori'],['performance','Xodimlar natijalari','Direktorning vazifalar nazorati'],['kpi','KPI va bonus tavsiyasi','0–100 ballik dastlabki ko‘rsatkich']]},
  {id:'education',title:'O‘quv jarayoni',desc:'Guruhlar, darslar va ustozlar',icon:'education',
-  items:[['education','Guruhlar va darslar','O‘quv jarayonini boshqarish']]},
+  items:[['education','Guruhlar va darslar','O‘quv jarayonini boshqarish'],['students','O‘quvchilar va yangi foydalanuvchilar','ID, ism va telefon bo‘yicha qidiruv']]},
  {id:'sales',title:'Sotuv va CRM',desc:'Mijozlar, savdo va kuzatuv',icon:'crm',
   items:[['crm','CRM va sotuv','Mijoz va sotuv amallari']]},
  {id:'marketing',title:'Marketing',desc:'Kontent, reklama va natijalar',icon:'marketing',
@@ -178,15 +178,15 @@ const MENU_GROUPS=[
 function roleRoutes(role){
  const base=['home','sections','profile','messenger','chat','notifications','salary-confirm','tasks','my-attendance','my-leaves'];
 
- if(role==='owner')return new Set([...base,'hr-attendance','leave-management','performance','kpi','employees','employee-card','crm','education','finance','marketing','attendance','audit','salary-accounting','salary-supervision','finance-dashboard','salary-bulk','salary-import','finance-groups']);
- if(role==='director')return new Set([...base,'hr-attendance','leave-management','performance','kpi','employees','education','salary-supervision','finance-dashboard']);
- if(role==='administrator')return new Set([...base,'education','group-members']);
- if(role==='education_manager')return new Set([...base,'education']);
+ if(role==='owner')return new Set([...base,'hr-attendance','leave-management','performance','kpi','employees','employee-card','crm','education','students','finance','marketing','attendance','audit','salary-accounting','salary-supervision','finance-dashboard','salary-bulk','salary-import','finance-groups']);
+ if(role==='director')return new Set([...base,'hr-attendance','leave-management','performance','kpi','employees','education','students','salary-supervision','finance-dashboard']);
+ if(role==='administrator')return new Set([...base,'education','students','group-members']);
+ if(role==='education_manager')return new Set([...base,'education','students']);
  if(role==='hr')return new Set([...base,'employees','attendance','hr-attendance','leave-management']);
- if(role==='accountant')return new Set([...base,'finance','salary-accounting','finance-groups','finance-dashboard','salary-bulk','salary-import']);
+ if(role==='accountant')return new Set([...base,'students','finance','salary-accounting','finance-groups','finance-dashboard','salary-bulk','salary-import']);
  if(role==='sales')return new Set([...base,'crm']);
  if(['marketing','editor','targetologist'].includes(role))return new Set([...base,'marketing']);
- if(['teacher','assistant_teacher'].includes(role))return new Set([...base,'education']);
+ if(['teacher','assistant_teacher'].includes(role))return new Set([...base,'education','students']);
  return new Set(base);
 }
 function visibleGroups(){
@@ -649,6 +649,17 @@ if(tab==='education'&&owner){
  const courseName=id=>courses.find(x=>x.id===id)?.title||id;
  inject('Owner — o‘quv jarayoni',`<div class="grid">${count(groups.length,'Guruhlar')}${count(courses.length,'Kurslar')}${count((placement.mappings||[]).length,'Tarif-kurs mosliklari')}</div><div class="card"><h3>Tarifni kursga biriktirish</h3><p class="sub">Administrator o‘quvchini to‘lov asosida guruhga olishi uchun tarif qaysi kursga tegishli ekanini belgilang. Bir tarif faqat bir kursga bog‘lanadi.</p><form id="ownerPlanMap" class="stack"><select class="input" name="plan_id" required><option value="">Tarifni tanlang</option>${plans.map(p=>`<option value="${esc(p.id)}">${esc(p.name)} · ${esc(p.code)}</option>`).join('')}</select><select name="course_id" class="input" required><option value="">Kursni tanlang</option>${courses.map(x=>`<option value="${esc(x.id)}">${esc(x.title)}</option>`).join('')}</select><button class="btn">Tarif–kurs mosligini saqlash</button></form></div><div class="card"><h3>Hozirgi mosliklar</h3>${list(placement.mappings||[],x=>`<strong>${esc(plans.find(p=>p.id===x.plan_id)?.name||'Tarif')}</strong><div class="sub">${esc(courseName(x.course_id))}</div>`)}</div><div class="card"><h3>Guruhlar</h3>${list(groups,x=>`<strong>${esc(x.name)} <span class="pill">${esc(x.status)}</span></strong><div class="sub">${esc(courseName(x.course_id))} · Sig‘im: ${esc(x.capacity||30)}</div>`)}</div>`);
  formHandler('ownerPlanMap',async f=>{if(!confirm('Tarifni tanlangan kursga bog‘laysizmi?'))return;await api('/owner/placement-map',{plan_id:f.get('plan_id'),course_id:f.get('course_id')})});
+ return;
+}
+if(tab==='students'){
+ const permitted=['owner','director','administrator','education_manager','teacher','assistant_teacher','accountant'];
+ if(!permitted.includes(state.user.role))throw Error('O‘quvchilar uchun ruxsat mavjud emas');
+ const term=state.studentSearchTerm||'';
+ const r=term.length>=2?await api('/staff/ops/office-student-search',{query:term}):{students:[],message:'Qidirish uchun kamida 2 belgi kiriting'};
+ const people=r.students||[];
+ const cards=list(people,x=>'<strong>'+esc(x.full_name)+' <span class="pill">'+esc(x.qadam_id||'ID mavjud emas')+'</span></strong><div class="sub">'+(x.groups.length?'Guruh: '+esc(x.groups.join(', ')):'Guruhga biriktirilmagan')+'</div>'+(x.phone?'<div class="sub">Telefon: '+esc(x.phone)+'</div>':'')+(x.is_new?'<div class="sub">Guruhga hali qabul qilinmagan</div>':''));
+ inject('O‘quvchilar qidiruvi','<div class="card"><h3>O‘quvchi va yangi foydalanuvchini topish</h3><form id="studentSearchForm" class="stack"><input class="input" name="query" maxlength="100" placeholder="QADAM ID, ism, familiya yoki ruxsat etilgan telefon" value="'+esc(term)+'" required minlength="2"><button class="btn">Qidirish</button></form><p class="sub">Ustoz faqat o‘z guruhidagi o‘quvchilarni ko‘radi.</p></div><div class="card"><h3>Natijalar ('+people.length+')</h3>'+cards+'</div><div class="notice">'+esc(r.message||'')+' '+(r.truncated?'Qidiruv oxirgi 1000 foydalanuvchi bo‘yicha bajarildi.':'')+'</div>');
+ formHandler('studentSearchForm',async d=>{state.studentSearchTerm=String(d.get('query')||'').trim()});
  return;
 }
 if(tab==='education'){const r=owner?await api('/owner/education-list'):await api('/staff/my-groups');const groups=r.groups||[];inject('O‘quv jarayoni',`<div class="grid">${count(groups.length,'Guruhlar')}${count((r.courses||[]).length,'Kurslar')}${count((r.lessons||[]).length,'Darslar')}</div><div class="card"><h3>Guruhlar</h3>${list(groups,x=>`<strong>${esc(x.name||x.title||'Guruh')} <span class="pill">${esc(x.status||'')}</span></strong><div class="sub">${esc(x.starts_at||'')} • Limit: ${esc(x.capacity??30)}</div>`)}</div>${owner?`<div class="card"><h3>Kurslar</h3>${list(r.courses,x=>`<strong>${esc(x.title)}</strong><span class="sub">${x.is_published?'Nashr qilingan':'Yopiq'}</span>`)}</div>`:''}`);return;}
