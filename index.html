@@ -815,6 +815,7 @@ if(tab==='hr-attendance'){
  inject('Davomat nazorati',`<div class="card"><h3>Hisobot davri</h3><form id="hrAttendanceDates" class="stack"><label>Dan</label><input name="from" type="date" class="input" required value="${esc(from)}"><label>Gacha</label><input name="to" type="date" class="input" required value="${esc(to)}"><button class="btn alt">Ko‘rsatish</button></form><div class="grid">${count(fmt(items.length),'Faol xodimlar')}${count(fmt(late),'Kechikishlar')}${count(fmt(absent),'Kelmagan kunlar')}${count(fmt(r.no_schedule_count),'Jadvalsiz xodimlar')}</div></div>${['owner','hr'].includes(state.user.role)?`<div class="card"><h3>Xodim ish jadvali</h3><p class="sub">Kechikish va kelmagan kunlarni hisoblash uchun har bir xodimning ish kunlarini kiriting. Jadvalsiz xodim kelmagan deb hisoblanmaydi.</p><form id="hrScheduleSave" class="stack"><select name="staff_id" class="input" required><option value="">Xodimni tanlang</option>${(schedules.staff||[]).filter(x=>state.user.role==='owner'||x.role!=='owner').map(x=>`<option value="${esc(x.id)}">${esc(x.full_name)} · ${esc(roles[x.role]||x.role)}</option>`).join('')}</select><select name="weekday" class="input" required><option value="1">Dushanba</option><option value="2">Seshanba</option><option value="3">Chorshanba</option><option value="4">Payshanba</option><option value="5">Juma</option><option value="6">Shanba</option><option value="7">Yakshanba</option></select><label>Ish boshlanishi</label><input type="time" name="starts_at" class="input" required value="09:00"><label>Ish tugashi</label><input type="time" name="ends_at" class="input" required value="18:00"><button class="btn">Jadvalni saqlash</button></form><p class="sub">Jadvaldagi yozuvlar: ${(schedules.schedules||[]).length}</p></div>`:''}<div class="card"><h3>Xodimlar davomati</h3>${list(items,x=>`<strong>${esc(x.full_name)} <span class="pill">${esc(roles[x.role]||x.role)}</span></strong><div class="sub">Ish kunlari: ${x.scheduled} · Kelgan: ${x.present} · Kechikkan: ${x.late} · Kelmagan: ${x.absent}</div><div class="sub">Tasdiqlangan ta’til: ${x.approved_leave} · Hali tugamagan smena: ${x.open_shifts}</div>`)}</div><div class="notice">${(r.warnings||[]).map(esc).join(' ')}</div>${r.truncated?'<div class="notice">Ma’lumotlar soni cheklangan, to‘liq audit uchun davrni qisqartiring.</div>':''}`);
  if($('hrScheduleSave'))formHandler('hrScheduleSave',async d=>{
   await api('/staff/ops/hr-schedule-save',{staff_id:d.get('staff_id'),weekday:Number(d.get('weekday')),starts_at:d.get('starts_at'),ends_at:d.get('ends_at')});
+  await navigate('hr-attendance');
  });
  $('hrAttendanceDates').addEventListener('submit',ev=>submit(ev,async()=>{const d=new FormData($('hrAttendanceDates'));state.hrAttendanceFrom=String(d.get('from'));state.hrAttendanceTo=String(d.get('to'));await navigate('hr-attendance')}));
  return;
@@ -838,8 +839,34 @@ if(tab==='leave-management'){
 }
 if(tab==='performance'){
  if(!['owner','director'].includes(state.user.role))throw Error('Direktor ruxsati yo‘q');
- const r=await api('/staff/ops/director-performance'),items=r.rows||[];
- inject('Xodimlar natijalari',`<div class="grid">${count(items.length,'Xodimlar')}${count(items.reduce((v,x)=>v+x.total,0),'Vazifalar')}${count(items.reduce((v,x)=>v+x.completed,0),'Yakunlangan')}${count(items.reduce((v,x)=>v+x.overdue,0),'Muddati o‘tgan')}</div><div class="card"><h3>Vazifalar bo‘yicha natijalar</h3>${list(items,x=>`<strong>${esc(x.full_name)} <span class="pill">${esc(roles[x.role]||x.role)}</span></strong><div class="sub">Jami: ${x.total} · Yakunlandi: ${x.completed} · Bajarilmoqda: ${x.in_progress} · Tekshiruvda: ${x.review}</div><div class="sub">Kechikkan vazifalar: ${x.overdue} · Bajarilish darajasi: ${x.completion_percent===null?'Ma’lumot yo‘q':x.completion_percent+'%'}</div>`)}</div><div class="notice">${esc(r.note||'')} ${r.truncated?'Hisobot ma’lumotlari cheklangan.':''}</div>`);
+ const tzParts=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tashkent',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+ const part=k=>tzParts.find(x=>x.type===k)?.value||'';
+ const todayStr=part('year')+'-'+part('month')+'-'+part('day');
+ const from=state.hrAttendanceFrom||todayStr.slice(0,7)+'-01',to=state.hrAttendanceTo||todayStr;
+ const [perfResult,attendanceResult]=await Promise.allSettled([
+   api('/staff/ops/director-performance'),
+   api('/staff/ops/hr-attendance-report',{from,to})
+ ]);
+ if(perfResult.status!=='fulfilled')throw perfResult.reason;
+ const r=perfResult.value,items=r.rows||[];
+ const a=attendanceResult.status==='fulfilled'?attendanceResult.value:null;
+ const byStaff=new Map((a?.rows||[]).map(x=>[x.staff_id,x]));
+ const total=x=>items.reduce((sum,item)=>sum+Number(item[x]||0),0);
+ const fmt=x=>Number(x||0).toLocaleString('uz-UZ');
+ inject('Xodimlar natijalari',`<div class="grid">${count(items.length,'Xodimlar')}${count(total('total'),'Vazifalar')}${count(total('completed'),'Yakunlangan')}${count(total('overdue'),'Muddati o‘tgan')}</div>
+ <div class="card"><h3>Davomat bilan bog‘langan nazorat</h3>
+ <p class="sub">Davr: ${esc(from)} — ${esc(to)} (Toshkent). Topshiriq va davomat ko‘rsatkichlari alohida baholanadi.</p>
+ ${a?`<div class="grid">${count(fmt((a.rows||[]).reduce((v,x)=>v+Number(x.late||0),0)),'Kechikishlar')}${count(fmt((a.rows||[]).reduce((v,x)=>v+Number(x.absent||0),0)),'Kelmagan kunlar')}${count(fmt(a.no_schedule_count),'Jadvalsiz xodimlar')}</div>`:'<div class="notice">Davomat ma’lumotlarini olib bo‘lmadi. Topshiriq hisoboti alohida ko‘rsatilmoqda.</div>'}
+ <p class="sub">Jadvali yo‘q xodim kelmagan hisoblanmaydi. Tasdiqlangan ta’til va tugamagan smena kelmaslik sifatida baholanmaydi.</p></div>
+ <div class="card"><h3>Xodimlar kesimida</h3>${list(items,x=>{
+   const att=byStaff.get(x.staff_id);
+   return `<strong>${esc(x.full_name)} <span class="pill">${esc(roles[x.role]||x.role)}</span></strong>
+   <div class="sub">Vazifalar: ${fmt(x.total)} · Yakunlangan: ${fmt(x.completed)} · Jarayonda: ${fmt(x.in_progress)} · Tekshiruvda: ${fmt(x.review)} · Muddati o‘tgan: ${fmt(x.overdue)}</div>
+   <div class="sub">Topshiriq bajarilishi: ${x.completion_percent===null?'Hisoblanmagan':esc(x.completion_percent)+'%'}</div>
+   ${!a?'<div class="sub">Davomat: ma’lumot yuklanmadi</div>':!att?'<div class="sub">Davomat: xodim bo‘yicha ma’lumot yo‘q</div>':Number(att.scheduled||0)===0?'<div class="sub">Davomat: ish jadvali kiritilmagan, baholanmaydi</div>':`<div class="sub">Davomat: ${fmt(att.present)} kelgan · ${fmt(att.late)} kechikkan · ${fmt(att.absent)} kelmagan · ${fmt(att.approved_leave)} tasdiqlangan ta’til · ${fmt(att.open_shifts)} ochiq smena</div>`}
+   `;
+ })}</div>
+ <div class="notice">${esc(r.note||'')} ${r.truncated||a?.truncated?'Hisobotda ayrim ma’lumotlar cheklangan.':''} KPI yakuniy bahosi faqat topshiriqlar va davomat bilan belgilanmaydi.</div>`);
  return;
 }
 if(tab==='attendance'){
