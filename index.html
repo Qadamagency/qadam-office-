@@ -406,7 +406,7 @@ async function render(tab){const owner=state.user.role==='owner';
 
 if(tab==='messenger'){
  const mode=state.messengerMode||'private';
- const studentChatAllowed=['owner','director','education_manager','administrator','accountant','teacher','assistant_teacher'].includes(state.user.role);
+ const studentChatAllowed=['administrator','accountant','teacher','assistant_teacher'].includes(state.user.role);
  const tabs="<div class='msg-tabs'><button type='button' id='modePrivate' class='btn "+(mode==='private'?'':'alt')+"'>Shaxsiy chatlar</button><button type='button' id='modeGroup' class='btn "+(mode==='group'?'':'alt')+"'>Xodimlar guruhi</button>"+(studentChatAllowed?"<button type='button' id='modeStudents' class='btn "+(mode==='student'?'':'alt')+"'>O‘quvchilar</button>":"")+"</div>";
  if(mode==='group'){
    const [settings,data]=await Promise.all([api('/staff/ops/office-chat-settings'),api('/staff/ops/chat-list',{channel:'general',requester_staff_id:null})]);
