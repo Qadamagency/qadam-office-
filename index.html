@@ -163,7 +163,7 @@ const MENU_GROUPS=[
 function roleRoutes(role){
  const base=['home','sections','profile','chat','notifications','salary-confirm','tasks'];
 
- if(role==='owner')return new Set([...base,'employees','employee-card','crm','education','group-members','finance','marketing','attendance','audit','salary-accounting','salary-supervision','finance-dashboard','salary-bulk','salary-import','finance-groups']);
+ if(role==='owner')return new Set([...base,'employees','employee-card','crm','education','finance','marketing','attendance','audit','salary-accounting','salary-supervision','finance-dashboard','salary-bulk','salary-import','finance-groups']);
  if(role==='director')return new Set([...base,'employees','education','salary-supervision','finance-dashboard']);
  if(role==='administrator')return new Set([...base,'education','group-members']);
  if(role==='education_manager')return new Set([...base,'education']);
@@ -776,7 +776,7 @@ if(tab==='finance'){
 if(tab==='marketing'){const r=await api('/marketing/dashboard');inject('Marketing',`<div class="grid">${count((r.campaigns||[]).length,'Kampaniyalar')}${count((r.content||[]).length,'Kontentlar')}${count((r.gifts||[]).length,'Sovg‘alar')}${count((r.orders||[]).length,'Buyurtmalar')}</div><div class="card"><h3>Kampaniyalar</h3>${list(r.campaigns,x=>`<strong>${esc(x.name)} <span class="pill">${esc(x.status)}</span></strong><div class="sub">${esc(x.channel)} • ${Number(x.spent_uzs||0).toLocaleString('uz-UZ')} so‘m sarf</div>`)}</div><div class="card"><h3>Kontent</h3>${list(r.content,x=>`<strong>${esc(x.title)}</strong><div class="sub">${esc(x.channel)} • ${esc(x.status)}</div>`)}</div>`);return;}
 if(tab==='attendance'){
  if(!['owner','hr'].includes(state.user.role))throw Error('Davomat uchun ruxsat yo‘q');
- const r=state.user.role==='owner'?await api('/owner/attendance-list'):await api('/staff/ops/staff-attendance');
+ const r=await api('/staff/ops/staff-attendance');
  const attendance=r.attendance||[];
  inject('Xodimlar davomati',`<div class="grid">${count(attendance.length,'Davomat qaydlari')}${count(attendance.filter(x=>x.check_in&&!x.check_out).length,'Hozir ishda')}</div><div class="card"><h3>Oxirgi davomatlar</h3>${list(attendance,x=>`<strong>${esc(x.employee_name||x.work_date||'Xodim')} <span class="pill">${esc(x.work_date)}</span></strong><div class="sub">Keldi: ${x.check_in?esc(new Date(x.check_in).toLocaleString('uz-UZ')):'—'} · Ketdi: ${x.check_out?esc(new Date(x.check_out).toLocaleString('uz-UZ')):'—'}</div>`)}</div>`);
  return;
