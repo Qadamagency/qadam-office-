@@ -174,7 +174,11 @@ function roleRoutes(role){
  if(['teacher','assistant_teacher'].includes(role))return new Set([...base,'education']);
  return new Set(base);
 }
-function visibleGroups(){return MENU_GROUPS.map(group=>({...group,items:group.items.filter(([route])=>state.allowedRoutes?.has(route))})).filter(group=>group.items.length);}
+function visibleGroups(){
+ return MENU_GROUPS.map(group=>({...group,items:group.items.filter(([route])=>state.allowedRoutes?.has(route))
+   .map(item=>item[0]==='finance'&&state.user?.role==='accountant'?['finance','Mukofotlar hisobi','Xodimlar mukofotlari va cheklar']:item)
+ })).filter(group=>group.items.length);
+}
 function routeCategory(route){return visibleGroups().find(group=>group.items.some(([id])=>id===route))?.id||null;}
 function directoryButtons(items){
  return '<div class="hub-grid">'+items.map(item=>`<button type="button" class="hub-card" data-hub="${esc(item.id)}"><span class="hub-icon">${navIcon(item.icon||'home')}</span><span class="hub-card-body"><strong>${esc(item.title)}</strong><small>${esc(item.desc||'')}</small></span><span class="hub-chevron">›</span></button>`).join('')+'</div>';
@@ -228,7 +232,10 @@ async function navigate(tab){
 
 if(state.user?.role!=='owner'&&state.profileRequired&&tab!=='profile'){
  tab='profile';
-}const seq=++state.navSeq;state.current=tab;document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===(tab==='home'?'home':tab==='profile'?'profile':tab==='notifications'?'notifications':'sections')));$('section').innerHTML='<div class="card"><span class="spin"></span> Ma’lumotlar yuklanmoqda...</div>';clearMessage();try{await render(tab)}catch(e){if(seq!==state.navSeq)return;$('section').innerHTML=`<div class="card"><h2 class="title">Ma’lumotlar ochilmadi</h2><div class="notice error">${esc(e.message||String(e))}</div><button class="btn" id="retry">Qayta urinish</button></div>`;$('retry').onclick=()=>navigate(tab)}}
+}
+const previous=state.current;
+if(previous!==tab)state.previousScreen=previous;
+const seq=++state.navSeq;state.current=tab;document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===(tab==='home'?'home':tab==='profile'?'profile':tab==='notifications'?'notifications':'sections')));$('section').innerHTML='<div class="card"><span class="spin"></span> Ma’lumotlar yuklanmoqda...</div>';clearMessage();try{await render(tab)}catch(e){if(seq!==state.navSeq)return;$('section').innerHTML=`<div class="card"><h2 class="title">Ma’lumotlar ochilmadi</h2><div class="notice error">${esc(e.message||String(e))}</div><div class="actions"><button class="btn" id="retry">Qayta urinish</button><button class="btn alt" id="errorBack">Bo‘limlarga qaytish</button></div></div>`;$('retry').onclick=()=>navigate(tab);$('errorBack').onclick=()=>navigate('sections')}}
 const count=(n,label)=>`<div class="metric"><span>${esc(label)}</span><strong>${esc(n??0)}</strong></div>`;
 const wrapper=(title,html)=>{
  const category=routeCategory(state.current);
