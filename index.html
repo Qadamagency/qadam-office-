@@ -148,7 +148,7 @@ const MENU_GROUPS=[
  {id:'finance',title:'Moliya',desc:'Oylik, to‘lovlar, chek va Excel',icon:'finance',
   items:[['finance-dashboard','Moliyaviy dashboard','Kirim, chiqim va qarzdorlik'],['finance','Oyliklarni tasdiqlash','Owner uchun hisob-kitoblar'],['salary-accounting','Oylik va cheklar','Rekvisit, chek va to‘lovlar'],['finance-groups','Guruhlar moliyasi','Ustozlar va yordamchilar ulushi'],['salary-bulk','Ommaviy oylik','Barcha xodimlar oyligi'],['salary-import','Excel import','Excel orqali maosh rejalari'],['salary-supervision','Oyliklar nazorati','Direktor tekshiruvi'],['salary-confirm','Mening oyligim','Oylikni oldim/olmadim']]},
  {id:'people',title:'Xodimlar',desc:'Jamoa, kadrlar va vazifalar',icon:'employees',
-  items:[['employees','Xodimlar','Xodimlar kartasi va roli'],['tasks','Vazifalar','Topshiriqlarni boshqarish'],['attendance','Davomat','Xodimlar ishtiroki']]},
+  items:[['employees','Xodimlar','Xodimlar kartasi va roli'],['tasks','Vazifalar','Topshiriqlarni boshqarish'],['my-attendance','Mening davomatim','Kelish va ketishni belgilash'],['attendance','Jamoa davomati','Xodimlar ishtiroki']]},
  {id:'education',title:'O‘quv jarayoni',desc:'Guruhlar, darslar va ustozlar',icon:'education',
   items:[['education','Guruhlar va darslar','O‘quv jarayonini boshqarish']]},
  {id:'sales',title:'Sotuv va CRM',desc:'Mijozlar, savdo va kuzatuv',icon:'crm',
@@ -161,7 +161,7 @@ const MENU_GROUPS=[
   items:[['audit','Tizim auditi','Lavozimlar va harakatlar']]}
 ];
 function roleRoutes(role){
- const base=['home','sections','profile','chat','notifications','salary-confirm','tasks'];
+ const base=['home','sections','profile','chat','notifications','salary-confirm','tasks','my-attendance'];
 
  if(role==='owner')return new Set([...base,'employees','employee-card','crm','education','finance','marketing','attendance','audit','salary-accounting','salary-supervision','finance-dashboard','salary-bulk','salary-import','finance-groups']);
  if(role==='director')return new Set([...base,'employees','education','salary-supervision','finance-dashboard']);
@@ -188,20 +188,20 @@ function quickRoutes(){
  const role=state.user?.role;
  const priorities={
  owner:['finance-dashboard','salary-supervision','employees','tasks','audit','crm'],
- director:['salary-supervision','finance-dashboard','tasks','employees'],
- administrator:['education','tasks','notifications'],
+ director:['salary-supervision','tasks','my-attendance','finance-dashboard'],
+ administrator:['education','tasks','my-attendance','notifications'],
  education_manager:['education','tasks','notifications'],
- hr:['employees','tasks','notifications'],
- accountant:['salary-accounting','salary-bulk','finance-dashboard','finance-groups'],
- teacher:['education','tasks','salary-confirm'],
- assistant_teacher:['education','tasks','salary-confirm'],
+ hr:['employees','attendance','my-attendance','tasks'],
+ accountant:['salary-accounting','finance-dashboard','my-attendance','salary-bulk'],
+ teacher:['education','tasks','my-attendance','salary-confirm'],
+ assistant_teacher:['education','tasks','my-attendance','salary-confirm'],
  sales:['crm','tasks','salary-confirm'],
  marketing:['marketing','tasks','notifications'],
  editor:['marketing','tasks','notifications'],
  targetologist:['marketing','tasks','notifications']
  };
- const labels={finance:'Moliya',employees:'Xodimlar',tasks:'Vazifalar',education:'Ta’lim',crm:'CRM',marketing:'Marketing',audit:'Audit','salary-supervision':'Oylik nazorati','finance-dashboard':'Moliyaviy hisobot','salary-accounting':'Oylik va cheklar','salary-bulk':'Oylik hisoblash','finance-groups':'Guruhlar moliyasi','salary-confirm':'Oylik tasdig‘i',notifications:'Xabarlar'};
- const icons={'finance-dashboard':'finance','salary-supervision':'finance','salary-accounting':'finance','salary-bulk':'finance','finance-groups':'finance','salary-confirm':'finance',notifications:'tasks'};
+ const labels={'my-attendance':'Mening davomatim',finance:'Moliya',employees:'Xodimlar',tasks:'Vazifalar',education:'Ta’lim',crm:'CRM',marketing:'Marketing',audit:'Audit','salary-supervision':'Oylik nazorati','finance-dashboard':'Moliyaviy hisobot','salary-accounting':'Oylik va cheklar','salary-bulk':'Oylik hisoblash','finance-groups':'Guruhlar moliyasi','salary-confirm':'Oylik tasdig‘i',notifications:'Xabarlar'};
+ const icons={'my-attendance':'employees','finance-dashboard':'finance','salary-supervision':'finance','salary-accounting':'finance','salary-bulk':'finance','finance-groups':'finance','salary-confirm':'finance',notifications:'tasks'};
  return (priorities[role]||['tasks','salary-confirm']).filter(id=>state.allowedRoutes.has(id)).slice(0,4)
    .map(id=>({id,title:labels[id]||id,desc:visibleGroups().find(g=>g.items.some(x=>x[0]===id))?.title||'Tezkor kirish',icon:icons[id]||id}));
 }
@@ -549,6 +549,18 @@ if(tab==='tasks'&&state.user.role==='director'){
  inject('Direktor — vazifalar',`<div class="grid">${count(tasks.length,'Barcha vazifalar')}${count(tasks.filter(x=>x.can_review===true).length,'Tekshiruvga kelgan')}${count(tasks.filter(x=>x.status==='completed').length,'Yakunlangan')}</div><div class="card"><h3>Xodimga topshiriq</h3><form id="directorCreateTask" class="stack"><input name="title" class="input" minlength="3" maxlength="200" required placeholder="Topshiriq nomi"><textarea name="description" class="input" maxlength="4000" placeholder="Tavsif"></textarea><select class="input" name="assigned_to" required><option value="">Mas’ul xodim</option>${staff.filter(x=>!['owner','director'].includes(x.role)).map(x=>`<option value="${esc(x.id)}">${esc(x.full_name)} · ${esc(roles[x.role]||x.role)}</option>`).join('')}</select><select class="input" name="priority"><option value="normal">Oddiy</option><option value="high">Muhim</option><option value="urgent">Shoshilinch</option><option value="low">Past</option></select><label>Muddat (ixtiyoriy)</label><input type="datetime-local" name="due_at" class="input"><button class="btn">Topshiriq yuborish</button></form></div><div class="card"><h3>Vazifalar</h3>${list(tasks,x=>`<strong>${esc(x.title)} <span class="pill">${esc(x.status)}</span></strong><div class="sub">Mas’ul: ${esc(staff.find(s=>s.id===x.assigned_to)?.full_name||'Xodim')} · ${esc(x.priority)}</div><p class="sub">${esc(x.description||'')}</p>${x.can_review===true?`<div class="actions"><button type="button" class="btn small" data-director-review="${esc(x.id)}" data-result="completed">Tasdiqlash</button><button type="button" class="btn small alt" data-director-review="${esc(x.id)}" data-result="returned">Qaytarish</button></div>`:''}`)}</div>`);
  formHandler('directorCreateTask',async f=>api('/staff/ops/manager-task-create',{title:f.get('title'),description:f.get('description'),assigned_to:f.get('assigned_to'),priority:f.get('priority'),due_at:f.get('due_at')?new Date(f.get('due_at')).toISOString():null}));
  document.querySelectorAll('[data-director-review]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{const note=prompt('Vazifaga izoh (ixtiyoriy)','');if(note===null)return;await api('/staff/ops/manager-task-review',{task_id:btn.dataset.directorReview,status:btn.dataset.result,review_note:note});await navigate('tasks')}));
+ return;
+}
+if(tab==='my-attendance'){
+ const r=await api('/staff/my-dashboard'),records=r.attendance||[];
+ const fmt=v=>v?new Date(v).toLocaleString('uz-UZ',{timeZone:'Asia/Tashkent'}):'—';
+ const now=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tashkent',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+ const p=k=>now.find(x=>x.type===k)?.value||'';
+ const today=p('year')+'-'+p('month')+'-'+p('day');
+ const current=records.find(x=>x.work_date===today);
+ inject('Mening davomatim',`<div class="card"><h3>Bugungi davomat · ${esc(today)}</h3><div class="grid">${count(fmt(current?.check_in),'Ishga kelish')}${count(fmt(current?.check_out),'Ishdan ketish')}</div><div class="actions">${!current?.check_in?'<button class="btn" type="button" id="clockIn">Ishga keldim</button>':''}${current?.check_in&&!current?.check_out?'<button class="btn alt" type="button" id="clockOut">Ishdan ketdim</button>':''}</div>${current?.check_out?'<div class="notice">Bugungi davomat yakunlangan.</div>':''}</div><div class="card"><h3>Oxirgi davomatlar</h3>${list(records,x=>`<strong>${esc(x.work_date)}</strong><div class="sub">Keldi: ${esc(fmt(x.check_in))} · Ketdi: ${esc(fmt(x.check_out))}</div>`)}</div>`);
+ if($('clockIn'))$('clockIn').onclick=()=>submit({preventDefault(){}},async()=>{await api('/staff/check-in');await navigate('my-attendance')});
+ if($('clockOut'))$('clockOut').onclick=()=>submit({preventDefault(){}},async()=>{await api('/staff/check-out');await navigate('my-attendance')});
  return;
 }
 if(tab==='tasks'){
