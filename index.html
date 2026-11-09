@@ -148,7 +148,7 @@ const MENU_GROUPS=[
  {id:'finance',title:'Moliya',desc:'Oylik, to‘lovlar, chek va Excel',icon:'finance',
   items:[['finance-dashboard','Moliyaviy dashboard','Kirim, chiqim va qarzdorlik'],['finance','Oyliklarni tasdiqlash','Owner uchun hisob-kitoblar'],['salary-accounting','Oylik va cheklar','Rekvisit, chek va to‘lovlar'],['finance-groups','Guruhlar moliyasi','Ustozlar va yordamchilar ulushi'],['salary-bulk','Ommaviy oylik','Barcha xodimlar oyligi'],['salary-import','Excel import','Excel orqali maosh rejalari'],['salary-supervision','Oyliklar nazorati','Direktor tekshiruvi'],['salary-confirm','Mening oyligim','Oylikni oldim/olmadim']]},
  {id:'people',title:'Xodimlar',desc:'Jamoa, kadrlar va vazifalar',icon:'employees',
-  items:[['employees','Xodimlar','Xodimlar kartasi va roli'],['tasks','Vazifalar','Topshiriqlarni boshqarish'],['my-attendance','Mening davomatim','Kelish va ketishni belgilash'],['attendance','Jamoa davomati','Xodimlar ishtiroki'],['hr-attendance','Kechikish va kelmaganlar','Jadval asosidagi davomat nazorati'],['my-leaves','Mening ta’tilim','Ta’tilga ariza yuborish'],['leave-management','Ta’til so‘rovlari','HR tavsiyasi va Owner qarori'],['performance','Xodimlar natijalari','Direktorning vazifalar nazorati']]},
+  items:[['employees','Xodimlar','Xodimlar kartasi va roli'],['tasks','Vazifalar','Topshiriqlarni boshqarish'],['my-attendance','Mening davomatim','Kelish va ketishni belgilash'],['attendance','Jamoa davomati','Xodimlar ishtiroki'],['hr-attendance','Kechikish va kelmaganlar','Jadval asosidagi davomat nazorati'],['my-leaves','Mening ta’tilim','Ta’tilga ariza yuborish'],['leave-management','Ta’til so‘rovlari','HR tavsiyasi va Owner qarori'],['performance','Xodimlar natijalari','Direktorning vazifalar nazorati'],['kpi','KPI va bonus tavsiyasi','0–100 ballik dastlabki ko‘rsatkich']]},
  {id:'education',title:'O‘quv jarayoni',desc:'Guruhlar, darslar va ustozlar',icon:'education',
   items:[['education','Guruhlar va darslar','O‘quv jarayonini boshqarish']]},
  {id:'sales',title:'Sotuv va CRM',desc:'Mijozlar, savdo va kuzatuv',icon:'crm',
@@ -163,8 +163,8 @@ const MENU_GROUPS=[
 function roleRoutes(role){
  const base=['home','sections','profile','chat','notifications','salary-confirm','tasks','my-attendance','my-leaves'];
 
- if(role==='owner')return new Set([...base,'hr-attendance','leave-management','performance','employees','employee-card','crm','education','finance','marketing','attendance','audit','salary-accounting','salary-supervision','finance-dashboard','salary-bulk','salary-import','finance-groups']);
- if(role==='director')return new Set([...base,'hr-attendance','leave-management','performance','employees','education','salary-supervision','finance-dashboard']);
+ if(role==='owner')return new Set([...base,'hr-attendance','leave-management','performance','kpi','employees','employee-card','crm','education','finance','marketing','attendance','audit','salary-accounting','salary-supervision','finance-dashboard','salary-bulk','salary-import','finance-groups']);
+ if(role==='director')return new Set([...base,'hr-attendance','leave-management','performance','kpi','employees','education','salary-supervision','finance-dashboard']);
  if(role==='administrator')return new Set([...base,'education','group-members']);
  if(role==='education_manager')return new Set([...base,'education']);
  if(role==='hr')return new Set([...base,'employees','attendance','hr-attendance','leave-management']);
@@ -188,7 +188,7 @@ function quickRoutes(){
  const role=state.user?.role;
  const priorities={
  owner:['finance-dashboard','salary-supervision','employees','tasks','audit','crm'],
- director:['performance','hr-attendance','tasks','salary-supervision'],
+ director:['kpi','performance','hr-attendance','tasks','salary-supervision'],
  administrator:['education','tasks','my-attendance','notifications'],
  education_manager:['education','tasks','notifications'],
  hr:['hr-attendance','leave-management','employees','tasks'],
@@ -835,6 +835,25 @@ if(tab==='leave-management'){
  if(!confirm('Ta’til arizasi bo‘yicha yakuniy qarorni tasdiqlaysizmi?'))return;
  await api('/owner/leave-review',{request_id:btn.dataset.leaveDecide,status:btn.dataset.decision,review_note:note.trim()});
  await navigate('leave-management')}));
+ return;
+}
+if(tab==='kpi'){
+ if(!['owner','director'].includes(state.user.role))throw Error('KPI paneliga ruxsat yo‘q');
+ const date=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tashkent',year:'numeric',month:'2-digit'}).formatToParts(new Date());
+ const year=date.find(x=>x.type==='year')?.value||'',month=date.find(x=>x.type==='month')?.value||'';
+ const selected=state.kpiMonth||year+'-'+month;
+ const r=await api('/staff/ops/kpi-preview',{month:selected});
+ const rows=r.rows||[],fmt=x=>Number(x||0).toLocaleString('uz-UZ');
+ inject('KPI va bonus tavsiyasi',`<div class="card"><h3>Hisobot oyi</h3>
+ <form id="kpiMonthForm" class="stack"><input class="input" name="month" type="month" value="${esc(selected)}" required max="${esc(year+'-'+month)}"><button class="btn">Hisobotni ko‘rsatish</button></form>
+ <p class="sub">${esc(r.formula||'')}.</p></div>
+ <div class="grid">${count(rows.length,'Xodimlar')}${count(rows.filter(x=>x.score!==null).length,'KPI hisoblangan')}${count(rows.filter(x=>x.eligible).length,'Bonus tavsiya')}${count(fmt(rows.reduce((n,x)=>n+Number(x.suggested_bonus_uzs||0),0))+' so‘m','Tavsiya summasi')}</div>
+ <div class="card"><h3>Xodimlar KPI hisoboti</h3>${list(rows,x=>`<strong>${esc(x.full_name)} <span class="pill">${esc(roles[x.role]||x.role)}</span></strong>
+ <div class="sub">KPI: ${x.score===null?'Ma’lumot yetarli emas':esc(x.score)+' / 100'} · Maqsad: ${esc(x.bonus_target)} / 100</div>
+ <div class="sub">Topshiriqlar: ${fmt(x.completed)}/${fmt(x.task_count)} · Davomat: ${fmt(x.present)}/${fmt(x.attendance_days)} · Kechikish: ${fmt(x.late)}</div>
+ <div class="sub">Bonus tavsiyasi: ${fmt(x.suggested_bonus_uzs)} so‘m · ${x.eligible?'Mezon bajarilgan':'Tavsiya yo‘q'}</div>`)}</div>
+ <div class="notice">${esc(r.warning||'')} ${r.truncated?'Hisobot ayrim yozuvlar bilan cheklangan.':''} Mezonlar dastlabki hisob bo‘lib, pul o‘tkazish yoki mukofotni tasdiqlash hisoblanmaydi.</div>`);
+ formHandler('kpiMonthForm',async d=>{state.kpiMonth=String(d.get('month'));await navigate('kpi')});
  return;
 }
 if(tab==='performance'){
