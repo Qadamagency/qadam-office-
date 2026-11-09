@@ -162,16 +162,16 @@ const MENU_GROUPS=[
 ];
 function roleRoutes(role){
  const base=['home','sections','profile','chat','notifications','salary-confirm','tasks'];
- const staff=['director','administrator','education_manager','hr','accountant','teacher','assistant_teacher','sales','marketing','editor','targetologist'];
+
  if(role==='owner')return new Set([...base,'employees','employee-card','crm','education','group-members','finance','marketing','attendance','audit','salary-accounting','salary-supervision','finance-dashboard','salary-bulk','salary-import','finance-groups']);
  if(role==='director')return new Set([...base,'employees','education','salary-supervision','finance-dashboard']);
  if(role==='administrator')return new Set([...base,'education','group-members']);
  if(role==='education_manager')return new Set([...base,'education']);
- if(role==='hr')return new Set([...base,'employees']);
+ if(role==='hr')return new Set([...base,'employees','attendance']);
  if(role==='accountant')return new Set([...base,'finance','salary-accounting','finance-groups','finance-dashboard','salary-bulk','salary-import']);
  if(role==='sales')return new Set([...base,'crm']);
  if(['marketing','editor','targetologist'].includes(role))return new Set([...base,'marketing']);
- if(['teacher','assistant_teacher'].includes(role))return new Set([...base,'education','attendance']);
+ if(['teacher','assistant_teacher'].includes(role))return new Set([...base,'education']);
  return new Set(base);
 }
 function visibleGroups(){return MENU_GROUPS.map(group=>({...group,items:group.items.filter(([route])=>state.allowedRoutes?.has(route))})).filter(group=>group.items.length);}
@@ -504,8 +504,8 @@ if(tab==='home'){if(owner){
  if(!overview)errors.push('Xodimlar va CRM: '+(results[0].reason?.message||'yuklanmadi'));
  if(!report)errors.push('Moliyaviy hisobot: '+(results[1].reason?.message||'yuklanmadi'));
  const errorHtml=errors.length?'<div class="notice error">'+errors.map(esc).join('<br>')+'<p class="tiny">Qolgan bo‘limlardan foydalanish mumkin. Yangilash tugmasini bosing.</p></div>':'';
- inject('Owner boshqaruv paneli',`<div class="hero"><span class="tag">OWNER DASHBOARD</span><h1>Xush kelibsiz!</h1><p class="lead">QADAM OFFICE boshqaruv paneli. Ko‘rsatkichlar faqat serverdan olinadi.</p></div>${errorHtml}<div class="grid">${count(overview?stats.staff:'—','Xodimlar')}${count(overview?stats.active:'—','Faol xodimlar')}${count(overview?stats.leads:'—','CRM lidlar')}${count(overview?stats.groups:'—','Guruhlar')}</div><div class="card"><h3>Moliyaviy ko‘rsatkichlar</h3><div class="grid">${count(report?Number(fin.revenue_uzs||0).toLocaleString('uz-UZ'):'—','Kirim, so‘m')}${count(report?Number(fin.recorded_outflow_uzs||0).toLocaleString('uz-UZ'):'—','Chiqim, so‘m')}${count(report?Number(fin.net_before_payroll_uzs||0).toLocaleString('uz-UZ'):'—','Maoshgacha farq, so‘m')}</div><p class="tiny">Bank balansi yoki auditdan o‘tgan sof foyda emas.</p></div><div class="card"><h3>Tezkor bo‘limlar</h3><div class="quick-actions"><button data-jump="employees">Xodimlar</button><button data-jump="crm">CRM</button><button data-jump="tasks">Vazifalar</button><button data-jump="finance">Moliya</button></div></div><div class="card"><h3>Xodimlar</h3>${overview?list(overview.employees,x=>`<strong>${esc(x.full_name)} <span class="pill">${esc(x.employee_code)}</span></strong><span class="sub">${esc(roles[x.role]||x.role)} • ${x.is_active?'Faol':'Faol emas'}</span>`):'<div class="empty">Hozircha ma’lumot olinmadi</div>'}</div>`);
- document.querySelectorAll('[data-jump]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.jump)));
+ inject('Owner boshqaruv paneli',`<div class="hero"><span class="tag">OWNER DASHBOARD</span><h1>Xush kelibsiz!</h1><p class="lead">QADAM OFFICE boshqaruv paneli. Ko‘rsatkichlar faqat serverdan olinadi.</p></div>${errorHtml}<div class="grid">${count(overview?stats.staff:'—','Xodimlar')}${count(overview?stats.active:'—','Faol xodimlar')}${count(overview?stats.leads:'—','CRM lidlar')}${count(overview?stats.groups:'—','Guruhlar')}</div><div class="card"><h3>Moliyaviy ko‘rsatkichlar</h3><div class="grid">${count(report?Number(fin.revenue_uzs||0).toLocaleString('uz-UZ'):'—','Kirim, so‘m')}${count(report?Number(fin.recorded_outflow_uzs||0).toLocaleString('uz-UZ'):'—','Chiqim, so‘m')}${count(report?Number(fin.net_before_payroll_uzs||0).toLocaleString('uz-UZ'):'—','Maoshgacha farq, so‘m')}</div><p class="tiny">Bank balansi yoki auditdan o‘tgan sof foyda emas.</p></div><div class="card"><h3>Xodimlar</h3>${overview?list(overview.employees,x=>`<strong>${esc(x.full_name)} <span class="pill">${esc(x.employee_code)}</span></strong><span class="sub">${esc(roles[x.role]||x.role)} • ${x.is_active?'Faol':'Faol emas'}</span>`):'<div class="empty">Hozircha ma’lumot olinmadi</div>'}</div>`);
+
 }else{const d=await api('/staff/my-dashboard');inject('Shaxsiy kabinet',`<div class="hero"><h1>Xush kelibsiz!</h1><p class="lead">${esc(state.user.full_name)} • ${esc(roles[state.user.role]||state.user.role)}</p></div><div class="grid">${count((d.tasks||[]).length,'Vazifalar')}${count((d.attendance||[]).length,'Davomat qaydlari')}</div><div class="card"><h3>Bugungi ish</h3><div class="actions"><button class="btn" id="checkin">Ishga keldim</button><button class="btn alt" id="checkout">Ishdan chiqdim</button></div></div><div class="card"><h3>Vazifalarim</h3>${list(d.tasks,x=>`<strong>${esc(x.title)}</strong><span class="sub">${esc(x.status)} • ${esc(x.priority)}</span>`)}</div>`);$('checkin').onclick=()=>workTime('check-in');$('checkout').onclick=()=>workTime('check-out');}return;}
 if(tab==='employees'&&state.user.role==='director'){
  const r=await api('/staff/ops/staff-directory');
@@ -774,7 +774,13 @@ if(tab==='finance'){
  return;
 }
 if(tab==='marketing'){const r=await api('/marketing/dashboard');inject('Marketing',`<div class="grid">${count((r.campaigns||[]).length,'Kampaniyalar')}${count((r.content||[]).length,'Kontentlar')}${count((r.gifts||[]).length,'Sovg‘alar')}${count((r.orders||[]).length,'Buyurtmalar')}</div><div class="card"><h3>Kampaniyalar</h3>${list(r.campaigns,x=>`<strong>${esc(x.name)} <span class="pill">${esc(x.status)}</span></strong><div class="sub">${esc(x.channel)} • ${Number(x.spent_uzs||0).toLocaleString('uz-UZ')} so‘m sarf</div>`)}</div><div class="card"><h3>Kontent</h3>${list(r.content,x=>`<strong>${esc(x.title)}</strong><div class="sub">${esc(x.channel)} • ${esc(x.status)}</div>`)}</div>`);return;}
-if(tab==='attendance'){if(!owner){await navigate('home');return;}const r=await api('/owner/attendance-list');inject('Xodimlar davomati',`<div class="card">${list(r.attendance,x=>`<strong>${esc(x.work_date)}</strong><div class="sub">Keldi: ${esc(x.check_in||'—')} • Ketdi: ${esc(x.check_out||'—')}</div>`)}</div>`);return;}
+if(tab==='attendance'){
+ if(!['owner','hr'].includes(state.user.role))throw Error('Davomat uchun ruxsat yo‘q');
+ const r=state.user.role==='owner'?await api('/owner/attendance-list'):await api('/staff/ops/staff-attendance');
+ const attendance=r.attendance||[];
+ inject('Xodimlar davomati',`<div class="grid">${count(attendance.length,'Davomat qaydlari')}${count(attendance.filter(x=>x.check_in&&!x.check_out).length,'Hozir ishda')}</div><div class="card"><h3>Oxirgi davomatlar</h3>${list(attendance,x=>`<strong>${esc(x.employee_name||x.work_date||'Xodim')} <span class="pill">${esc(x.work_date)}</span></strong><div class="sub">Keldi: ${x.check_in?esc(new Date(x.check_in).toLocaleString('uz-UZ')):'—'} · Ketdi: ${x.check_out?esc(new Date(x.check_out).toLocaleString('uz-UZ')):'—'}</div>`)}</div>`);
+ return;
+}
 if(tab==='audit'){
  const [audit,diag]=await Promise.allSettled([api('/owner/audit'),api('/owner/system-audit')]);
  const r=audit.status==='fulfilled'?audit.value:{events:[]};
