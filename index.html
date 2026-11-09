@@ -398,7 +398,7 @@ if(tab==='chat'){
  `<div class="card"><h3>${esc(label(current))}</h3><div style="max-height:450px;overflow-y:auto;padding:8px 0">${messages.length?messages.map(x=>`<div style="margin:10px 0;padding:12px;border:1px solid var(--border);border-radius:12px;background:${x.is_mine?'var(--panel2)':'var(--panel)'}"><div class="sub">${esc(x.sender_name)} · ${esc(new Date(x.created_at).toLocaleString('uz-UZ'))}</div><div style="white-space:pre-wrap;overflow-wrap:anywhere;margin-top:5px">${esc(x.message)}</div></div>`).join(''):'<p class="sub">Hozircha xabar yo‘q. Birinchi xabarni yuboring.</p>'}</div><form id="chatSend" class="stack"><textarea class="input" name="message" required minlength="1" maxlength="2000" rows="3" placeholder="Xabaringizni yozing..."></textarea><button class="btn" type="submit">Xabar yuborish</button></form><button class="btn alt" id="chatRefresh" type="button" style="margin-top:10px">Xabarlarni yangilash</button></div>`);
  $('chatThread').onchange=v=>{const selection=threads[Number(v.target.value)];if(selection){state.chatChannel=selection.channel;state.chatRequester=selection.requester_staff_id;navigate('chat')}};
  $('chatRefresh').onclick=()=>navigate('chat');
- formHandler('chatSend',async f=>{const msg=String(f.get('message')||'').trim();if(!msg)throw Error('Xabarni kiriting');await api('/staff/ops/chat-send',{channel:current.channel,requester_staff_id:current.requester_staff_id,message:msg});await navigate('chat')});
+ formHandler('chatSend',async f=>{const msg=String(f.get('message')||'').trim();if(!msg)throw Error('Xabarni kiriting');await api('/staff/ops/chat-send',{channel:current.channel,requester_staff_id:current.requester_staff_id,message:msg})});
  return;
 }
 if(tab==='notifications'){
