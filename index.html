@@ -406,7 +406,8 @@ async function render(tab){const owner=state.user.role==='owner';
 
 if(tab==='messenger'){
  const mode=state.messengerMode||'private';
- const tabs="<div class='msg-tabs'><button type='button' id='modePrivate' class='btn "+(mode==='private'?'':'alt')+"'>Shaxsiy chatlar</button><button type='button' id='modeGroup' class='btn "+(mode==='group'?'':'alt')+"'>Xodimlar guruhi</button></div>";
+ const studentChatAllowed=['owner','director','education_manager','administrator','accountant','teacher','assistant_teacher'].includes(state.user.role);
+ const tabs="<div class='msg-tabs'><button type='button' id='modePrivate' class='btn "+(mode==='private'?'':'alt')+"'>Shaxsiy chatlar</button><button type='button' id='modeGroup' class='btn "+(mode==='group'?'':'alt')+"'>Xodimlar guruhi</button>"+(studentChatAllowed?"<button type='button' id='modeStudents' class='btn "+(mode==='student'?'':'alt')+"'>O‘quvchilar</button>":"")+"</div>";
  if(mode==='group'){
    const [settings,data]=await Promise.all([api('/staff/ops/office-chat-settings'),api('/staff/ops/chat-list',{channel:'general',requester_staff_id:null})]);
    const group=settings.group||{},messages=data.messages||[];
@@ -421,6 +422,20 @@ if(tab==='messenger'){
    document.querySelectorAll('[data-group-profile]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{const worker=(settings.members||[]).find(x=>x.employee_code===btn.dataset.groupProfile);if(!worker)throw Error('Xodim topilmadi');await showPublicStaffProfile(worker.id,$('groupManage'))}));
 
    if($('staffGroupSend'))formHandler('staffGroupSend',async d=>{await api('/staff/ops/chat-send',{channel:'general',requester_staff_id:null,message:String(d.get('message')||'').trim()})});
+ }else if(mode==='student'){
+   if(!studentChatAllowed)throw Error('O‘quvchi bilan chat ruxsati yo‘q');
+   const r=await api('/staff/ops/office-student-chat-contacts');
+   const students=r.students||[],chosen=students.find(x=>x.id===state.selectedChatStudentId);
+   const cards="<div class='card'><h3>O‘quvchilar bilan suhbat</h3><p class='sub'>Sizga biriktirilgan guruhlar va ruxsat etilgan o‘quvchilar.</p><input class='input' id='chatStudentSearch' maxlength='80' placeholder='O‘quvchi ismi yoki QADAM ID'><div id='chatStudentContacts'>"+(students.length?students.map(x=>"<button class='msg-contact' type='button' data-chat-student='"+esc(x.id)+"'><span class='msg-avatar'>"+esc((x.full_name||'?').slice(0,1))+"</span><span><strong>"+esc(x.full_name)+"</strong><small>"+esc(x.qadam_id||'')+" · "+esc((x.groups||[]).join(', '))+"</small></span></button>").join(''):"<p class='sub'>Hozircha guruhingizda o‘quvchilar mavjud emas.</p>")+"</div></div>";
+   let conversation='';
+   if(chosen){
+     const data=await api('/staff/ops/office-student-chat-list',{student_id:chosen.id}),messages=data.messages||[];
+     conversation="<div class='card'><div class='msg-grouphead'><div class='msg-avatar'>"+esc((chosen.full_name||'?').slice(0,1))+"</div><div><strong>"+esc(chosen.full_name)+"</strong><p class='sub'>"+esc(chosen.qadam_id||'')+" · "+esc((chosen.groups||[]).join(', '))+"</p></div></div><div class='msg-scroll'>"+(messages.length?messages.map(m=>"<div class='msg-bubble "+(m.is_mine?'mine':'')+"'><div>"+esc(m.message)+"</div><div class='msg-time'>"+esc(new Date(m.created_at).toLocaleString('uz-UZ'))+"</div></div>").join(''):"<div class='empty'>Hali xabar yo‘q.</div>")+"</div><form class='msg-compose' id='studentStaffSend'><input class='input' maxlength='2000' required name='message' placeholder='O‘quvchiga yozing...'><button class='btn' type='submit'>➤</button></form><button class='btn alt small' id='refreshMessages' type='button'>Yangilash</button></div>";
+   }
+   inject('Chat',tabs+cards+conversation+(r.truncated?"<div class='notice'>Ro‘yxatda 1000 tagacha o‘quvchi ko‘rsatiladi.</div>":""));
+   document.querySelectorAll('[data-chat-student]').forEach(btn=>btn.onclick=()=>{state.selectedChatStudentId=btn.dataset.chatStudent;navigate('messenger')});
+   $('chatStudentSearch').oninput=e=>{const q=String(e.target.value||'').toLowerCase();document.querySelectorAll('[data-chat-student]').forEach(btn=>{const s=students.find(x=>x.id===btn.dataset.chatStudent);btn.style.display=s&&[s.full_name,s.qadam_id].some(v=>String(v||'').toLowerCase().includes(q))?'flex':'none'})};
+   if($('studentStaffSend'))formHandler('studentStaffSend',async d=>{await api('/staff/ops/office-student-chat-send',{student_id:chosen.id,message:String(d.get('message')||'').trim()})});
  }else{
    const threads=await api('/staff/ops/office-direct-threads');
    const people=threads.contacts||[],chosen=people.find(x=>x.id===state.directStaffId);
@@ -440,6 +455,7 @@ if(tab==='messenger'){
  }
  $('modePrivate').onclick=()=>{state.messengerMode='private';navigate('messenger')};
  $('modeGroup').onclick=()=>{state.messengerMode='group';navigate('messenger')};
+ if($('modeStudents'))$('modeStudents').onclick=()=>{state.messengerMode='student';navigate('messenger')};
  if($('refreshMessages'))$('refreshMessages').onclick=()=>navigate('messenger');
  return;
 }
