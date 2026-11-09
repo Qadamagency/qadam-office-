@@ -148,7 +148,7 @@ const MENU_GROUPS=[
  {id:'finance',title:'Moliya',desc:'Oylik, to‘lovlar, chek va Excel',icon:'finance',
   items:[['finance-dashboard','Moliyaviy dashboard','Kirim, chiqim va qarzdorlik'],['finance','Oyliklarni tasdiqlash','Owner uchun hisob-kitoblar'],['salary-accounting','Oylik va cheklar','Rekvisit, chek va to‘lovlar'],['finance-groups','Guruhlar moliyasi','Ustozlar va yordamchilar ulushi'],['salary-bulk','Ommaviy oylik','Barcha xodimlar oyligi'],['salary-import','Excel import','Excel orqali maosh rejalari'],['salary-supervision','Oyliklar nazorati','Direktor tekshiruvi'],['salary-confirm','Mening oyligim','Oylikni oldim/olmadim']]},
  {id:'people',title:'Xodimlar',desc:'Jamoa, kadrlar va vazifalar',icon:'employees',
-  items:[['employees','Xodimlar','Xodimlar kartasi va roli'],['tasks','Vazifalar','Topshiriqlarni boshqarish'],['my-attendance','Mening davomatim','Kelish va ketishni belgilash'],['attendance','Jamoa davomati','Xodimlar ishtiroki']]},
+  items:[['employees','Xodimlar','Xodimlar kartasi va roli'],['tasks','Vazifalar','Topshiriqlarni boshqarish'],['my-attendance','Mening davomatim','Kelish va ketishni belgilash'],['attendance','Jamoa davomati','Xodimlar ishtiroki'],['hr-attendance','Kechikish va kelmaganlar','Jadval asosidagi davomat nazorati'],['my-leaves','Mening ta’tilim','Ta’tilga ariza yuborish'],['leave-management','Ta’til so‘rovlari','HR tavsiyasi va Owner qarori'],['performance','Xodimlar natijalari','Direktorning vazifalar nazorati']]},
  {id:'education',title:'O‘quv jarayoni',desc:'Guruhlar, darslar va ustozlar',icon:'education',
   items:[['education','Guruhlar va darslar','O‘quv jarayonini boshqarish']]},
  {id:'sales',title:'Sotuv va CRM',desc:'Mijozlar, savdo va kuzatuv',icon:'crm',
@@ -161,13 +161,13 @@ const MENU_GROUPS=[
   items:[['audit','Tizim auditi','Lavozimlar va harakatlar']]}
 ];
 function roleRoutes(role){
- const base=['home','sections','profile','chat','notifications','salary-confirm','tasks','my-attendance'];
+ const base=['home','sections','profile','chat','notifications','salary-confirm','tasks','my-attendance','my-leaves'];
 
- if(role==='owner')return new Set([...base,'employees','employee-card','crm','education','finance','marketing','attendance','audit','salary-accounting','salary-supervision','finance-dashboard','salary-bulk','salary-import','finance-groups']);
- if(role==='director')return new Set([...base,'employees','education','salary-supervision','finance-dashboard']);
+ if(role==='owner')return new Set([...base,'hr-attendance','leave-management','performance','employees','employee-card','crm','education','finance','marketing','attendance','audit','salary-accounting','salary-supervision','finance-dashboard','salary-bulk','salary-import','finance-groups']);
+ if(role==='director')return new Set([...base,'hr-attendance','leave-management','performance','employees','education','salary-supervision','finance-dashboard']);
  if(role==='administrator')return new Set([...base,'education','group-members']);
  if(role==='education_manager')return new Set([...base,'education']);
- if(role==='hr')return new Set([...base,'employees','attendance']);
+ if(role==='hr')return new Set([...base,'employees','attendance','hr-attendance','leave-management']);
  if(role==='accountant')return new Set([...base,'finance','salary-accounting','finance-groups','finance-dashboard','salary-bulk','salary-import']);
  if(role==='sales')return new Set([...base,'crm']);
  if(['marketing','editor','targetologist'].includes(role))return new Set([...base,'marketing']);
@@ -188,10 +188,10 @@ function quickRoutes(){
  const role=state.user?.role;
  const priorities={
  owner:['finance-dashboard','salary-supervision','employees','tasks','audit','crm'],
- director:['salary-supervision','tasks','my-attendance','finance-dashboard'],
+ director:['performance','hr-attendance','tasks','salary-supervision'],
  administrator:['education','tasks','my-attendance','notifications'],
  education_manager:['education','tasks','notifications'],
- hr:['employees','attendance','my-attendance','tasks'],
+ hr:['hr-attendance','leave-management','employees','tasks'],
  accountant:['salary-accounting','finance-dashboard','my-attendance','salary-bulk'],
  teacher:['education','tasks','my-attendance','salary-confirm'],
  assistant_teacher:['education','tasks','my-attendance','salary-confirm'],
@@ -200,8 +200,8 @@ function quickRoutes(){
  editor:['marketing','tasks','notifications'],
  targetologist:['marketing','tasks','notifications']
  };
- const labels={'my-attendance':'Mening davomatim',finance:'Moliya',employees:'Xodimlar',tasks:'Vazifalar',education:'Ta’lim',crm:'CRM',marketing:'Marketing',audit:'Audit','salary-supervision':'Oylik nazorati','finance-dashboard':'Moliyaviy hisobot','salary-accounting':'Oylik va cheklar','salary-bulk':'Oylik hisoblash','finance-groups':'Guruhlar moliyasi','salary-confirm':'Oylik tasdig‘i',notifications:'Xabarlar'};
- const icons={'my-attendance':'employees','finance-dashboard':'finance','salary-supervision':'finance','salary-accounting':'finance','salary-bulk':'finance','finance-groups':'finance','salary-confirm':'finance',notifications:'tasks'};
+ const labels={'performance':'Xodimlar natijalari','hr-attendance':'Davomat nazorati','leave-management':'Ta’til so‘rovlari','my-leaves':'Mening ta’tilim','my-attendance':'Mening davomatim',finance:'Moliya',employees:'Xodimlar',tasks:'Vazifalar',education:'Ta’lim',crm:'CRM',marketing:'Marketing',audit:'Audit','salary-supervision':'Oylik nazorati','finance-dashboard':'Moliyaviy hisobot','salary-accounting':'Oylik va cheklar','salary-bulk':'Oylik hisoblash','finance-groups':'Guruhlar moliyasi','salary-confirm':'Oylik tasdig‘i',notifications:'Xabarlar'};
+ const icons={'performance':'employees','hr-attendance':'employees','leave-management':'employees','my-leaves':'employees','my-attendance':'employees','finance-dashboard':'finance','salary-supervision':'finance','salary-accounting':'finance','salary-bulk':'finance','finance-groups':'finance','salary-confirm':'finance',notifications:'tasks'};
  return (priorities[role]||['tasks','salary-confirm']).filter(id=>state.allowedRoutes.has(id)).slice(0,4)
    .map(id=>({id,title:labels[id]||id,desc:visibleGroups().find(g=>g.items.some(x=>x[0]===id))?.title||'Tezkor kirish',icon:icons[id]||id}));
 }
@@ -793,6 +793,52 @@ if(tab==='finance'){
  return;
 }
 if(tab==='marketing'){const r=await api('/marketing/dashboard');inject('Marketing',`<div class="grid">${count((r.campaigns||[]).length,'Kampaniyalar')}${count((r.content||[]).length,'Kontentlar')}${count((r.gifts||[]).length,'Sovg‘alar')}${count((r.orders||[]).length,'Buyurtmalar')}</div><div class="card"><h3>Kampaniyalar</h3>${list(r.campaigns,x=>`<strong>${esc(x.name)} <span class="pill">${esc(x.status)}</span></strong><div class="sub">${esc(x.channel)} • ${Number(x.spent_uzs||0).toLocaleString('uz-UZ')} so‘m sarf</div>`)}</div><div class="card"><h3>Kontent</h3>${list(r.content,x=>`<strong>${esc(x.title)}</strong><div class="sub">${esc(x.channel)} • ${esc(x.status)}</div>`)}</div>`);return;}
+
+if(tab==='my-leaves'){
+ const r=await api('/staff/my-leaves'),items=r.requests||[];
+ const kinds={annual:"Yillik ta’til",unpaid:"Ish haqi saqlanmagan",sick:"Kasallik",other:"Boshqa"};
+ inject('Mening ta’tilim',`<div class="card"><h3>Yangi ta’til arizasi</h3><form class="stack" id="leaveRequest"><label>Ta’til turi</label><select class="input" name="leave_type" required><option value="annual">Yillik ta’til</option><option value="unpaid">Ish haqi saqlanmagan</option><option value="sick">Kasallik</option><option value="other">Boshqa</option></select><label>Boshlanish sanasi</label><input type="date" class="input" name="starts_on" required><label>Tugash sanasi</label><input type="date" class="input" name="ends_on" required><textarea class="input" name="reason" maxlength="1000" placeholder="Ta’til sababi (ixtiyoriy)"></textarea><button class="btn">Ta’til arizasini yuborish</button></form><p class="sub">HR tavsiya beradi, yakuniy qarorni Owner qabul qiladi.</p></div><div class="card"><h3>Mening arizalarim</h3>${list(items,x=>`<strong>${esc(kinds[x.leave_type]||x.leave_type)} <span class="pill">${esc(x.status)}</span></strong><div class="sub">${esc(x.starts_on)} — ${esc(x.ends_on)}</div>${x.review_note?`<p class="sub">Izoh: ${esc(x.review_note)}</p>`:''}${x.status==='pending'?`<button class="btn small alt" type="button" data-leave-cancel="${esc(x.id)}">Bekor qilish</button>`:''}`)}</div>`);
+ formHandler('leaveRequest',async d=>{if(String(d.get('starts_on'))>String(d.get('ends_on')))throw Error('Ta’til sanalarini tekshiring');await api('/staff/leave-request',{leave_type:d.get('leave_type'),starts_on:d.get('starts_on'),ends_on:d.get('ends_on'),reason:d.get('reason')})});
+ document.querySelectorAll('[data-leave-cancel]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{if(!confirm('Arizani bekor qilasizmi?'))return;await api('/staff/leave-cancel',{request_id:btn.dataset.leaveCancel});await navigate('my-leaves')}));
+ return;
+}
+if(tab==='hr-attendance'){
+ if(!['owner','hr','director'].includes(state.user.role))throw Error('Davomat nazorati huquqi yo‘q');
+ const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tashkent',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+ const parts=k=>today.find(x=>x.type===k)?.value||'';
+ const todayStr=parts('year')+'-'+parts('month')+'-'+parts('day');
+ const fromDefault=todayStr.slice(0,7)+'-01';
+ const from=state.hrAttendanceFrom||fromDefault,to=state.hrAttendanceTo||todayStr;
+ const r=await api('/staff/ops/hr-attendance-report',{from,to}),items=r.rows||[];
+ const fmt=x=>Number(x||0).toLocaleString('uz-UZ');
+ const absent=items.reduce((v,x)=>v+x.absent,0),late=items.reduce((v,x)=>v+x.late,0);
+ inject('Davomat nazorati',`<div class="card"><h3>Hisobot davri</h3><form id="hrAttendanceDates" class="stack"><label>Dan</label><input name="from" type="date" class="input" required value="${esc(from)}"><label>Gacha</label><input name="to" type="date" class="input" required value="${esc(to)}"><button class="btn alt">Ko‘rsatish</button></form><div class="grid">${count(fmt(items.length),'Faol xodimlar')}${count(fmt(late),'Kechikishlar')}${count(fmt(absent),'Kelmagan kunlar')}${count(fmt(r.no_schedule_count),'Jadvalsiz xodimlar')}</div></div><div class="card"><h3>Xodimlar davomati</h3>${list(items,x=>`<strong>${esc(x.full_name)} <span class="pill">${esc(roles[x.role]||x.role)}</span></strong><div class="sub">Ish kunlari: ${x.scheduled} · Kelgan: ${x.present} · Kechikkan: ${x.late} · Kelmagan: ${x.absent}</div><div class="sub">Tasdiqlangan ta’til: ${x.approved_leave} · Hali tugamagan smena: ${x.open_shifts}</div>`)}</div><div class="notice">${(r.warnings||[]).map(esc).join(' ')}</div>${r.truncated?'<div class="notice">Ma’lumotlar soni cheklangan, to‘liq audit uchun davrni qisqartiring.</div>':''}`);
+ $('hrAttendanceDates').addEventListener('submit',ev=>submit(ev,async()=>{const d=new FormData($('hrAttendanceDates'));state.hrAttendanceFrom=String(d.get('from'));state.hrAttendanceTo=String(d.get('to'));await navigate('hr-attendance')}));
+ return;
+}
+if(tab==='leave-management'){
+ if(!['owner','hr','director'].includes(state.user.role))throw Error('Ta’til boshqaruviga ruxsat yo‘q');
+ const r=await api('/staff/ops/hr-leave-list'),items=r.requests||[],ownerLeave=state.user.role==='owner',hrLeave=['owner','hr'].includes(state.user.role);
+ inject('Ta’til so‘rovlari',`<div class="grid">${count(items.length,'Jami arizalar')}${count(items.filter(x=>x.status==='pending').length,'Javob kutilmoqda')}${count(items.filter(x=>x.status==='approved').length,'Tasdiqlangan')}${count(items.filter(x=>x.status==='rejected').length,'Rad etilgan')}</div><div class="card"><h3>Arizalar</h3>${list(items,x=>`<strong>${esc(x.employee_name)} <span class="pill">${esc(x.status)}</span></strong><div class="sub">${esc(x.leave_type)} · ${esc(x.starts_on)} — ${esc(x.ends_on)}</div>${x.reason?`<div class="sub">Sabab: ${esc(x.reason)}</div>`:''}${x.hr_recommendation?`<div class="sub">HR tavsiyasi: ${esc(x.hr_recommendation.recommendation)} · ${esc(x.hr_recommendation.note)}</div>`:''}${x.review_note?`<div class="sub">Owner izohi: ${esc(x.review_note)}</div>`:''}${x.status==='pending'&&hrLeave?`<button class="btn small alt" data-leave-recommend="${esc(x.id)}" type="button">HR tavsiyasi</button>`:''}${x.status==='pending'&&ownerLeave?`<div class="actions"><button class="btn small" type="button" data-leave-decide="${esc(x.id)}" data-decision="approved">Tasdiqlash</button><button class="btn small alt" type="button" data-leave-decide="${esc(x.id)}" data-decision="rejected">Rad etish</button></div>`:''}`)}</div>`);
+ document.querySelectorAll('[data-leave-recommend]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{
+ const decision=prompt('HR tavsiyasi: tasdiqlash uchun approve, rad uchun reject yozing','approve');if(decision===null)return;
+ if(!['approve','reject'].includes(decision.trim()))throw Error('approve yoki reject kiriting');
+ const note=prompt('Tavsiya izohi (kamida 3 belgi)','');if(note===null)return;
+ await api('/staff/ops/hr-leave-recommend',{request_id:btn.dataset.leaveRecommend,recommendation:decision.trim(),note:note.trim()});
+ await navigate('leave-management')}));
+ document.querySelectorAll('[data-leave-decide]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{
+ const note=prompt('Owner qarori izohi (ixtiyoriy)','');if(note===null)return;
+ if(!confirm('Ta’til arizasi bo‘yicha yakuniy qarorni tasdiqlaysizmi?'))return;
+ await api('/owner/leave-review',{request_id:btn.dataset.leaveDecide,status:btn.dataset.decision,review_note:note.trim()});
+ await navigate('leave-management')}));
+ return;
+}
+if(tab==='performance'){
+ if(!['owner','director'].includes(state.user.role))throw Error('Direktor ruxsati yo‘q');
+ const r=await api('/staff/ops/director-performance'),items=r.rows||[];
+ inject('Xodimlar natijalari',`<div class="grid">${count(items.length,'Xodimlar')}${count(items.reduce((v,x)=>v+x.total,0),'Vazifalar')}${count(items.reduce((v,x)=>v+x.completed,0),'Yakunlangan')}${count(items.reduce((v,x)=>v+x.overdue,0),'Muddati o‘tgan')}</div><div class="card"><h3>Vazifalar bo‘yicha natijalar</h3>${list(items,x=>`<strong>${esc(x.full_name)} <span class="pill">${esc(roles[x.role]||x.role)}</span></strong><div class="sub">Jami: ${x.total} · Yakunlandi: ${x.completed} · Bajarilmoqda: ${x.in_progress} · Tekshiruvda: ${x.review}</div><div class="sub">Kechikkan vazifalar: ${x.overdue} · Bajarilish darajasi: ${x.completion_percent===null?'Ma’lumot yo‘q':x.completion_percent+'%'}</div>`)}</div><div class="notice">${esc(r.note||'')} ${r.truncated?'Hisobot ma’lumotlari cheklangan.':''}</div>`);
+ return;
+}
 if(tab==='attendance'){
  if(!['owner','hr'].includes(state.user.role))throw Error('Davomat uchun ruxsat yo‘q');
  const r=await api('/staff/ops/staff-attendance');
