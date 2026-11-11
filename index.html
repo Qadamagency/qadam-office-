@@ -723,10 +723,14 @@ if(tab==='home'&&state.user.role==='director'){
  return;
 }
 if(tab==='home'){if(owner){
+ // Show shell immediately; finance and staff data still come from live authorized API calls.
+ const ownerRenderSeq=state.navSeq;
+ inject('Owner boshqaruv paneli','<div class="hero q90-hero"><div><span class="tag">QADAM AKADEMIYA • OWNER</span><h1>Assalomu alaykum!</h1><p class="lead">Hisobot ma’lumotlari yuklanmoqda...</p></div><div class="q90-symbol" aria-hidden="true">Q</div></div><div class="grid"><div class="metric"><span class="spin"></span><span> Xodimlar</span></div><div class="metric"><span class="spin"></span><span> Guruhlar</span></div></div><div class="card"><h3>Moliyaviy ko‘rsatkichlar</h3><span class="spin"></span><p class="sub">Serverdan yangilanmoqda...</p></div>');
  const results=await Promise.allSettled([
   api('/owner/overview'),
   api('/owner/executive-dashboard',{from:localDate(-30),to:localDate()})
  ]);
+ if(ownerRenderSeq!==state.navSeq||state.current!=='home')return;
  const overview=results[0].status==='fulfilled'?results[0].value:null;
  const report=results[1].status==='fulfilled'?results[1].value:null;
  const stats=overview?.stats||{},fin=report?.derived||{};
