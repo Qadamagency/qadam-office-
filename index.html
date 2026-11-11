@@ -154,6 +154,40 @@ html,body{background:linear-gradient(160deg,#fff 0%,#faf8ff 34%,#f6f2ff 100%);co
 .q90-quick .hub-card{background:#fff}
 @media(max-width:600px){.shell{padding:12px 12px 115px}.card{padding:16px}.hero{padding:20px 17px}.hero h1{font-size:23px}.q90-stat-grid{gap:9px}.q90-stat-grid .metric{padding:13px 11px}#cabinet .nav{background:#fffffffa!important;border-top:1px solid #ede5f7!important;box-shadow:0 -6px 24px #592e8914!important}#cabinet .nav button{min-height:61px!important}}
 @media(prefers-reduced-motion:reduce){.btn{transition:none}}
+</style><style>
+/* v90 reference: light lilac mobile dashboard, real cards and photo-based chats */
+:root{--bg:#f8f7fd;--panel:#fff;--panel2:#f5f1ff;--border:#e9e3f4;--text:#171426;--muted:#756e86;--accent:#8344dc}
+body,html{background:linear-gradient(160deg,#fdfcff,#f5f0ff);color:var(--text)}
+#cabinet .bar .top{background:#fff!important;border:1px solid #ede7f7!important;box-shadow:0 8px 27px #4d278014!important}
+#cabinet .top .brand-office{color:#7035c9;border-color:#ded0f6}
+.official-logo{filter:invert(1)}
+.card,.metric,.hub-card,.tg-list{background:#fff!important;border:1px solid #ede7f5!important;border-radius:19px!important;box-shadow:0 6px 20px #533a8710!important}
+.title{color:#211536;font-size:22px;letter-spacing:-.6px}
+.btn{background:linear-gradient(120deg,#a267ee,#7334ce)!important;color:#fff!important;border:0!important;box-shadow:0 4px 10px #8a4dd526!important}
+.btn.alt,.btn.line{background:#f5f0fc!important;color:#6f3bc1!important;border:1px solid #e8dcf8!important;box-shadow:none!important}
+.hero.q90-hero,.hero{background:linear-gradient(125deg,#b989f1,#7941d0)!important;box-shadow:0 14px 30px #7547b62a!important}
+.hero:after{border-color:#ffffff22}
+.tag,.pill{color:#7131c6;background:#f3eaff;border-color:#eadcf9}
+.hub-icon{background:#f4ecff;color:#803ddd}
+.hub-card{align-items:center;min-height:92px}
+.hub-card-body strong{color:#271b3a}
+.metric strong{color:#6832bb}
+.tabs button.active,.msg-tabs .btn:not(.alt){background:linear-gradient(120deg,#ac73ee,#7940d1)!important;color:#fff!important}
+#cabinet .nav{border:1px solid #ece4f9!important;background:#fffffff5!important;box-shadow:0 -8px 30px #7147ad17!important}
+#cabinet .nav button.active{background:#f2e8ff!important;color:#6f2fc9!important}
+.input,.tg-search{background:#f8f6fc!important;border-color:#e9e2f4!important;color:#241a37!important}
+.tg-contact{background:#fff!important;border-bottom:1px solid #f0ebf6}
+.tg-contact:hover{background:#faf7ff!important}
+.tg-unread{background:#8544df}
+.msg-avatar{overflow:hidden;background:linear-gradient(135deg,#dec6ff,#9561e1)!important;color:#4a1886!important;font-weight:800}
+.msg-avatar img{width:100%;height:100%;display:block;object-fit:cover}
+.tg-message-area{background-color:#f4effb;background-image:radial-gradient(#e1d4f25c 1.3px,transparent 1.3px);background-size:25px 25px}
+.tg-bubble.mine{background:#e7d2ff}
+.msg-compose button{background:linear-gradient(130deg,#a76bec,#7939ce)!important}
+.q90-live-toast{position:fixed;z-index:101;top:calc(12px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);width:min(92%,430px);background:#fff;border:1px solid #dccbf4;border-left:4px solid #8344dc;border-radius:15px;padding:13px 14px;box-shadow:0 12px 35px #2f175133;display:flex;gap:12px;align-items:center;color:#271a36;cursor:pointer;text-align:left}
+.q90-live-toast strong{display:block;font-size:13px}.q90-live-toast small{font-size:12px;color:#6d627c}
+#q90-notice-counter{background:#8b45e0;color:#fff;min-width:18px;height:18px;display:inline-grid;place-items:center;border-radius:18px;font-size:10px;padding:0 4px;margin-left:4px}
+@media(max-width:600px){.shell{padding-left:12px;padding-right:12px}.hub-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.hub-card{min-height:105px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12px 6px}.hub-icon{width:35px;height:35px;flex:0 0 35px}.hub-card-body{align-items:center}.hub-card-body small,.hub-chevron{display:none}.hub-card-body strong{font-size:11px;line-height:1.25}#cabinet .nav button{font-size:10px!important}.tg-list{padding-top:8px}}
 </style></head><body><main class="shell" id="root"><div class="top"><div class="brand"><img class="official-logo" src="./assets/qadam-logo.svg" alt="QADAM Akademiya"> <span class="brand-office">OFFICE</span></div><span class="pill">QADAM OFFICE</span></div><section id="banner" class="notice hidden" role="alert"></section><div id="loading" class="card"><span class="spin"></span> <span id="loadingText">Mini App ishga tushirilmoqda...</span></div><div id="auth" class="hidden"><div id="tgHelp" class="notice hidden"><strong>Telegram ulanishi aniqlanmadi.</strong><p>QADAM OFFICE Bot 2 ichida /start yuboring va yangi 🔐 Kirish tugmasidan oching.</p><button type="button" class="btn alt small" id="retryTelegram">Qayta tekshirish</button><p class="tiny" id="tgDiagnostics"></p></div><div class="hero"><span class="tag">QADAM AKADEMIYA • OFFICE</span><h1>Xodim kabinetiga kirish</h1><p class="lead">Telegram orqali himoyalangan kirish. Xodim ID, parol va 6 xonali PIN talab qilinadi.</p></div><div class="tabs"><button id="tabLogin" class="active" data-screen="login">Kirish</button><button id="tabActivate" data-screen="activate">Xodim faollashtirish</button><button id="tabOwner" class="hidden" data-screen="owner">Owner birinchi kirish</button></div><div class="card" id="screenLogin"><form id="loginForm"><div class="field"><label for="empCode">Xodim ID</label><input class="input" id="empCode" required autocomplete="username" placeholder="Masalan: NMV007" maxlength="16"></div><div class="field"><label for="empPass">Parol</label><input class="input" id="empPass" required type="password" autocomplete="current-password" placeholder="Parolingiz" maxlength="128"></div><button class="btn full" type="submit">Kirish →</button></form></div><div class="card hidden" id="screenActivate"><h2 class="title">Xodimni faollashtirish</h2><p class="lead">Avval Xodim ID orqali Ownerga tasdiqlash so‘rovini yuboring. Owner shaxsingizni tekshirganidan keyin faollashtirish kodini beradi.</p><form id="activationRequestForm" class="stack"><div class="field"><label for="requestEmployeeCode">Xodim ID</label><input class="input" id="requestEmployeeCode" name="code" required maxlength="16" placeholder="Masalan: SL007"></div><button class="btn alt full" type="submit">Ownerga tasdiqlash so‘rovi yuborish</button></form><div class="notice">Owner tasdiqlamaguncha akkaunt faollashmaydi. Tasdiqdan keyin Ownerdan kodni olib, quyidagi maydonlarni to‘ldiring.</div><form id="activateForm"><div class="field"><label>Xodim ID</label><input class="input" name="code" required></div><div class="field"><label>Faollashtirish kodi</label><input class="input" name="activation" required autocomplete="off" maxlength="8" minlength="8" pattern="[A-Za-z0-9]{8}" autocapitalize="characters" placeholder="8 belgili kod (harf + raqam)" style="text-transform:uppercase"></div><div class="field"><label>Yangi parol (kamida 12 belgi)</label><input class="input" type="password" name="password" minlength="12" required></div><button class="btn full">Faollashtirish</button></form></div><div class="card hidden" id="screenOwner"><h2 class="title">Owner akkauntini birinchi marta faollashtirish</h2><p class="lead">Faqat server belgilagan Owner Telegram akkauntida, bir martalik sozlash uchun.</p><form id="ownerForm"><div class="field"><label>Yangi parol (kamida 12 belgi)</label><input class="input" name="password" type="password" minlength="12" required></div><div class="field"><label>Parolni takrorlang</label><input class="input" name="confirm_password" type="password" minlength="12" required></div><button class="btn full">Owner parolini o‘rnatish</button></form></div></div><section id="mfa" class="hidden"><div class="hero"><span class="tag">2-BOSQICH</span><h1>6 xonali PIN</h1><p id="mfaDesc" class="lead">Tasdiqlash...</p></div><div class="card"><form id="pinForm"><div class="field"><label>PIN kod</label><input class="input" id="pin" type="password" inputmode="numeric" autocomplete="one-time-code" maxlength="6" minlength="6" pattern="[0-9]{6}" required placeholder="● ● ● ● ● ●"></div><div id="confirmPinField" class="field hidden"><label>PIN kodni takrorlang</label><input class="input" id="pinConfirm" type="password" inputmode="numeric" maxlength="6" pattern="[0-9]{6}"></div><button class="btn full" type="submit">Tasdiqlash →</button></form><button id="backLogin" class="btn line full" style="margin-top:10px">Kirishga qaytish</button></div></section><section id="cabinet" class="hidden"><div class="bar"><div class="top"><div><div class="tag">QADAM OFFICE • STAFF</div><div style="font-weight:800;font-size:20px" id="who">Kabinet</div><span class="sub" id="role"></span></div><button class="btn line small" id="logout">Chiqish</button></div></div><div class="nav" id="nav" aria-label="Bo‘limlar"></div><div id="section" aria-live="polite"></div></section><p class="foot">QADAM OFFICE • xavfsiz Telegram Mini App • v55</p></main>
 <script>
 'use strict';
@@ -276,10 +310,43 @@ function quickRoutes(){
    .map(id=>({id,title:labels[id]||id,desc:visibleGroups().find(g=>g.items.some(x=>x[0]===id))?.title||'Tezkor kirish',icon:icons[id]||id}));
 }
 function renderMainNav(){
- const nav=[['home','Bosh sahifa'],['sections','Bo‘limlar'],['messenger','Chat'],['notifications','Xabarlar'],['profile','Profil']];
+ const preferred=state.user?.role==='owner'?[['home','Asosiy'],['finance','Moliya'],['employees','Xodimlar'],['messenger','Chat'],['profile','Profil']]:[['home','Asosiy'],['sections','Bo‘limlar'],['messenger','Chat'],['notifications','Xabarlar'],['profile','Profil']];
+ const nav=preferred.filter(([id])=>state.allowedRoutes?.has(id));
  $('nav').innerHTML=nav.map(([id,label])=>`<button type="button" data-nav="${id}" aria-label="${label}"><span class="nav-ico">${navIcon(id)}</span><span>${label}</span></button>`).join('');
  $('nav').querySelectorAll('[data-nav]').forEach(button=>button.addEventListener('click',()=>navigate(button.dataset.nav)));
 }
+// Foreground-only alerts. Telegram push notifications require a separate server-side bot sender.
+let q90PollHandle=null,q90KnownIds=null,q90PollBusy=false;
+function q90Toast(title,body){
+ document.getElementById('q90LiveToast')?.remove();
+ const el=document.createElement('button');el.type='button';el.id='q90LiveToast';el.className='q90-live-toast';
+ el.innerHTML='<span aria-hidden="true">🔔</span><span><strong>'+esc(title)+'</strong><small>'+esc(body)+'</small></span>';
+ el.onclick=()=>{el.remove();navigate('notifications')};
+ document.body.appendChild(el);setTimeout(()=>el.remove(),7000);
+}
+async function q90RefreshUnread(){
+ if(!state.user||q90PollBusy||document.hidden)return;
+ q90PollBusy=true;
+ try{
+  const result=await api('/staff/ops/notifications',{},10000);
+  const items=Array.isArray(result.notifications)?result.notifications:[];
+  const unread=items.filter(x=>!x.read_at);
+  const ids=new Set(unread.map(x=>String(x.id)));
+  const prev=q90KnownIds;q90KnownIds=ids;
+  const nav=document.querySelector('[data-nav="notifications"]');
+  if(nav){nav.querySelector('#q90-notice-counter')?.remove();
+   if(unread.length){const badge=document.createElement('span');badge.id='q90-notice-counter';badge.textContent=String(Math.min(99,unread.length));nav.appendChild(badge);}
+  }
+  if(prev){const newest=unread.find(x=>!prev.has(String(x.id)));if(newest){q90Toast(newest.title||'Yangi xabar',newest.body||'Bildirishnomani oching');try{window.Telegram?.WebApp?.HapticFeedback?.notificationOccurred('success')}catch{}}}
+ }catch(e){console.debug('Notification refresh unavailable',e?.message)}
+ finally{q90PollBusy=false}
+}
+function q90StartAlerts(){
+ if(q90PollHandle)clearInterval(q90PollHandle);
+ q90KnownIds=null;q90RefreshUnread();
+ q90PollHandle=setInterval(q90RefreshUnread,30000);
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&state.user)q90RefreshUnread()});
 async function enter(staff){
  state.user=staff;
  state.allowedRoutes=roleRoutes(staff.role);
@@ -287,6 +354,7 @@ async function enter(staff){
  $('role').textContent=(roles[staff.role]||staff.role)+' • '+staff.employee_code;
  show('cabinet');
  renderMainNav();
+ q90StartAlerts();
  if(staff.role!=='owner'){
    try{const check=await api('/staff/ops/profile-status');state.profileRequired=check.required&&!check.complete;}
    catch(e){state.profileRequired=true;notify('Profil tekshirilmadi. Shaxsiy profilni oching.');}
@@ -445,6 +513,13 @@ async function showPublicStaffProfile(staffId,host){
  const el=document.createElement('div');el.className='card msg-public-profile';
  el.innerHTML='<div class="msg-grouphead">'+(r.photo_signed_url?'<img src="'+esc(r.photo_signed_url)+'" alt="Profil rasmi" style="width:66px;height:66px;border-radius:50%;object-fit:cover">':'<div class="msg-avatar">'+esc(String(e.full_name||'?').slice(0,1))+'</div>')+'<div><h3>'+esc(e.full_name||'Xodim')+'</h3><p class="sub">'+esc(roles[e.role]||e.role)+' · '+esc(e.employee_code||'')+'</p></div></div><p class="sub">'+esc(p.position_title||'')+' '+esc(p.department||'')+'</p><p>'+esc(p.biography||'O‘zi haqida ma’lumot kiritilmagan')+'</p>';
  const old=host.querySelector('.msg-public-profile');if(old)old.remove();host.append(el);
+}
+function q90Avatar(person){
+ const name=String(person?.full_name||person?.name||'?');
+ const initial=esc(name.trim().slice(0,1).toUpperCase()||'?');
+ const src=person?.photo_signed_url||person?.avatar_url||person?.photo_url||'';
+ const image=typeof src==='string'&&/^https:\/\//i.test(src)?'<img loading="lazy" referrerpolicy="no-referrer" alt="" src="'+esc(src)+'">':'';
+ return '<span class="msg-avatar" aria-label="'+esc(name)+'">'+(image||initial)+'</span>';
 }
 function chatClock(date){try{return new Date(date).toLocaleTimeString('uz-UZ',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Tashkent'})}catch{return ''}}
 function chatDay(date){try{return new Date(date).toLocaleDateString('uz-UZ',{day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Tashkent'})}catch{return ''}}
