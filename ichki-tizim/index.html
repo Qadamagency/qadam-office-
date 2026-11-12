@@ -284,7 +284,7 @@ body,html{background:linear-gradient(160deg,#fdfcff,#f5f0ff);color:var(--text)}
 #auth .qweb-switch button[aria-selected="true"]{background:#fff;box-shadow:0 2px 8px #522d7514;color:#7c3ac8}
 @media(max-width:460px){#auth .qweb-buttons{grid-template-columns:1fr}#auth .hero h1{font-size:23px!important}}
 @media(min-width:960px){body:has(#auth:not(.hidden)) .shell{padding:24px 28px 52px!important;max-width:640px!important;margin:auto!important}body:has(#auth:not(.hidden)) #root>.top{position:static;width:auto;border:0;padding:12px 0!important}body:has(#auth:not(.hidden)) #auth{margin:45px auto!important}}
-</style></head><body><main class="shell" id="root"><div class="top"><div class="brand"><img class="official-logo" src="../assets/qadam-logo.svg" alt="QADAM Akademiya"> <span class="brand-office">OFFICE</span></div><span class="pill">QADAM OFFICE</span></div><section id="banner" class="notice hidden" role="alert"></section><div id="loading" class="card"><span class="spin"></span> <span id="loadingText">Mini App ishga tushirilmoqda...</span></div><div id="auth" class="hidden"><div id="tgHelp" class="notice hidden"><strong>Telegram ulanishi aniqlanmadi.</strong><p>Ichki tizim brauzer loginini xavfsiz server autentifikatsiyasi bilan ulash kerak. Ungacha 2-botni Telegram Desktop ichida oching.</p><button type="button" class="btn alt small" id="retryTelegram">Qayta tekshirish</button><p class="tiny" id="tgDiagnostics"></p></div><div class="hero"><span class="tag">QADAM AKADEMIYA • OFFICE</span><h1>Xodim kabinetiga kirish</h1><p class="lead">Telegram orqali himoyalangan kirish. Xodim ID, parol va 6 xonali PIN talab qilinadi.</p></div><div class="tabs"><button id="tabLogin" class="active" data-screen="login">Kirish</button><button id="tabActivate" data-screen="activate">Xodim faollashtirish</button><button id="tabOwner" class="hidden" data-screen="owner">Owner birinchi kirish</button></div><div class="card" id="screenLogin"><form id="loginForm"><div class="field"><label for="empCode">Xodim ID</label><input class="input" id="empCode" required autocomplete="username" placeholder="Masalan: NMV007" maxlength="16"></div><div class="field"><label for="empPass">Parol</label><input class="input" id="empPass" required type="password" autocomplete="current-password" placeholder="Parolingiz" maxlength="128"></div><button class="btn full" type="submit">Kirish →</button></form>
+</style></head><body><main class="shell" id="root"><div class="top"><div class="brand"><img class="official-logo" src="../assets/qadam-logo.svg" alt="QADAM Akademiya"> <span class="brand-office">OFFICE</span></div><span class="pill">QADAM OFFICE</span></div><section id="banner" class="notice hidden" role="alert"></section><div id="loading" class="card"><span class="spin"></span> <span id="loadingText">Mini App ishga tushirilmoqda...</span></div><div id="auth" class="hidden"><div id="tgHelp" class="notice hidden"><strong>Telegram ulanishi aniqlanmadi.</strong><p>Xodim ID, parol va PIN orqali kirishingiz mumkin.</p><button type="button" class="btn alt small" id="retryTelegram">Qayta tekshirish</button><p class="tiny" id="tgDiagnostics"></p></div><div class="hero"><span class="tag">QADAM AKADEMIYA • OFFICE</span><h1>Ichki tizimga xush kelibsiz</h1><p class="lead">2-botdagi xodim ID, parol va 6 xonali PIN bilan kiring. Kirish haqida Telegramga xavfsizlik xabari yuboriladi.</p></div><div class="tabs"><button id="tabLogin" class="active" data-screen="login">Kirish</button><button id="tabActivate" data-screen="activate">Xodim faollashtirish</button><button id="tabOwner" class="hidden" data-screen="owner">Owner birinchi kirish</button></div><div class="card" id="screenLogin"><form id="loginForm"><div class="field"><label for="empCode">Xodim ID</label><input class="input" id="empCode" required autocomplete="username" placeholder="Masalan: NMV007" maxlength="16"></div><div class="field"><label for="empPass">Parol</label><input class="input" id="empPass" required type="password" autocomplete="current-password" placeholder="Parolingiz" maxlength="128"></div><button class="btn full" type="submit">Kirish →</button></form>
 <div class="qweb-or">yoki boshqa kirish usuli</div>
 <div class="qweb-buttons">
  <button class="qweb-choice" type="button" id="qwebTelegram" aria-label="Telegram orqali kirish"><svg viewBox="0 0 24 24" fill="#229ED9" aria-hidden="true"><path d="M22 3 2.6 10.6c-1.3.5-1.3 1.3-.2 1.7l5 1.6 2 6.1c.3.9.2 1.2 1.1 1.2.7 0 1-.3 1.5-.8l2.4-2.3 5 3.7c.9.5 1.6.3 1.9-.9L24 4.3C24.3 3 23.5 2.5 22 3Zm-2 3.5L9.7 16l-.4 3.5-1.7-5.1z"/></svg><span>Telegram orqali kirish</span></button>
@@ -292,11 +292,11 @@ body,html{background:linear-gradient(160deg,#fdfcff,#f5f0ff);color:var(--text)}
 </div>
 <div class="qweb-feedback hidden" id="qwebPanel" role="status" aria-live="polite"></div>
 <p class="qweb-safety-note">Xavfsizlik uchun kirish vaqti, qurilma/brauzer turi hamda taxminiy IP hududi qayd etilishi mumkin. Aniq GPS manzili olinmaydi. Faqat ruxsat etilgan xodim akkauntlari tizimga kira oladi.</p>
-</div><div class="card hidden" id="screenActivate"><h2 class="title">Xodimni faollashtirish</h2><p class="lead">Avval Xodim ID orqali Ownerga tasdiqlash so‘rovini yuboring. Owner shaxsingizni tekshirganidan keyin faollashtirish kodini beradi.</p><form id="activationRequestForm" class="stack"><div class="field"><label for="requestEmployeeCode">Xodim ID</label><input class="input" id="requestEmployeeCode" name="code" required maxlength="16" placeholder="Masalan: SL007"></div><button class="btn alt full" type="submit">Ownerga tasdiqlash so‘rovi yuborish</button></form><div class="notice">Owner tasdiqlamaguncha akkaunt faollashmaydi. Tasdiqdan keyin Ownerdan kodni olib, quyidagi maydonlarni to‘ldiring.</div><form id="activateForm"><div class="field"><label>Xodim ID</label><input class="input" name="code" required></div><div class="field"><label>Faollashtirish kodi</label><input class="input" name="activation" required autocomplete="off" maxlength="8" minlength="8" pattern="[A-Za-z0-9]{8}" autocapitalize="characters" placeholder="8 belgili kod (harf + raqam)" style="text-transform:uppercase"></div><div class="field"><label>Yangi parol (kamida 12 belgi)</label><input class="input" type="password" name="password" minlength="12" required></div><button class="btn full">Faollashtirish</button></form></div><div class="card hidden" id="screenOwner"><h2 class="title">Owner akkauntini birinchi marta faollashtirish</h2><p class="lead">Faqat server belgilagan Owner Telegram akkauntida, bir martalik sozlash uchun.</p><form id="ownerForm"><div class="field"><label>Yangi parol (kamida 12 belgi)</label><input class="input" name="password" type="password" minlength="12" required></div><div class="field"><label>Parolni takrorlang</label><input class="input" name="confirm_password" type="password" minlength="12" required></div><button class="btn full">Owner parolini o‘rnatish</button></form></div></div><section id="mfa" class="hidden"><div class="hero"><span class="tag">2-BOSQICH</span><h1>6 xonali PIN</h1><p id="mfaDesc" class="lead">Tasdiqlash...</p></div><div class="card"><form id="pinForm"><div class="field"><label>PIN kod</label><input class="input" id="pin" type="password" inputmode="numeric" autocomplete="one-time-code" maxlength="6" minlength="6" pattern="[0-9]{6}" required placeholder="● ● ● ● ● ●"></div><div id="confirmPinField" class="field hidden"><label>PIN kodni takrorlang</label><input class="input" id="pinConfirm" type="password" inputmode="numeric" maxlength="6" pattern="[0-9]{6}"></div><button class="btn full" type="submit">Tasdiqlash →</button></form><button id="backLogin" class="btn line full" style="margin-top:10px">Kirishga qaytish</button></div></section><section id="cabinet" class="hidden"><div class="bar"><div class="top"><div><div class="tag">QADAM OFFICE • STAFF</div><div style="font-weight:800;font-size:20px" id="who">Kabinet</div><span class="sub" id="role"></span></div><button class="btn line small" id="logout">Chiqish</button></div></div><div class="nav" id="nav" aria-label="Bo‘limlar"></div><div id="section" aria-live="polite"></div></section><p class="foot">QADAM OFFICE • Ichki tizim • umumiy maʼlumotlar bazasi</p></main>
+</div><div class="card hidden" id="screenActivate"><h2 class="title">Xodimni faollashtirish</h2><p class="lead">Avval Xodim ID orqali Ownerga tasdiqlash so‘rovini yuboring. Owner shaxsingizni tekshirganidan keyin faollashtirish kodini beradi.</p><form id="activationRequestForm" class="stack"><div class="field"><label for="requestEmployeeCode">Xodim ID</label><input class="input" id="requestEmployeeCode" name="code" required maxlength="16" placeholder="Masalan: SL007"></div><button class="btn alt full" type="submit">Ownerga tasdiqlash so‘rovi yuborish</button></form><div class="notice">Owner tasdiqlamaguncha akkaunt faollashmaydi. Tasdiqdan keyin Ownerdan kodni olib, quyidagi maydonlarni to‘ldiring.</div><form id="activateForm"><div class="field"><label>Xodim ID</label><input class="input" name="code" required></div><div class="field"><label>Faollashtirish kodi</label><input class="input" name="activation" required autocomplete="off" maxlength="8" minlength="8" pattern="[A-Za-z0-9]{8}" autocapitalize="characters" placeholder="8 belgili kod (harf + raqam)" style="text-transform:uppercase"></div><div class="field"><label>Yangi parol (kamida 12 belgi)</label><input class="input" type="password" name="password" minlength="12" required></div><button class="btn full">Faollashtirish</button></form></div><div class="card hidden" id="screenOwner"><h2 class="title">Owner akkauntini birinchi marta faollashtirish</h2><p class="lead">Faqat server belgilagan Owner Telegram akkauntida, bir martalik sozlash uchun.</p><form id="ownerForm"><div class="field"><label>Yangi parol (kamida 12 belgi)</label><input class="input" name="password" type="password" minlength="12" required></div><div class="field"><label>Parolni takrorlang</label><input class="input" name="confirm_password" type="password" minlength="12" required></div><button class="btn full">Owner parolini o‘rnatish</button></form></div></div><section id="mfa" class="hidden"><div class="hero"><span class="tag">2-BOSQICH</span><h1>6 xonali PIN</h1><p id="mfaDesc" class="lead">Tasdiqlash...</p></div><div class="card"><form id="pinForm"><div class="field"><label>PIN kod</label><input class="input" id="pin" type="password" inputmode="numeric" autocomplete="one-time-code" maxlength="6" minlength="6" pattern="[0-9]{6}" required placeholder="● ● ● ● ● ●"></div><div id="confirmPinField" class="field hidden"><label>PIN kodni takrorlang</label><input class="input" id="pinConfirm" type="password" inputmode="numeric" maxlength="6" pattern="[0-9]{6}"></div><button class="btn full" type="submit">Tasdiqlash →</button></form><button id="backLogin" class="btn line full" style="margin-top:10px">Kirishga qaytish</button></div></section><section id="cabinet" class="hidden"><div class="bar"><div class="top"><div><div class="tag">QADAM OFFICE • STAFF</div><div style="font-weight:800;font-size:20px" id="who">Kabinet</div><span class="sub" id="role"></span></div><button class="btn line small" id="logout">Chiqish</button></div></div><div class="nav" id="nav" aria-label="Bo‘limlar"></div><div id="section" aria-live="polite"></div></section><p class="foot">QADAM OFFICE • Ichki tizim • xavfsiz web kirish</p></main>
 <script>
 'use strict';
 (()=>{
-const BASE='https://vpxvazxmidbqajlhdqxz.supabase.co/functions/v1/qadam-office-bot';
+const BASE='https://vpxvazxmidbqajlhdqxz.supabase.co/functions/v1/qadam-office-web';
 const tg=window.Telegram?.WebApp;const $=id=>document.getElementById(id);
 function telegramData(){
   const fromSdk=window.Telegram?.WebApp?.initData;
@@ -307,7 +307,7 @@ function diagnostic(){
  const h=new URLSearchParams(location.hash.replace(/^#/,''));
  return 'SDK: '+(window.Telegram?.WebApp?'bor':'yo‘q')+' · Telegram launch: '+(h.has('tgWebAppData')?'bor':'yo‘q')+' · URL: '+(location.protocol==='https:'?'HTTPS':'boshqa')+' · v55';
 }
-const state={initData:'',user:null,pending:null,mode:null,current:'home',busy:false,navSeq:0};
+const state={initData:'',webToken:sessionStorage.getItem('qadamOfficeWebToken')||'',user:null,pending:null,mode:null,current:'home',busy:false,navSeq:0};
 const ICONS={"messenger":"<rect x=\"2\" y=\"3\" width=\"20\" height=\"15\" rx=\"5\"/><path d=\"m7 18-2 4 7-4\"/>","home":"<path d=\"m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z\"/>","employees":"<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75\"/>","crm":"<rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"3\"/><path d=\"M8 8h8M8 12h8M8 16h5\"/>","tasks":"<rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"3\"/><path d=\"m8 12 3 3 5-6\"/>","education":"<path d=\"m2 10 10-6 10 6-10 6-10-6ZM6 12v6c4 3 8 3 12 0v-6M22 10v7\"/>","finance":"<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M15 8h-4a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4H9m3-10v2m0 8v2\"/>","marketing":"<path d=\"m3 11 12-5v12L3 14zM15 9c3 0 5-2 5-4M15 15c3 0 5 2 5 4M6 15l2 5h3l-2-6\"/>","attendance":"<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 7v5l3 2\"/>","audit":"<path d=\"M12 2v3m0 14v3M4.9 4.9l2.1 2.1m10 10 2.1 2.1M2 12h3m14 0h3M4.9 19.1 7 17m10-10 2.1-2.1\"/><circle cx=\"12\" cy=\"12\" r=\"4\"/>"};
 ICONS.sections='<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>';
 ICONS.notifications='<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/>';
@@ -341,50 +341,50 @@ function show(id){for(const k of ['loading','auth','mfa','cabinet']){const el=$(
 function notify(msg,type='error'){const n=$('banner');n.className='notice '+(type==='good'?'good':'error');n.textContent=msg;try{n.scrollIntoView({block:'nearest',behavior:'smooth'})}catch{}}
 function clearMessage(){$('banner').classList.add('hidden')}
 function busy(flag){state.busy=flag;document.querySelectorAll('button').forEach(x=>x.disabled=flag)}
-async function api(path,data={},timeout=25000){if(!state.initData)throw Error('Telegram bot ichidagi Mini App orqali oching. Brauzerda to‘g‘ridan-to‘g‘ri kirib bo‘lmaydi.');const ctl=new AbortController();const timer=setTimeout(()=>ctl.abort(),timeout);try{const response=await fetch(BASE+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...data,initData:state.initData}),signal:ctl.signal,cache:'no-store'});let body;try{body=await response.json()}catch{throw Error('Server noto‘g‘ri javob qaytardi ('+response.status+')')}if(!response.ok||body.ok===false)throw Error(body.message||'So‘rov bajarilmadi ('+response.status+')');return body;}catch(e){if(e.name==='AbortError')throw Error('Server 25 soniyada javob bermadi. Internetni tekshirib, qayta urinib ko‘ring.');throw e;}finally{clearTimeout(timer)}}
+async function api(path,data={},timeout=25000){
+ const authPaths=['/login','/pin'],isPublic=authPaths.includes(path),token=state.webToken;
+ if(!isPublic&&!token)throw Error('Avval xodim ID va parol bilan kiring.');
+ const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),timeout);
+ try{
+  const response=await fetch(BASE+path,{method:'POST',headers:{'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},body:JSON.stringify(data),signal:ctl.signal,cache:'no-store'});
+  let body;try{body=await response.json()}catch{throw Error('Server noto‘g‘ri javob qaytardi ('+response.status+')')}
+  if(!response.ok||body.ok===false){if(response.status===401&&token&&!isPublic){state.webToken='';sessionStorage.removeItem('qadamOfficeWebToken');}throw Error(body.message||'So‘rov bajarilmadi ('+response.status+')')}
+  return body;
+ }catch(e){if(e.name==='AbortError')throw Error('Server javob bermadi. Internetni tekshiring.');throw e;}finally{clearTimeout(timer)}
+}
 function localDate(offset=0){
  const d=new Date(Date.now()+offset*86400000),p=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Tashkent',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d);
  const get=t=>p.find(x=>x.type===t)?.value||'';
  return get('year')+'-'+get('month')+'-'+get('day');
 }
 async function init(){
- try{window.Telegram?.WebApp?.ready();window.Telegram?.WebApp?.expand();window.Telegram?.WebApp?.disableVerticalSwipes?.()}catch{}
- state.initData=telegramData();
- if(!state.initData){await new Promise(r=>setTimeout(r,1100));state.initData=telegramData()}
- if(!state.initData){
-   show('auth');$('tgHelp').classList.remove('hidden');$('tgDiagnostics').textContent=diagnostic();
-   notify('Brauzer orqali xavfsiz kirish hali yoqilmagan. Hozircha QADAM OFFICE 2-botni Telegram Desktop ichidan oching.');return;
+ $('tabActivate').classList.add('hidden');$('tabOwner').classList.add('hidden');
+ $('tgHelp').classList.add('hidden');
+ if(state.webToken){
+  try{const me=await api('/me');if(me?.staff){await enter(me.staff);return}}catch(e){state.webToken='';sessionStorage.removeItem('qadamOfficeWebToken');console.warn('Web session',e.message)}
  }
- $('tgHelp').classList.add('hidden');clearMessage();
- try{const me=await api('/me');if(me.ok&&me.staff){await enter(me.staff);return}}
- catch(e){if(!/Kirish talab|401|tasdig‘i|yaroqsiz/i.test(e.message||''))console.warn('Session check:',e.message)}
- show('auth');checkOwner();
+ show('auth');authTab('login');
 }
-$('retryTelegram').addEventListener('click',()=>{show('loading');
 function qwebShowMethod(method){
  const panel=document.getElementById('qwebPanel');if(!panel)return;
  panel.classList.remove('hidden');
- if(method==='telegram'){
-  panel.innerHTML='<strong>Telegram bilan rasmiy tasdiqlash</strong><p>Telegram OAuth orqali tasdiqlash, mavjud xodim akkauntiga bog‘lash va server sessiyasi ishga tushirilgach ushbu usul yoqiladi. Telefon raqamini bu sahifaga kiritish talab etilmaydi — Telegram kerak bo‘lsa o‘zining rasmiy oynasida so‘raydi.</p><p>Hozircha QADAM OFFICE 2-botni Telegram Desktop ichidan oching.</p>';
- }else{
-  panel.innerHTML='<strong>Google / Gmail orqali kirish</strong><p>Google OAuth yoki Gmail bir martalik kodi uchun provayderni ulash va xodim akkauntini tasdiqlangan email bilan bog‘lash kerak. Tasdiqlanmaguncha xodim hisobiga kirish berilmaydi.</p><p>Bu tugma hozircha xavfsizlik sababli ishga tushirilmagan.</p>';
- }
+ if(method==='telegram')panel.innerHTML='<strong>Telegram orqali kirish</strong><p>Telegram OAuth ulash jarayoni keyingi bosqichda ochiladi. Hozircha xodim ID, parol va 6 xonali PIN bilan kiring. Telegramga xavfsizlik tasdig‘i yuboriladi.</p>';
+ else panel.innerHTML='<strong>Google orqali kirish</strong><p>Google OAuth ulash uchun xavfsiz hisob bog‘lash jarayoni kerak. Hozircha xodim ID, parol va 6 xonali PIN bilan kiring.</p>';
 }
 document.getElementById('qwebTelegram')?.addEventListener('click',()=>qwebShowMethod('telegram'));
 document.getElementById('qwebGoogle')?.addEventListener('click',()=>qwebShowMethod('google'));
-
-init().catch(e=>{show('auth');notify(e.message)})});
+$('retryTelegram').addEventListener('click',()=>init().catch(e=>notify(e.message)));
 async function checkOwner(){try{const result=await api('/setup-status');$('tabOwner').classList.toggle('hidden',result.owner_first_setup_pending!==true);}catch{ $('tabOwner').classList.add('hidden');}}
 function authTab(screen){['login','activate','owner'].forEach(x=>{$('screen'+x[0].toUpperCase()+x.slice(1)).classList.toggle('hidden',x!==screen);$('tab'+x[0].toUpperCase()+x.slice(1)).classList.toggle('active',x===screen)});clearMessage();}
 document.querySelectorAll('[data-screen]').forEach(b=>b.addEventListener('click',()=>authTab(b.dataset.screen)));
 async function submit(event,callback){event.preventDefault();if(state.busy)return;busy(true);clearMessage();try{await callback()}catch(e){notify(e.message||'Noma’lum xato')}finally{busy(false)}}
 $('loginForm').addEventListener('submit',e=>submit(e,async()=>{const v=await api('/login',{code:$('empCode').value.trim().toUpperCase(),password:$('empPass').value});$('empPass').value='';if(!v.pending_id||!['pin_verify','pin_enroll'].includes(v.mode))throw Error('Server PIN bosqichini qaytarmadi');state.pending=v.pending_id;state.mode=v.mode;$('mfaDesc').textContent=v.message||'PIN kiriting';$('confirmPinField').classList.toggle('hidden',v.mode!=='pin_enroll');$('pinConfirm').required=v.mode==='pin_enroll';show('mfa');}));
-$('pinForm').addEventListener('submit',e=>submit(e,async()=>{const pin=$('pin').value;const isNew=state.mode==='pin_enroll';const v=await api(isNew?'/pin-enroll':'/pin-verify',{pending_id:state.pending,pin,...(isNew?{confirm_pin:$('pinConfirm').value}:{})});if(!v.ok)throw Error(v.message||'PIN rad etildi');$('pin').value='';$('pinConfirm').value='';state.pending=null;const me=await api('/me');if(!me.staff)throw Error('PIN tasdiqlandi, lekin sessiya tekshirilmadi. Ilovani yopib, qayta oching.');await enter(me.staff);}));
+$('pinForm').addEventListener('submit',e=>submit(e,async()=>{const pin=$('pin').value;const isNew=state.mode==='pin_enroll';const v=await api('/pin',{pending_id:state.pending,pin});if(!v.ok)throw Error(v.message||'PIN rad etildi');$('pin').value='';$('pinConfirm').value='';state.pending=null;state.webToken=v.token;sessionStorage.setItem('qadamOfficeWebToken',v.token);const me=await api('/me');if(!me.staff)throw Error('PIN tasdiqlandi, lekin sessiya tekshirilmadi. Ilovani yopib, qayta oching.');await enter(me.staff);}));
 $('ownerForm').addEventListener('submit',e=>submit(e,async()=>{const f=new FormData(e.target);const v=await api('/owner-first-setup',{password:f.get('password'),confirm_password:f.get('confirm_password')});e.target.reset();$('tabOwner').classList.add('hidden');authTab('login');notify(v.message||'Parol o‘rnatildi. Endi ID va parol bilan kiring.','good')}));
 $('activationRequestForm').addEventListener('submit',e=>submit(e,async()=>{const f=new FormData(e.target);const code=String(f.get('code')||'').trim().toUpperCase();const v=await api('/activation-request',{code});document.querySelector('#activateForm [name=code]').value=code;notify(v.message||'Ownerga so‘rov yuborildi','good')}));
 $('activateForm').addEventListener('submit',e=>submit(e,async()=>{const f=new FormData(e.target);const v=await api('/activate',{code:String(f.get('code')).trim().toUpperCase(),activation:String(f.get('activation')||'').trim().toUpperCase(),password:f.get('password')});e.target.reset();authTab('login');notify(v.message||'Xodim faollashtirildi','good')}));
 $('backLogin').addEventListener('click',()=>{state.pending=null;show('auth');authTab('login')});
-$('logout').addEventListener('click',()=>submit({preventDefault(){}},async()=>{await api('/app-logout');state.user=null;show('auth');authTab('login')}));
+$('logout').addEventListener('click',()=>submit({preventDefault(){}},async()=>{await api('/logout');state.webToken='';sessionStorage.removeItem('qadamOfficeWebToken');state.user=null;show('auth');authTab('login')}));
 
 const MENU_GROUPS=[
  {id:'finance',title:'Moliya',desc:'Oylik, to‘lovlar, chek va Excel',icon:'finance',
@@ -399,11 +399,11 @@ const MENU_GROUPS=[
   items:[['marketing','Marketing kabineti','Kampaniyalar va kontent']]},
  {id:'communication',title:'Aloqa',desc:'Xabarlar va ichki muloqot',icon:'tasks',
   items:[['messenger','Shaxsiy chatlar va guruh','Xodimlar guruhi va shaxsiy xabarlar'],['chat','Murojaatlar','Owner va bo‘limlarga murojaat'],['notifications','Bildirishnomalar','Yangi xabar va eslatmalar']]},
- {id:'management',title:'Boshqaruv',desc:'Audit va muhim tekshiruvlar',icon:'audit',
-  items:[['audit','Tizim auditi','Lavozimlar va harakatlar']]}
+ {id:'management',title:'Boshqaruv',desc:'Audit, qurilmalar va xavfsizlik',icon:'audit',
+  items:[['devices','Qurilmalar va kirishlar','Akkauntga kirish tarixi'],['audit','Tizim auditi','Lavozimlar va harakatlar']]}
 ];
 function roleRoutes(role){
- const base=['home','sections','profile','messenger','chat','notifications','salary-confirm','tasks','my-attendance','my-leaves'];
+ const base=['home','sections','profile','messenger','chat','notifications','devices','salary-confirm','tasks','my-attendance','my-leaves'];
 
  if(role==='owner')return new Set([...base,'hr-attendance','leave-management','performance','kpi','employees','employee-card','crm','education','students','finance','marketing','attendance','audit','salary-accounting','salary-supervision','finance-dashboard','salary-bulk','salary-import','finance-groups']);
  if(role==='director')return new Set([...base,'hr-attendance','leave-management','performance','kpi','employees','education','students','salary-supervision','finance-dashboard']);
@@ -515,7 +515,7 @@ const seq=++state.navSeq;state.current=tab;document.querySelectorAll('[data-nav]
 const count=(n,label)=>`<div class="metric"><span>${esc(label)}</span><strong>${esc(n??0)}</strong></div>`;
 const wrapper=(title,html)=>{
  const category=routeCategory(state.current);
- const back=state.current==='home'||state.current==='profile'||state.current==='sections'?'':state.current.startsWith('group:')?
+ const back=state.current==='home'||state.current==='profile'||state.current==='sections'||state.current==='devices'?'':state.current.startsWith('group:')?
    '<button class="hub-back" type="button" id="hubBack">‹ Barcha bo‘limlar</button>':
    '<button class="hub-back" type="button" id="hubBack">‹ '+esc(category?MENU_GROUPS.find(g=>g.id===category)?.title||'Bo‘limlar':'Bo‘limlar')+'</button>';
  return back+`<div class="row"><h2 class="title">${esc(title)}</h2><button class="btn alt small" id="refresh">↻ Yangilash</button></div>${html}`;
@@ -871,6 +871,13 @@ if(tab==='chat'){
  $('chatThread').onchange=v=>{const selection=threads[Number(v.target.value)];if(selection){state.chatChannel=selection.channel;state.chatRequester=selection.requester_staff_id;navigate('chat')}};
  $('chatRefresh').onclick=()=>navigate('chat');
  formHandler('chatSend',async f=>{const msg=String(f.get('message')||'').trim();if(!msg)throw Error('Xabarni kiriting');await api('/staff/ops/chat-send',{channel:current.channel,requester_staff_id:current.requester_staff_id,message:msg})});
+ return;
+}
+if(tab==='devices'){
+ const result=await api('/devices',{all:state.user.role==='owner'});
+ const events=result.events||[];
+ const methodName={id_password:'ID va parol',telegram:'Telegram',google:'Google',email_otp:'Email kodi',passkey:'Passkey'};
+ inject('Qurilmalar va kirishlar','<div class="card"><h3>Akkauntga kirish tarixi</h3><p class="sub">Qurilma va brauzer ma’lumotlari xavfsizlik uchun saqlanadi. Hudud IP asosidagi taxmin bo‘lib, GPS emas.</p>'+list(events,x=>'<strong>'+esc(x.device_class||'Qurilma')+' · '+esc(x.operating_system||'')+' · '+esc(x.browser_name||'')+'</strong><div class="sub">'+esc(methodName[x.login_method]||x.login_method)+' · '+esc(new Date(x.occurred_at).toLocaleString('uz-UZ',{timeZone:'Asia/Tashkent'}))+'</div><span class="pill">'+esc(x.confirmation_status==='confirmed'?'Tasdiqlangan':x.confirmation_status==='denied'?'Rad etilgan':'Tasdiqlanmagan')+'</span>')+'</div>');
  return;
 }
 if(tab==='notifications'){
