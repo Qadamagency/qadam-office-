@@ -244,6 +244,27 @@ const ICONS={"messenger":"<rect x=\"2\" y=\"3\" width=\"20\" height=\"15\" rx=\"
 ICONS.sections='<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>';
 ICONS.notifications='<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/>';
 ICONS.profile='<circle cx="12" cy="8" r="4"/><path d="M4 21c0-5 3.5-8 8-8s8 3 8 8"/>';
+
+// Distinct outline icons for each real function; inherit v90 purple theme.
+Object.assign(ICONS,{
+  'chat':'<path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-4 3v-6a7.5 7.5 0 1 1 18-4.5z"/><path d="M7 11h10M7 14h6"/>',
+  'finance-dashboard':'<path d="M3 20h18M6 16V9m6 7V4m6 12v-6"/><path d="m3 10 6-4 4 2 8-5"/>',
+  'salary-accounting':'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h3m4 0h1M8 16h8"/>',
+  'salary-supervision':'<rect x="3" y="5" width="18" height="15" rx="3"/><path d="M3 10h18M8 15h5"/>',
+  'salary-bulk':'<path d="M4 4h16v5H4zM6 9v12h12V9M9 14h6m-6 4h6"/>',
+  'salary-import':'<path d="M12 3v13m-4-4 4 4 4-4M4 18v3h16v-3"/>',
+  'finance-groups':'<circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2 20v-2c0-3 2.5-5 6-5s6 2 6 5v2m2-6c3 0 6 2 6 5v1"/>',
+  'salary-confirm':'<path d="M20 7 10 17l-5-5"/><rect x="2" y="2" width="20" height="20" rx="4"/>',
+  'students':'<circle cx="9" cy="7" r="3"/><path d="M3 20v-2c0-3 2-5 6-5s6 2 6 5v2M16 6h5m-2.5-2.5v5"/>',
+  'my-attendance':'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18m-14 5 3 3 6-6"/>',
+  'hr-attendance':'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 3"/>',
+  'leave-management':'<path d="M4 4h16v16H4zM8 2v4m8-4v4M4 9h16m-12 5h8"/>',
+  'my-leaves':'<path d="M4 20h16M8 16l8-8 3 3-8 8-4 1zM14 10l3 3"/>',
+  'performance':'<path d="M3 20h18M6 17v-5m6 5V6m6 11v-8"/><path d="m3 9 5-4 5 4 8-7"/>',
+  'kpi':'<circle cx="12" cy="12" r="9"/><path d="m7 13 3 3 7-8"/>',
+  'owner':'<path d="m2 7 5 4 5-8 5 8 5-4-2 13H4z"/>',
+  'settings':'<circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M19 5l-2 2M7 17l-2 2"/>'
+});
 const navIcon=id=>'<svg viewBox="0 0 24 24" aria-hidden="true">'+(ICONS[id]||ICONS.home)+'</svg>';
 const menu=[['home','Bosh sahifa'],['employees','Xodimlar'],['crm','CRM'],['tasks','Vazifalar'],['education','Ta’lim'],['finance','Moliya'],['marketing','Marketing'],['attendance','Davomat'],['audit','Audit']];
 const roles={owner:'Owner',director:'Direktor',education_manager:'O‘quv bo‘limi rahbari',hr:'HR',administrator:'Administrator',accountant:'Buxgalter',teacher:'O‘qituvchi',assistant_teacher:'Yordamchi ustoz',sales:'Sotuv',marketing:'Marketing',editor:'Kontent muharriri',targetologist:'Targetolog'};
@@ -341,7 +362,7 @@ function quickRoutes(){
  targetologist:['marketing','tasks','notifications']
  };
  const labels={'performance':'Xodimlar natijalari','hr-attendance':'Davomat nazorati','leave-management':'Ta’til so‘rovlari','my-leaves':'Mening ta’tilim','my-attendance':'Mening davomatim',finance:'Moliya',employees:'Xodimlar',tasks:'Vazifalar',education:'Ta’lim',crm:'CRM',marketing:'Marketing',audit:'Audit','salary-supervision':'Oylik nazorati','finance-dashboard':'Moliyaviy hisobot','salary-accounting':'Oylik va cheklar','salary-bulk':'Oylik hisoblash','finance-groups':'Guruhlar moliyasi','salary-confirm':'Oylik tasdig‘i',notifications:'Xabarlar'};
- const icons={'performance':'employees','hr-attendance':'employees','leave-management':'employees','my-leaves':'employees','my-attendance':'employees','finance-dashboard':'finance','salary-supervision':'finance','salary-accounting':'finance','salary-bulk':'finance','finance-groups':'finance','salary-confirm':'finance',notifications:'tasks'};
+ const icons={'performance':'performance','hr-attendance':'hr-attendance','leave-management':'leave-management','my-leaves':'my-leaves','my-attendance':'my-attendance','finance-dashboard':'finance-dashboard','salary-supervision':'salary-supervision','salary-accounting':'salary-accounting','salary-bulk':'salary-bulk','finance-groups':'finance-groups','salary-confirm':'salary-confirm',notifications:'notifications'};
  return (priorities[role]||['tasks','salary-confirm']).filter(id=>state.allowedRoutes.has(id)).slice(0,4)
    .map(id=>({id,title:labels[id]||id,desc:visibleGroups().find(g=>g.items.some(x=>x[0]===id))?.title||'Tezkor kirish',icon:icons[id]||id}));
 }
