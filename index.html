@@ -303,7 +303,7 @@ $('ownerForm').addEventListener('submit',e=>submit(e,async()=>{const f=new FormD
 $('activationRequestForm').addEventListener('submit',e=>submit(e,async()=>{const f=new FormData(e.target);const code=String(f.get('code')||'').trim().toUpperCase();const v=await api('/activation-request',{code});document.querySelector('#activateForm [name=code]').value=code;notify(v.message||'Ownerga so‘rov yuborildi','good')}));
 $('activateForm').addEventListener('submit',e=>submit(e,async()=>{const f=new FormData(e.target);const v=await api('/activate',{code:String(f.get('code')).trim().toUpperCase(),activation:String(f.get('activation')||'').trim().toUpperCase(),password:f.get('password')});e.target.reset();authTab('login');notify(v.message||'Xodim faollashtirildi','good')}));
 $('backLogin').addEventListener('click',()=>{state.pending=null;show('auth');authTab('login')});
-$('logout').addEventListener('click',()=>submit({preventDefault(){}},async()=>{await api('/app-logout');state.user=null;show('auth');authTab('login')}));
+$('logout').addEventListener('click',()=>submit({preventDefault(){}},async()=>{await api('/app-logout');qminiStopConfirmationWatch();state.user=null;show('auth');authTab('login')}));
 
 const MENU_GROUPS=[
  {id:'finance',title:'Moliya',desc:'Oylik, to‘lovlar, chek va Excel',icon:'finance',
@@ -404,6 +404,31 @@ function q90StartAlerts(){
  q90PollHandle=setInterval(q90RefreshUnread,30000);
 }
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&state.user)q90RefreshUnread()});
+let qminiConfirmationTimer=null,qminiConfirmationChecking=false;
+function qminiStopConfirmationWatch(){if(qminiConfirmationTimer){clearTimeout(qminiConfirmationTimer);qminiConfirmationTimer=null}}
+function qminiForceReLogin(){
+ qminiStopConfirmationWatch();state.user=null;state.allowedRoutes=null;state.navSeq++;
+ show('auth');authTab('login');
+ notify('⏳ 1 daqiqa ichida kirish tasdiqlanmadi. Tizimdan chiqarildingiz. Qaytadan kiring.');
+}
+async function qminiWatchConfirmation(){
+ qminiStopConfirmationWatch();
+ if(!state.user||qminiConfirmationChecking)return;
+ qminiConfirmationChecking=true;
+ try{
+  const response=await api('/me');
+  if(!state.user)return;
+  if(response.confirmation_status==='confirmed'||!response.confirmation_deadline)return;
+  if(Date.now()>=Date.parse(response.confirmation_deadline)){qminiForceReLogin();return}
+  qminiConfirmationTimer=setTimeout(qminiWatchConfirmation,Math.min(4500,Math.max(400,Date.parse(response.confirmation_deadline)-Date.now()+1000)));
+ }catch(err){
+  if(!state.user)return;
+  if(/tasdiqlash muddati|qayta kiring|kirish talab|401|sessiya/i.test(err.message||'')){
+   qminiForceReLogin();return;
+  }
+  qminiConfirmationTimer=setTimeout(qminiWatchConfirmation,2500);
+ }finally{qminiConfirmationChecking=false}
+}
 async function enter(staff){
  state.user=staff;
  state.allowedRoutes=roleRoutes(staff.role);
@@ -417,6 +442,7 @@ async function enter(staff){
    catch(e){state.profileRequired=true;notify('Profil tekshirilmadi. Shaxsiy profilni oching.');}
  }else state.profileRequired=false;
  await navigate(state.profileRequired?'profile':'home');
+ qminiWatchConfirmation();
 }
 async function navigate(tab){
  if(tab.startsWith('group:')){
