@@ -558,6 +558,30 @@ function q90Avatar(person){
  return '<span class="msg-avatar" aria-label="'+esc(name)+'">'+(image||initial)+'</span>';
 }
 
+
+async function q91LoadChatAvatars(people){
+ const contacts=(people||[]).filter(p=>p?.id&&!p.photo_signed_url&&!p.avatar_url&&!p.photo_url).slice(0,18);
+ if(!contacts.length)return;
+ const worker=async()=>{
+  while(contacts.length){
+   const person=contacts.shift();
+   if(state.current!=='messenger'||state.messengerMode==='group')return;
+   try{
+    const result=await api('/staff/ops/office-staff-public-profile',{staff_id:person.id},8500);
+    const url=result?.photo_signed_url;
+    if(!url||!/^https:\/\//i.test(url))continue;
+    const btn=[...document.querySelectorAll('[data-contact]')].find(el=>el.dataset.contact===String(person.id));
+    if(!btn)continue;
+    const circle=btn.querySelector('.msg-avatar');
+    if(circle){
+      circle.textContent='';
+      const img=document.createElement('img');img.alt='';img.loading='lazy';img.referrerPolicy='no-referrer';img.src=url;circle.append(img);
+    }
+   }catch(e){/* Profile photo is optional; keep the initial as fallback. */}
+  }
+ };
+ await Promise.all([worker(),worker(),worker()]);
+}
 function q91OwnerPortrait(profile){
  const url=profile?.photo_signed_url||profile?.profile?.photo_signed_url||profile?.photo_url||'';
  const img=(typeof url==='string'&&/^https:\/\//i.test(url))?'<img src="'+esc(url)+'" alt="Owner profil rasmi" loading="eager">':'<svg viewBox="0 0 24 24" aria-label="Profil rasmi mavjud emas"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-5 3-8 8-8s8 3 8 8"/></svg>';
@@ -709,6 +733,7 @@ if(tab==='messenger'){
    }
    inject('Chat',chatBack+(chosen?'':tabs+listHtml)+chatHtml);
    document.querySelectorAll('[data-contact]').forEach(btn=>btn.onclick=()=>{state.directStaffId=btn.dataset.contact;navigate('messenger')});
+   if(!chosen)q91LoadChatAvatars(people);
    if($('contactSearch'))$('contactSearch').oninput=e=>{const q=e.target.value.toLocaleLowerCase('uz').trim();document.querySelectorAll('[data-contact]').forEach(btn=>{const p=people.find(x=>x.id===btn.dataset.contact);btn.style.display=p&&[p.full_name,p.employee_code].some(v=>String(v||'').toLocaleLowerCase('uz').includes(q))?'flex':'none'})};
    chatWireDelete();chatScrollEnd();
    if($('dmForm'))formHandler('dmForm',async d=>{await api('/staff/ops/office-direct-send',{staff_id:chosen.id,message:String(d.get('message')||'').trim()})});
