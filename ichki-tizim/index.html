@@ -342,7 +342,7 @@ function notify(msg,type='error'){const n=$('banner');n.className='notice '+(typ
 function clearMessage(){$('banner').classList.add('hidden')}
 function busy(flag){state.busy=flag;document.querySelectorAll('button').forEach(x=>x.disabled=flag)}
 async function api(path,data={},timeout=25000){
- const authPaths=['/login','/pin'],isPublic=authPaths.includes(path),token=state.webToken;
+ const authPaths=['/login','/pin','/telegram/config','/telegram/login'],isPublic=authPaths.includes(path),token=state.webToken;
  if(!isPublic&&!token)throw Error('Avval xodim ID va parol bilan kiring.');
  const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),timeout);
  try{
@@ -365,12 +365,38 @@ async function init(){
  }
  show('auth');authTab('login');
 }
-function qwebShowMethod(method){
+async function qwebShowMethod(method){
  const panel=document.getElementById('qwebPanel');if(!panel)return;
  panel.classList.remove('hidden');
- if(method==='telegram')panel.innerHTML='<strong>Telegram orqali kirish</strong><p>Telegram OAuth ulash jarayoni keyingi bosqichda ochiladi. Hozircha xodim ID, parol va 6 xonali PIN bilan kiring. Telegramga xavfsizlik tasdig‘i yuboriladi.</p>';
- else panel.innerHTML='<strong>Google orqali kirish</strong><p>Google OAuth ulash uchun xavfsiz hisob bog‘lash jarayoni kerak. Hozircha xodim ID, parol va 6 xonali PIN bilan kiring.</p>';
+ if(method!=='telegram'){panel.innerHTML='<strong>Google orqali kirish</strong><p>Google OAuth hali ulanmagan. ID, parol va PIN orqali kirishingiz mumkin.</p>';return;}
+ panel.innerHTML='<strong>Telegramning rasmiy tasdiqlashi</strong><p>Quyidagi rasmiy Telegram tugmasini bosing. Telegram akkauntingizda ushbu saytga kirishga ruxsat berish so‘rovi paydo bo‘ladi.</p><div id="qwebOfficialTelegram" style="min-height:44px;padding:10px 0"></div><p class="sub">BotFather orqali sayt domeni Telegram botga ruxsat etilgan bo‘lishi kerak.</p>';
+ try{
+  const config=await api('/telegram/config');
+  if(!/^[a-z0-9_]{5,32}$/i.test(config.username||''))throw Error('Bot nomi noto‘g‘ri');
+  const script=document.createElement('script');script.async=true;
+  script.src='https://telegram.org/js/telegram-widget.js?22';
+  script.setAttribute('data-telegram-login',config.username);
+  script.setAttribute('data-size','large');
+  script.setAttribute('data-radius','10');
+  script.setAttribute('data-request-access','write');
+  script.setAttribute('data-onauth','qadamTelegramAuth(user)');
+  const host=document.getElementById('qwebOfficialTelegram');if(host)host.append(script);
+  script.onerror=()=>notify('Telegram kirish oynasi yuklanmadi. Tarmoq yoki BotFather sozlamalarini tekshiring.');
+ }catch(err){panel.innerHTML='<strong>Telegram kirishi ochilmadi</strong><p>'+esc(err.message||'Serverga ulanib bo‘lmadi')+'</p>';}
 }
+window.qadamTelegramAuth=async function(user){
+ try{
+  busy(true);
+  const v=await api('/telegram/login',{telegram:user});
+  if(!v?.token)throw Error('Kirish sessiyasi yaratilmadi');
+  state.webToken=v.token;
+  sessionStorage.setItem('qadamOfficeWebToken',v.token);
+  const me=await api('/me');if(!me.staff)throw Error('Xodim ma’lumotlari topilmadi');
+  await enter(me.staff);
+  notify('Telegram orqali kirish muvaffaqiyatli. Telegramga xavfsizlik xabari yuborildi.','good');
+ }catch(err){notify(err.message||'Telegram tasdig‘i rad etildi');}
+ finally{busy(false)}
+};
 document.getElementById('qwebTelegram')?.addEventListener('click',()=>qwebShowMethod('telegram'));
 document.getElementById('qwebGoogle')?.addEventListener('click',()=>qwebShowMethod('google'));
 $('retryTelegram').addEventListener('click',()=>init().catch(e=>notify(e.message)));
