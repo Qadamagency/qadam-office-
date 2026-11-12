@@ -318,13 +318,13 @@ const MENU_GROUPS=[
   items:[['marketing','Marketing kabineti','Kampaniyalar va kontent']]},
  {id:'communication',title:'Aloqa',desc:'Xabarlar va ichki muloqot',icon:'tasks',
   items:[['messenger','Shaxsiy chatlar va guruh','Xodimlar guruhi va shaxsiy xabarlar'],['chat','Murojaatlar','Owner va bo‘limlarga murojaat'],['notifications','Bildirishnomalar','Yangi xabar va eslatmalar']]},
- {id:'management',title:'Boshqaruv',desc:'Audit va muhim tekshiruvlar',icon:'audit',
-  items:[['audit','Tizim auditi','Lavozimlar va harakatlar']]}
+ {id:'management',title:'Boshqaruv',desc:'Audit va tizim xavfsizligi',icon:'audit',
+  items:[['security-center','Tizim xavfsizligi','Owner uchun kirishlar va shubhali hodisalar'],['audit','Tizim auditi','Lavozimlar va harakatlar']]}
 ];
 function roleRoutes(role){
  const base=['home','sections','profile','messenger','chat','notifications','salary-confirm','tasks','my-attendance','my-leaves'];
 
- if(role==='owner')return new Set([...base,'hr-attendance','leave-management','performance','kpi','employees','employee-card','crm','education','students','finance','marketing','attendance','audit','salary-accounting','salary-supervision','finance-dashboard','salary-bulk','salary-import','finance-groups']);
+ if(role==='owner')return new Set([...base,'hr-attendance','leave-management','performance','kpi','employees','employee-card','crm','education','students','finance','marketing','attendance','audit','salary-accounting','salary-supervision','finance-dashboard','salary-bulk','salary-import','finance-groups','security-center']);
  if(role==='director')return new Set([...base,'hr-attendance','leave-management','performance','kpi','employees','education','students','salary-supervision','finance-dashboard']);
  if(role==='administrator')return new Set([...base,'education','students','group-members']);
  if(role==='education_manager')return new Set([...base,'education','students']);
@@ -1310,6 +1310,40 @@ if(tab==='attendance'){
  const r=await api('/staff/ops/staff-attendance');
  const attendance=r.attendance||[];
  inject('Xodimlar davomati',`<div class="grid">${count(attendance.length,'Davomat qaydlari')}${count(attendance.filter(x=>x.check_in&&!x.check_out).length,'Hozir ishda')}</div><div class="card"><h3>Oxirgi davomatlar</h3>${list(attendance,x=>`<strong>${esc(x.employee_name||x.work_date||'Xodim')} <span class="pill">${esc(x.work_date)}</span></strong><div class="sub">Keldi: ${x.check_in?esc(new Date(x.check_in).toLocaleString('uz-UZ')):'—'} · Ketdi: ${x.check_out?esc(new Date(x.check_out).toLocaleString('uz-UZ')):'—'}</div>`)}</div>`);
+ return;
+}
+if(tab==='security-center'){
+ if(!owner)throw Error('Faqat Owner uchun');
+ const r=await api('/owner/security-center');
+ const events=r.events||[],staff=r.staff||[],alerts=r.alerts||[],holds=r.holds||[];
+ const names=new Map(staff.map(x=>[x.id,x]));
+ const time=v=>new Date(v).toLocaleString('uz-UZ',{timeZone:'Asia/Tashkent',dateStyle:'short',timeStyle:'short'});
+ const status=x=>({pending:'Kutilmoqda',confirmed:'Tasdiqlangan',denied:'Rad etilgan',expired:'Tugagan'}[x]||x);
+ const current=state.securityCenterStaffId||'';
+ const rows=current?events.filter(x=>x.staff_id===current):events;
+ const location=x=>[x.city_name,x.region_name,x.country_code].filter(Boolean).join(', ')||'Aniqlanmadi';
+ inject('Tizim xavfsizligi',
+  '<div class="hero"><h1>🔐 Tizim xavfsizligi</h1><p class="lead">Owner · xodimlar kirishi va shubhali hodisalarni kuzatish</p></div>'+
+  '<div class="grid">'+count(events.length,'Kirishlar')+count(events.filter(x=>x.confirmation_status==='denied').length,'Rad etilgan')+count(holds.length,'Bloklangan')+'</div>'+
+  '<div class="card"><h3>🚨 Xavfsizlik ogohlantirishlari</h3>'+
+  list(alerts.slice(0,15),x=>'<strong>'+esc(x.kind==='denied'?'🚨 Shubhali kirish':x.kind==='login'?'🔐 Kirish':'Xavfsizlik hodisasi')+' · '+esc(names.get(x.staff_id)?.full_name||'Xodim')+'</strong><div class="sub">'+esc(time(x.created_at))+' · '+(x.telegram_sent_at?'Telegramga yuborilgan':'Telegramga yuborish tasdiqlanmagan')+'</div>')+'</div>'+
+  '<div class="card"><h3>🔒 Bloklangan akkauntlar</h3>'+list(holds,x=>'<strong>'+esc(names.get(x.staff_id)?.full_name||'Xodim')+' · '+esc(names.get(x.staff_id)?.employee_code||'')+'</strong><p class="sub">'+esc(x.reason)+' · '+esc(time(x.locked_at))+'</p>')+'</div>'+
+  '<div class="card"><label for="securityStaffSelect">Xodimni tekshirish</label><select class="input" id="securityStaffSelect"><option value="">Barcha xodimlar</option>'+
+  staff.map(x=>'<option value="'+esc(x.id)+'"'+(current===x.id?' selected':'')+'>'+esc(x.full_name)+' · '+esc(x.employee_code)+'</option>').join('')+'</select></div>'+
+  '<div class="card"><h3>🖥 Qurilmalar va kirish tarixi</h3><p class="sub">IP hududi taxminiy. Aniq GPS manzili emas. Vaqt Toshkent vaqti bilan.</p>'+
+  list(rows.slice(0,120),x=>'<strong>'+esc(names.get(x.staff_id)?.full_name||'Xodim')+' · '+esc(names.get(x.staff_id)?.employee_code||'')+'</strong>'+
+  '<div class="sub">'+esc(time(x.occurred_at))+' · '+esc(x.interface==='web'?'Ichki tizim':'Mini App')+' · '+esc(status(x.confirmation_status))+'</div>'+
+  '<div class="sub">'+esc(x.device_class||'—')+' · '+esc(x.operating_system||'—')+' · '+esc(x.browser_name||'—')+'</div>'+
+  '<div class="sub">IP: '+esc(x.ip_address||'Aniqlanmadi')+' · '+esc(location(x))+'</div>'+
+  '<button type="button" class="btn alt small" data-security-action="'+esc(x.id)+'" data-security-staff="'+esc(x.staff_id)+'">Sessiya amallari</button>')+'</div>'+
+  '<div class="card" id="securityDetails"><h3>📋 Amal tarixi</h3><p class="sub">Biror kirishni tanlang. Veb API amallari qayd etiladi; maxfiy xabar va parollar yozilmaydi.</p></div>');
+ if($('securityStaffSelect'))$('securityStaffSelect').onchange=e=>{state.securityCenterStaffId=e.target.value;navigate('security-center')};
+ document.querySelectorAll('[data-security-action]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{
+  const r=await api('/owner/security-activity',{staff_id:btn.dataset.securityStaff,event_id:btn.dataset.securityAction});
+  const el=$('securityDetails');if(!el)return;
+  el.innerHTML='<h3>📋 Sessiya amallari</h3>'+list(r.activities||[],x=>'<strong>'+esc(x.action_name||'API amal')+'</strong><div class="sub">'+esc(time(x.created_at))+' · '+esc(x.action_path||'—')+' · HTTP '+esc(x.result_status||'—')+'</div>');
+  el.scrollIntoView({behavior:'smooth',block:'nearest'});
+ }));
  return;
 }
 if(tab==='audit'){
