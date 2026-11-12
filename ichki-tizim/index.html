@@ -1,0 +1,1370 @@
+<!doctype html>
+<html lang="uz"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f8f6ff"><meta http-equiv="Cache-Control" content="no-store"><meta name="format-detection" content="telephone=no"><title>QADAM OFFICE — Ichki tizim</title>
+<style>
+:root{color-scheme:dark;--bg:#0c0f16;--panel:#181e2a;--panel2:#222937;--border:#343d4e;--text:#f6f7fa;--muted:#a8b2c5;--accent:#e1874d;--ok:#80d5b1;--bad:#ff8b91}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text)}body{padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.55;cursor:wait}.shell{max-width:1050px;margin:auto;padding:22px 16px 70px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0 22px}.brand{font-size:20px;font-weight:850;letter-spacing:.6px}.mark{background:var(--accent);border-radius:14px;display:inline-flex;width:42px;height:42px;color:#141414;align-items:center;justify-content:center;font-weight:900;font-size:22px;margin-right:10px}.muted,.sub{color:var(--muted)}.sub{font-size:13px}.card{border:1px solid var(--border);background:var(--panel);padding:20px;border-radius:20px;margin-bottom:15px}.hero{padding:25px 20px;background:linear-gradient(135deg,#282739,#181e2a);border-radius:23px;border:1px solid #3b3a4c;margin-bottom:18px}.hero h1{font-size:28px;line-height:1.1;margin:8px 0 12px}.title{font-size:21px;font-weight:800;margin:0 0 15px}.lead{font-size:15px;color:var(--muted);line-height:1.6}.tabs,.nav{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.tabs button,.nav button{border:1px solid var(--border);background:var(--panel2);color:var(--text);border-radius:12px;padding:11px 13px;font-size:14px}.tabs button.active,.nav button.active{background:var(--accent);color:#101318;border-color:var(--accent);font-weight:800}.field{margin:16px 0}.field label{display:block;font-weight:700;margin:0 0 8px}.input{display:block;width:100%;background:#222837;border:1px solid #485064;color:#fff;border-radius:12px;padding:14px 15px;outline:0}.input:focus{border-color:var(--accent)}.btn{border:0;border-radius:13px;background:var(--accent);font-weight:800;color:#111520;padding:13px 17px;min-height:47px}.btn.alt{background:#303a4b;color:var(--text)}.btn.line{background:transparent;border:1px solid var(--border);color:var(--text)}.btn.small{padding:8px 11px;min-height:36px}.full{width:100%}.stack{display:grid;gap:12px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.metric{background:var(--panel2);border:1px solid var(--border);border-radius:16px;padding:17px}.metric strong{display:block;font-size:27px;margin-top:7px}.metric span{font-size:13px;color:var(--muted)}.row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.entry{border-top:1px solid var(--border);padding:14px 0;line-height:1.5}.entry:first-child{border-top:0}.entry strong{display:block}.pill{padding:5px 8px;border-radius:20px;font-size:12px;background:#354050;color:#f3f3f3}.notice{padding:13px 15px;border-radius:12px;border:1px solid #5b4b3c;background:#2b2420;line-height:1.5;color:#ffd6b2;margin:14px 0}.notice.error{border-color:#85515a;background:#352027;color:#ffced3}.notice.good{border-color:#3f7867;background:#19332f;color:#b9f4e1}.hidden{display:none!important}.empty{text-align:center;padding:26px;color:var(--muted)}.tag{color:var(--accent);font-weight:700;font-size:12px;letter-spacing:1.2px}.bar{position:sticky;top:0;background:#0c0f16ee;z-index:10;backdrop-filter:blur(10px)}.foot{margin-top:25px;color:#798494;font-size:12px;text-align:center}.tiny{font-size:12px;color:var(--muted)}.actions{display:flex;gap:9px;flex-wrap:wrap}input[type=date]{color-scheme:dark}a{color:#ffb985}.spin{width:20px;height:20px;border:3px solid #8f93a1;border-top-color:var(--accent);border-radius:50%;animation:rot .9s linear infinite;display:inline-block;vertical-align:middle}@keyframes rot{to{transform:rotate(360deg)}}@media(min-width:740px){.grid{grid-template-columns:repeat(4,1fr)}.shell{padding-left:32px;padding-right:32px}.hero h1{font-size:38px}}
+
+/* QADAM OFFICE mobile-first Mini App shell */
+html{overscroll-behavior-y:contain}body{overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+.shell{max-width:640px;padding:12px 14px calc(104px + env(safe-area-inset-bottom))}
+.shell>.top{padding:6px 0 14px}.brand{font-size:18px;display:flex;align-items:center}.mark{width:36px;height:36px;border-radius:11px;font-size:21px}
+.hero{padding:22px 20px;border-radius:21px;background:radial-gradient(ellipse at 100% 0,#533523 0,transparent 46%),linear-gradient(145deg,#272c3a,#181e2a)}
+.hero h1{font-size:27px;line-height:1.16}.hero .lead{font-size:14px}
+.card{padding:17px;border-radius:18px}.bar{top:0;border-bottom:1px solid #263041}.bar .top{padding:10px 0 12px}
+.nav{position:fixed;z-index:50;left:0;right:0;bottom:0;margin:0;padding:8px 8px calc(8px + env(safe-area-inset-bottom));display:flex;flex-wrap:nowrap;gap:4px;overflow-x:auto;overscroll-behavior-x:contain;background:#131925f7;border-top:1px solid #344052;box-shadow:0 -12px 28px #05060caa;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}.nav button{flex:0 0 76px;min-height:55px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;background:transparent;border-radius:11px;color:#aeb7c7;padding:5px 3px;font-size:10px;white-space:nowrap}
+.nav button.active{background:#3b2b23;color:#ffab6b;border:1px solid #885335}
+.nav-ico{font-size:20px;line-height:1.1}
+.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.quick-actions button{padding:15px;background:#273142;border:1px solid #41516b;border-radius:12px;color:white;text-align:left;font-weight:700}
+.metric{padding:15px 13px}.metric strong{font-size:22px;overflow-wrap:anywhere}.metric span{font-size:12px}
+.input{min-height:51px;font-size:16px}.btn{min-height:48px}.pill{white-space:nowrap}
+#banner{position:relative;z-index:70}.foot{margin-bottom:15px}
+@media(min-width:740px){.shell{max-width:820px;padding:20px 28px 115px}.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.hero h1{font-size:33px}.nav{justify-content:center}.nav button{flex-basis:85px}}
+
+/* QADAM OFFICE • interface system v55 */
+:root{color-scheme:light;--bg:#f3f5f8;--panel:#fff;--panel2:#f5f7fa;--border:#e5e9f0;--text:#172335;--muted:#697789;--accent:#ff791e;--ok:#16865b;--bad:#d94856}
+html,body{background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{min-height:100dvh}
+.shell{max-width:1120px;padding:20px 18px 110px}
+.top{padding:8px 0 18px}
+.brand{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:850;letter-spacing:-.45px}
+.mark{width:38px;height:38px;margin:0;background:#142235;color:#fff;border-radius:12px;box-shadow:inset -7px -7px 0 #ff791e;font-size:21px}
+.pill,.tag{background:#fff3e9;color:#bd4d07;border:1px solid #ffe1c9;border-radius:100px;padding:6px 10px;font-size:11px;font-weight:800;letter-spacing:.6px}
+.card,.metric,.entry{background:#fff;border:1px solid var(--border);box-shadow:0 5px 22px rgba(21,38,63,.035)}
+.card{border-radius:20px;padding:20px}
+.hero{background:linear-gradient(118deg,#15253a 0%,#233a53 72%,#394e64 100%);border:0;color:#fff;box-shadow:0 16px 38px rgba(15,34,58,.14);position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;right:-70px;bottom:-130px;width:260px;height:260px;border:55px solid rgba(255,121,30,.19);border-radius:50%;pointer-events:none}
+.hero h1{color:#fff;font-size:clamp(26px,4vw,36px);letter-spacing:-.8px;line-height:1.15;position:relative;z-index:1}
+.hero .lead{color:#dce5ee;position:relative;z-index:1}
+.hero .tag{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.18);color:#fff}
+.title{font-size:22px;letter-spacing:-.55px;color:#18283c}
+.lead,.sub,.muted{color:var(--muted)}
+.input{background:#f8fafc;border:1px solid #dbe2eb;color:#172335;border-radius:13px;min-height:49px}
+.input:focus{border-color:#ff791e;box-shadow:0 0 0 3px rgba(255,121,30,.11)}
+.btn{background:#ff791e;color:#fff;border-radius:13px;box-shadow:none;transition:transform .15s,background .15s}
+.btn:hover{background:#ec6b13;transform:translateY(-1px)}
+.btn.alt{background:#edf1f5;color:#26364a}
+.btn.line{color:#27374a;border:1px solid #dce2e9}
+.metric{border-radius:17px;padding:18px;min-width:0}
+.metric strong{font-size:clamp(23px,4vw,30px);color:#172335;letter-spacing:-.7px}
+.metric span{color:#677588}
+.grid{gap:12px}
+.entry{border-radius:14px;margin-bottom:8px}
+.nav{position:sticky;top:0;z-index:12;display:flex;flex-wrap:nowrap;overflow-x:auto;gap:5px;margin:0 0 20px;padding:8px;background:#fff;border:1px solid #e4e8ee;border-radius:18px;box-shadow:0 10px 25px rgba(22,36,55,.06);scrollbar-width:thin}
+.nav button{background:transparent!important;color:#68778a!important;border:0!important;border-radius:12px!important;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:78px;flex:1 0 auto;padding:9px 8px!important;font-size:11px!important;font-weight:700;white-space:nowrap}
+.nav button.active{background:#fff0e5!important;color:#e5660b!important}
+.nav-ico{display:flex;align-items:center;justify-content:center;line-height:1}
+.nav-ico svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.85;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.tabs button{background:#f1f4f8;color:#526277;border:1px solid #e5eaf1}
+.tabs button.active{background:#fff0e5;color:#d65d09;border-color:#ffd9bf}
+.bar{background:transparent}
+.foot{color:#98a4b2;font-size:11px;text-align:center}
+#auth{max-width:520px;margin:22px auto}
+#auth .hero{padding:30px 26px}
+#auth .card{box-shadow:0 12px 35px rgba(15,35,56,.055)}
+#cabinet .bar .top{background:#fff;border:1px solid #e7ebf0;padding:16px 18px;border-radius:18px;margin-bottom:12px}
+#cabinet .bar .tag{display:inline-block;margin-bottom:7px}
+.notice.error{background:#fff2f2;color:#a32638;border-color:#ffd4d9}
+.notice.good{background:#e9f8f0;color:#126641;border-color:#c7edda}
+@media(max-width:600px){.shell{padding:14px 12px 105px}.top{padding-bottom:13px}.nav{position:fixed;bottom:0;top:auto;left:0;right:0;margin:0;border-radius:18px 18px 0 0;border-bottom:0;padding:7px 6px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -8px 30px rgba(19,35,55,.1)}.nav button{min-width:70px}.card{padding:16px}.hero{padding:23px 19px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.foot{margin-top:30px}#cabinet .bar .top{padding:13px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation-duration:.01ms!important}}
+
+ .official-logo{width:162px;height:58px;object-fit:contain;filter:invert(1);mix-blend-mode:multiply}.brand-office{font-size:11px;font-weight:850;letter-spacing:2px;color:#ee6f18;border-left:1px solid #d6dce5;padding-left:10px}.brand{gap:6px}@media(max-width:420px){.official-logo{width:135px;height:49px}} /* QADAM OFFICE compact hierarchical navigation */
+#cabinet .nav{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5px!important;overflow:visible!important;overflow-x:hidden!important;width:100%;max-width:650px;margin-left:auto;margin-right:auto}
+#cabinet .nav button{min-width:0!important;width:100%!important;flex:1 1 0!important;min-height:58px!important;font-size:11px!important;white-space:normal!important;overflow-wrap:break-word;padding:8px 3px!important}
+#cabinet .nav button.active{background:#fff0e6!important;color:#c15d13!important}
+.hub-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:10px 0 18px}
+.hub-card{min-width:0;border:1px solid #e5e9f0;background:#fff;border-radius:18px;display:flex;align-items:flex-start;gap:12px;padding:17px 14px;text-align:left;color:#172335;min-height:106px;box-shadow:0 4px 12px rgba(22,36,55,.035);transition:border-color .15s,transform .15s}
+.hub-card:active{transform:scale(.985)}.hub-card:focus-visible,.hub-back:focus-visible{outline:3px solid #ff9b57;outline-offset:2px}
+.hub-icon{width:39px;height:39px;border-radius:12px;background:#fff1e7;color:#da6d1c;display:flex;justify-content:center;align-items:center;flex:0 0 39px}
+.hub-icon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.hub-card-body{display:flex;flex-direction:column;gap:6px;flex:1;min-width:0}
+.hub-card-body strong{font-weight:750;font-size:14px;overflow-wrap:anywhere;line-height:1.25}
+.hub-card-body small{font-size:11px;color:#697789;line-height:1.4;overflow-wrap:anywhere}
+.hub-chevron{font-size:21px;color:#a0aaba;align-self:center}
+.hub-back{border:0;background:none;color:#a45520;font-weight:700;font-size:14px;padding:9px 1px 14px;display:inline-block}
+@media(min-width:700px){#cabinet .nav{max-width:560px!important}.hub-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:420px){.hub-grid{gap:9px}.hub-card{padding:13px 10px;gap:8px;min-height:112px}.hub-icon{width:32px;height:32px;flex-basis:32px}.hub-card-body strong{font-size:12.5px}.hub-card-body small{font-size:10.5px}#cabinet .nav button{font-size:10px!important}}
+</style><script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+.msg-tabs{display:flex;gap:8px;margin-bottom:14px}.msg-tabs button{flex:1;font-size:13px;padding:11px 7px}
+.msg-grouphead{display:flex;gap:12px;align-items:center;margin-bottom:14px}.msg-grouphead h3{margin:0}.msg-grouphead p{margin:3px 0}
+.msg-avatar{flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#eea270,#bd6740);color:#24140f;font-weight:900;font-size:19px}
+.msg-contact{width:100%;border:0;border-bottom:1px solid var(--border);padding:12px 3px;display:flex;align-items:center;gap:12px;text-align:left;background:transparent;color:var(--text)}
+.msg-contact span:last-child{display:flex;flex-direction:column;gap:4px}.msg-contact small{color:var(--muted);font-size:12px}
+.msg-scroll{background:#101923;border-radius:16px;min-height:160px;max-height:440px;overflow-y:auto;padding:14px 10px;display:flex;flex-direction:column;gap:10px;margin:12px 0}
+.msg-bubble{max-width:85%;align-self:flex-start;background:#29394b;border-radius:16px 16px 16px 4px;padding:10px 13px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.5}
+.msg-bubble.mine{align-self:flex-end;background:#235c50;border-radius:16px 16px 4px 16px}
+.msg-sender{font-size:12px;color:#e9b08e;font-weight:700;margin-bottom:4px}.msg-time{text-align:right;font-size:10px;color:#b6c7cc;margin-top:5px}
+.msg-compose{display:flex;gap:8px;align-items:center}.msg-compose input{min-width:0;flex:1}.msg-compose button{min-width:44px}
+.msg-setting{display:flex;align-items:center;gap:12px;margin:18px 0}.msg-setting input{height:19px;width:19px}
+@media(max-width:550px){.msg-tabs button{font-size:12px}.msg-scroll{max-height:50vh}.msg-contact{padding:11px 0}}
+</style>
+<style>@media(max-width:600px){#cabinet .nav button{font-size:9px!important;padding:7px 1px!important;min-height:56px!important}#cabinet .nav-ico svg{width:19px;height:19px}}</style><style>
+.tg-list{border-radius:18px;background:#fff;border:1px solid #e8edf4;padding:15px 0;margin-bottom:14px;overflow:hidden}
+.tg-titlebar{display:flex;align-items:center;justify-content:space-between;padding:2px 17px 13px}.tg-titlebar h3{font-size:24px;letter-spacing:-.6px;margin:0;color:#101b2b}.tg-write-ico{font-size:25px;color:#1687dd}
+.tg-search{display:flex;align-items:center;gap:8px;border-radius:11px;margin:0 12px 8px;padding:0 12px;background:#f0f2f5;color:#86909e}.tg-search input{width:100%;height:40px;border:none;outline:none;background:transparent;color:#182337;font-size:14px}
+.tg-contact{display:flex;width:100%;gap:12px;align-items:center;border:0;border-bottom:1px solid #edf0f4;padding:11px 14px;text-align:left;background:#fff;color:#192333;min-height:74px}
+.tg-contact:last-child{border-bottom:0}.tg-contact:hover{background:#f5f9fd}.tg-contact-middle{display:flex;flex-direction:column;min-width:0;flex:1;gap:5px}.tg-contact-middle strong{font-size:15px;font-weight:730;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tg-contact-middle small{font-size:13px;color:#8d98a8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tg-contact-meta{display:flex;align-items:flex-end;flex-direction:column;gap:7px;align-self:center;color:#9aa4b1;font-size:11px;white-space:nowrap}.tg-unread{border-radius:100px;background:#228cee;color:#fff;display:grid;place-items:center;min-width:21px;height:21px;padding:0 5px;font-size:11px;font-weight:750}
+.tg-message-area{height:min(55vh,530px);min-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:7px;padding:15px 11px;background-color:#e7edf3;background-image:radial-gradient(circle at 25% 20%,rgba(255,255,255,.7) 0 3px,transparent 4px),radial-gradient(circle at 75% 70%,rgba(190,207,223,.25) 0 2px,transparent 3px);background-size:110px 110px;border-radius:13px;margin:11px 0}
+.tg-day{text-align:center;position:relative;margin:7px auto 10px;align-self:center}.tg-day span{display:inline-block;background:rgba(134,153,172,.78);padding:5px 12px;border-radius:100px;color:#fff;font-size:11px;font-weight:650}
+.tg-bubble{align-self:flex-start;max-width:88%;border-radius:15px 15px 15px 4px;background:#fff;box-shadow:0 1px 2px #a8b9ca44;padding:9px 11px 6px;color:#1d2b3b;font-size:14px;line-height:1.48;overflow-wrap:anywhere;white-space:pre-wrap}
+.tg-bubble.mine{background:#d5f7b8;align-self:flex-end;border-radius:15px 15px 4px 15px}.tg-body{max-width:100%}.tg-sender{font-size:12px;font-weight:750;color:#187fbb;margin-bottom:3px}.tg-foot{display:flex;gap:5px;justify-content:flex-end;align-items:center;margin-top:3px;color:#8c97a3;font-size:10px;line-height:1.2}.tg-bubble.mine .tg-foot{color:#438b59}.tg-ticks{font-size:12px;font-weight:800;color:#39a5cb}.tg-erase{background:transparent;border:none;color:#9ba6b2;font-size:18px;line-height:12px;min-width:22px;height:21px;padding:0 4px;cursor:pointer;opacity:.65}.tg-erase:hover{opacity:1;color:#bf3e46}
+.tg-empty{padding:30px 20px;text-align:center;font-size:14px;color:#73849a}.msg-compose{border:1px solid #e4e9f1;background:#fff;border-radius:24px;padding:5px 5px 5px 12px}.msg-compose input{border:0!important;outline:none;background:transparent!important;padding:9px 5px!important;color:#27354a!important}.msg-compose button{background:#1687e4!important;color:#fff!important;border-radius:50%;min-width:42px;width:42px;height:42px;min-height:42px;padding:0!important}
+.msg-tabs{background:#f1f4f8;padding:4px;border-radius:14px}.msg-tabs button{border-radius:11px;padding:10px 7px;box-shadow:none}
+@media(max-width:550px){.tg-message-area{height:52vh;min-height:190px}.tg-contact{padding:10px 12px}.tg-bubble{max-width:88%}}
+</style><style>.tg-backbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 12px}.tg-back-button{display:flex;align-items:center;gap:6px;color:#1687df;border:0;background:transparent;font-size:30px;padding:4px 6px;line-height:1;cursor:pointer}.tg-back-button span{font-size:15px;font-weight:650}.tg-back-title{font-size:13px;color:#728298;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tg-back-button:focus-visible{outline:2px solid #1687df;border-radius:8px}</style><style>.bio-test-card{margin-top:15px;border:1px solid #d5e1ee;border-radius:13px;padding:14px;background:rgba(75,140,198,.07)}.bio-test-card h3{margin:0 0 8px}.bio-test-card .sub{margin:7px 0 12px}.bio-status{padding:10px 12px;border-radius:9px;background:rgba(120,130,140,.13);font-size:13px;line-height:1.5;margin:9px 0 13px}.bio-status-ok{background:rgba(47,169,112,.14);color:#18835a}.bio-test-card button:disabled{opacity:.5}</style><style>
+/* QADAM OFFICE v90 premium concept — visual-only layer; original logo & backend unchanged */
+:root{color-scheme:light;--bg:#f8f6ff;--panel:#ffffff;--panel2:#f5f2ff;--border:#e9e4f6;--text:#171332;--muted:#77718e;--accent:#7937e9;--ok:#19834f;--bad:#d9465e}
+html,body{background:linear-gradient(160deg,#fff 0%,#faf8ff 34%,#f6f2ff 100%);color:var(--text)}
+.shell{max-width:840px}
+.card,.metric,.entry{border:1px solid #ece7f6;background:#fff;box-shadow:0 6px 24px rgba(85,42,140,.055)}
+.card{border-radius:21px}.metric{border-radius:17px;padding:15px 13px}.metric strong{color:#21113b;letter-spacing:-.7px;font-size:clamp(20px,4.4vw,29px);overflow-wrap:anywhere}.metric span{color:#766f88}
+.hero{background:linear-gradient(125deg,#3f168b 0%,#772fe0 57%,#a05af3 100%);border:0;box-shadow:0 14px 32px rgba(99,44,192,.19);border-radius:22px}
+.hero:after{border-color:rgba(255,255,255,.11);right:-90px;bottom:-145px}
+.hero h1{color:#fff}.hero .lead{color:#f1e8ff}
+.btn{background:linear-gradient(120deg,#9247f4,#5d22d2);color:#fff;border-radius:14px;box-shadow:0 5px 15px rgba(99,44,192,.16)}
+.btn:hover{background:#6930d9}.btn.alt{background:#f1edfa;color:#503a7f}.btn.line{color:#6e33cf;border-color:#dfd4f5;background:#fff}
+.input{background:#fbfaff;border-color:#e7def5;color:#201935}.input:focus{border-color:#8b4ee8;box-shadow:0 0 0 3px #8c4ee820}
+.tabs button{background:#f6f2fd;color:#63577b;border-color:#eae4f5}
+.tabs button.active{background:linear-gradient(120deg,#9950ee,#6429d6);color:#fff;border-color:transparent}
+.pill,.tag{background:#f2eafe;color:#7531c7;border:1px solid #e6d6ff}
+.nav{background:#fff;border:1px solid #ede8f5;box-shadow:0 -8px 28px rgba(57,24,98,.07)}
+.nav button{color:#77708b!important}.nav button.active,#cabinet .nav button.active{background:#f1e8ff!important;color:#7735e2!important}
+.hub-card{border-color:#ebe5f7;border-radius:18px;box-shadow:0 6px 22px rgba(78,38,127,.06);min-height:105px}
+.hub-icon{background:#f2e9ff;color:#7e37db}.hub-chevron{color:#9a7bc5}.hub-back{color:#7433d8}
+.hub-card:focus-visible,.hub-back:focus-visible{outline-color:#a971ed}
+#cabinet .bar .top{background:linear-gradient(120deg,#fff,#f8f4ff);border:1px solid #e9e1f5;border-radius:20px;box-shadow:0 5px 22px rgba(83,43,151,.035)}
+#cabinet .bar .tag{background:#f0e7ff;color:#7635c3}
+.brand-office{color:#6f2ecf;border-color:#e5d7f4}
+.official-logo{filter:invert(1);mix-blend-mode:multiply}
+.notice{border-color:#e8dcef;background:#fcf8ff;color:#65417b}.notice.error{background:#fff2f5;border-color:#ffd6df;color:#a32638}
+.notice.good{background:#ecf9f2;border-color:#c7edda;color:#126641}
+.entry{padding:14px;border-radius:15px}
+.title{color:#24183e}
+.sub,.muted,.lead{color:var(--muted)}
+#auth .hero{background:linear-gradient(125deg,#38157c,#8d41e6)}
+#auth .card{border-radius:23px}
+#cabinet .nav button .nav-ico svg{width:22px;height:22px}
+.q90-hero{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.q90-hero h1{font-size:22px;margin:5px 0}.q90-hero .lead{margin:4px 0}
+.q90-symbol{flex:0 0 58px;width:58px;height:58px;border-radius:50%;border:2px solid #ffffff66;display:grid;place-items:center;font-size:30px;font-weight:900;color:#fff;background:#ffffff20}
+.q90-stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:12px 0 16px}
+.q90-stat-grid .metric{min-height:91px;display:flex;flex-direction:column;justify-content:center}
+.q90-heading{font-size:17px;font-weight:800;margin:18px 0 10px;letter-spacing:-.4px}
+.q90-quick .hub-card{background:#fff}
+@media(max-width:600px){.shell{padding:12px 12px 115px}.card{padding:16px}.hero{padding:20px 17px}.hero h1{font-size:23px}.q90-stat-grid{gap:9px}.q90-stat-grid .metric{padding:13px 11px}#cabinet .nav{background:#fffffffa!important;border-top:1px solid #ede5f7!important;box-shadow:0 -6px 24px #592e8914!important}#cabinet .nav button{min-height:61px!important}}
+@media(prefers-reduced-motion:reduce){.btn{transition:none}}
+</style><style>
+/* v90 reference: light lilac mobile dashboard, real cards and photo-based chats */
+:root{--bg:#f8f7fd;--panel:#fff;--panel2:#f5f1ff;--border:#e9e3f4;--text:#171426;--muted:#756e86;--accent:#8344dc}
+body,html{background:linear-gradient(160deg,#fdfcff,#f5f0ff);color:var(--text)}
+#cabinet .bar .top{background:#fff!important;border:1px solid #ede7f7!important;box-shadow:0 8px 27px #4d278014!important}
+#cabinet .top .brand-office{color:#7035c9;border-color:#ded0f6}
+.official-logo{filter:invert(1)}
+.card,.metric,.hub-card,.tg-list{background:#fff!important;border:1px solid #ede7f5!important;border-radius:19px!important;box-shadow:0 6px 20px #533a8710!important}
+.title{color:#211536;font-size:22px;letter-spacing:-.6px}
+.btn{background:linear-gradient(120deg,#a267ee,#7334ce)!important;color:#fff!important;border:0!important;box-shadow:0 4px 10px #8a4dd526!important}
+.btn.alt,.btn.line{background:#f5f0fc!important;color:#6f3bc1!important;border:1px solid #e8dcf8!important;box-shadow:none!important}
+.hero.q90-hero,.hero{background:linear-gradient(125deg,#b989f1,#7941d0)!important;box-shadow:0 14px 30px #7547b62a!important}
+.hero:after{border-color:#ffffff22}
+.tag,.pill{color:#7131c6;background:#f3eaff;border-color:#eadcf9}
+.hub-icon{background:#f4ecff;color:#803ddd}
+.hub-card{align-items:center;min-height:92px}
+.hub-card-body strong{color:#271b3a}
+.metric strong{color:#6832bb}
+.tabs button.active,.msg-tabs .btn:not(.alt){background:linear-gradient(120deg,#ac73ee,#7940d1)!important;color:#fff!important}
+#cabinet .nav{border:1px solid #ece4f9!important;background:#fffffff5!important;box-shadow:0 -8px 30px #7147ad17!important}
+#cabinet .nav button.active{background:#f2e8ff!important;color:#6f2fc9!important}
+.input,.tg-search{background:#f8f6fc!important;border-color:#e9e2f4!important;color:#241a37!important}
+.tg-contact{background:#fff!important;border-bottom:1px solid #f0ebf6}
+.tg-contact:hover{background:#faf7ff!important}
+.tg-unread{background:#8544df}
+.msg-avatar{overflow:hidden;background:linear-gradient(135deg,#dec6ff,#9561e1)!important;color:#4a1886!important;font-weight:800}
+.msg-avatar img{width:100%;height:100%;display:block;object-fit:cover}
+.tg-message-area{background-color:#f4effb;background-image:radial-gradient(#e1d4f25c 1.3px,transparent 1.3px);background-size:25px 25px}
+.tg-bubble.mine{background:#e7d2ff}
+.msg-compose button{background:linear-gradient(130deg,#a76bec,#7939ce)!important}
+.q90-live-toast{position:fixed;z-index:101;top:calc(12px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);width:min(92%,430px);background:#fff;border:1px solid #dccbf4;border-left:4px solid #8344dc;border-radius:15px;padding:13px 14px;box-shadow:0 12px 35px #2f175133;display:flex;gap:12px;align-items:center;color:#271a36;cursor:pointer;text-align:left}
+.q90-live-toast strong{display:block;font-size:13px}.q90-live-toast small{font-size:12px;color:#6d627c}
+#q90-notice-counter{background:#8b45e0;color:#fff;min-width:18px;height:18px;display:inline-grid;place-items:center;border-radius:18px;font-size:10px;padding:0 4px;margin-left:4px}
+@media(max-width:600px){.shell{padding-left:12px;padding-right:12px}.hub-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.hub-card{min-height:105px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12px 6px}.hub-icon{width:35px;height:35px;flex:0 0 35px}.hub-card-body{align-items:center}.hub-card-body small,.hub-chevron{display:none}.hub-card-body strong{font-size:11px;line-height:1.25}#cabinet .nav button{font-size:10px!important}.tg-list{padding-top:8px}}
+</style><style>
+/* QADAM OFFICE v91: photo, modern conversation detail, meaningful statistics */
+.q91-owner-picture{flex:0 0 74px;width:74px;height:74px;display:grid;place-items:center;border-radius:50%;overflow:hidden;background:#ffffff36;border:3px solid #ffffff9e;box-shadow:0 6px 20px #441a742d;color:white}
+.q91-owner-picture img{width:100%;height:100%;object-fit:cover}
+.q91-owner-picture svg{width:43px;height:43px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round}
+.q91-owner-title{font-size:23px!important;line-height:1.23!important}
+.q91-owner-sub{opacity:.95;font-size:13px!important}
+.q91-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:14px 0}
+.q91-metric{border:1px solid #ebe5f5;background:#fff;box-shadow:0 7px 22px #6237a012;border-radius:18px;padding:15px 13px;min-width:0;display:flex;align-items:flex-start;gap:11px}
+.q91-metric-icon{width:39px;height:39px;flex:0 0 39px;display:grid;place-items:center;border-radius:13px;background:#f2e8ff;color:#8142d8}
+.q91-metric-icon svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.q91-metric-content{min-width:0;display:flex;flex-direction:column;gap:5px}
+.q91-metric-label{font-size:11.5px;color:#726883;line-height:1.3}
+.q91-metric-value{font-size:clamp(18px,3.4vw,24px);letter-spacing:-.6px;font-weight:850;color:#29153e;overflow-wrap:anywhere;line-height:1.2}
+.q91-sectionhead{font-weight:850;font-size:16px;color:#2b1c40;display:flex;align-items:center;gap:8px;margin:17px 0 10px}
+.q91-sectionhead svg{width:20px;height:20px;color:#8142d8}
+.q91-chatroom{border:1px solid #e8e0f3!important;border-radius:21px!important;padding:0!important;overflow:hidden;background:white!important}
+.q91-chatroom .q91-chathead{display:flex;gap:12px;align-items:center;padding:15px 16px;border-bottom:1px solid #eee9f5;background:linear-gradient(120deg,#fff,#faf7ff)}
+.q91-chatroom .q91-chathead .msg-avatar{width:53px;height:53px;flex:0 0 53px}
+.q91-chatroom .q91-chathead strong{font-size:15px;color:#241735}
+.q91-chatroom .q91-chathead small{display:block;color:#897d98;margin-top:3px;font-size:11px}
+.q91-chatroom .q91-chathead .btn{margin-left:auto;white-space:nowrap;font-size:11px}
+.q91-chatroom .tg-message-area{border-radius:0;margin:0;height:min(61vh,610px);min-height:285px;padding:16px 13px}
+.q91-chatroom .tg-bubble{max-width:83%;border-radius:16px 16px 16px 5px;padding:11px 12px 8px;box-shadow:0 2px 5px #52317a12}
+.q91-chatroom .tg-bubble.mine{border-radius:16px 16px 5px 16px;background:#e9d7ff}
+.q91-chatroom .msg-compose{margin:11px 12px;border-radius:24px;border:1px solid #e8ddfa}
+.q91-chatroom #refreshMessages{margin:0 13px 12px!important}
+.q91-chatroom .tg-day span{background:#997ab7c9}
+.q91-chatroom .tg-sender{color:#6d32bf}
+.q91-chatroom .tg-foot{font-size:10px}
+.tg-contact .msg-avatar{width:49px;height:49px;flex:0 0 49px}
+.tg-contact-middle{gap:6px}
+.tg-contact-middle strong{color:#261a37}
+.q91-photo-fallback{background:#d9c4f7!important}
+.q91-owner-loading{display:flex;gap:8px;align-items:center}
+@media(max-width:600px){.q91-owner-picture{width:65px;height:65px;flex-basis:65px}.q91-metrics{gap:9px}.q91-metric{padding:12px 10px;gap:8px}.q91-metric-icon{width:32px;height:32px;flex-basis:32px}.q91-metric-icon svg{width:19px;height:19px}.q91-metric-value{font-size:18px}.q91-chatroom .tg-message-area{height:58vh}}
+</style><style>
+/* QADAM OFFICE desktop companion — same application screens and API as Mini App.
+   Access remains denied without verified Telegram initData until browser auth is implemented server-side. */
+@media(min-width:960px){
+ body{background:#f8f6fc!important}
+ .shell{max-width:none!important;margin:0!important;padding:22px 44px 52px 308px!important;min-height:100vh}
+ #root>.top{position:fixed;left:0;top:0;width:268px;z-index:35;padding:27px 20px!important;background:#fff;border-right:1px solid #e8e0f3}
+ #root>.top .brand{flex-wrap:wrap}
+ #root>.top>.pill{display:none}
+ #cabinet .nav{position:fixed!important;left:0!important;right:auto!important;top:108px!important;bottom:0!important;width:268px!important;max-width:268px!important;height:calc(100vh - 108px)!important;overflow-y:auto!important;overflow-x:hidden!important;margin:0!important;padding:17px 13px!important;display:grid!important;grid-template-columns:1fr!important;grid-auto-rows:min-content!important;align-content:start!important;gap:9px!important;background:#fff!important;border:0!important;border-right:1px solid #e8e0f3!important;border-radius:0!important;box-shadow:none!important}
+ #cabinet .nav button{min-height:56px!important;width:100%!important;display:flex!important;flex-direction:row!important;gap:14px!important;justify-content:flex-start!important;align-items:center!important;padding:12px 18px!important;text-align:left!important;font-size:14px!important;border-radius:14px!important}
+ #cabinet .nav-ico svg{height:23px;width:23px}
+ #cabinet .bar{background:transparent!important;border:0!important;position:sticky;top:10px;z-index:20}
+ #cabinet .bar .top{padding:15px 22px!important;margin-bottom:23px;box-shadow:0 7px 24px #6837a112!important}
+ #cabinet #section{max-width:1250px;margin:0 auto}
+ #cabinet #section>.row{padding:3px 1px}
+ #cabinet .hub-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+ #cabinet .hub-card{min-height:110px;flex-direction:row;align-items:center;text-align:left;justify-content:flex-start;padding:20px;gap:13px}
+ #cabinet .hub-card-body{align-items:flex-start}
+ #cabinet .hub-card-body strong{font-size:15px}
+ #cabinet .hub-card-body small{display:block;font-size:12px}
+ #cabinet .hub-chevron{display:inline}
+ #cabinet .hub-icon{width:46px;height:46px;flex-basis:46px;border-radius:15px}
+ #cabinet .grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+ #cabinet .q91-metrics{grid-template-columns:repeat(4,minmax(0,1fr))}
+ #cabinet .q91-chatroom{max-width:1050px;margin:0 auto}
+ #cabinet .q91-chatroom .tg-message-area{height:min(62vh,660px)}
+ #cabinet .tg-list{max-width:1050px;margin:0 auto 16px}
+ #cabinet .card{border-radius:23px!important}
+ #cabinet .hero{min-height:130px}
+ #cabinet .hero.q90-hero{padding:25px 35px}
+ #cabinet .hero.q90-hero h1{font-size:30px!important}
+ #auth{max-width:520px;margin:8vh auto!important}
+ .foot{text-align:center;margin-left:auto}
+}
+@media(min-width:1450px){#cabinet .hub-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:959px){#root>.top{position:static}}
+</style></head><body><main class="shell" id="root"><div class="top"><div class="brand"><img class="official-logo" src="../assets/qadam-logo.svg" alt="QADAM Akademiya"> <span class="brand-office">OFFICE</span></div><span class="pill">QADAM OFFICE</span></div><section id="banner" class="notice hidden" role="alert"></section><div id="loading" class="card"><span class="spin"></span> <span id="loadingText">Mini App ishga tushirilmoqda...</span></div><div id="auth" class="hidden"><div id="tgHelp" class="notice hidden"><strong>Telegram ulanishi aniqlanmadi.</strong><p>Ichki tizim brauzer loginini xavfsiz server autentifikatsiyasi bilan ulash kerak. Ungacha 2-botni Telegram Desktop ichida oching.</p><button type="button" class="btn alt small" id="retryTelegram">Qayta tekshirish</button><p class="tiny" id="tgDiagnostics"></p></div><div class="hero"><span class="tag">QADAM AKADEMIYA • OFFICE</span><h1>Xodim kabinetiga kirish</h1><p class="lead">Telegram orqali himoyalangan kirish. Xodim ID, parol va 6 xonali PIN talab qilinadi.</p></div><div class="tabs"><button id="tabLogin" class="active" data-screen="login">Kirish</button><button id="tabActivate" data-screen="activate">Xodim faollashtirish</button><button id="tabOwner" class="hidden" data-screen="owner">Owner birinchi kirish</button></div><div class="card" id="screenLogin"><form id="loginForm"><div class="field"><label for="empCode">Xodim ID</label><input class="input" id="empCode" required autocomplete="username" placeholder="Masalan: NMV007" maxlength="16"></div><div class="field"><label for="empPass">Parol</label><input class="input" id="empPass" required type="password" autocomplete="current-password" placeholder="Parolingiz" maxlength="128"></div><button class="btn full" type="submit">Kirish →</button></form></div><div class="card hidden" id="screenActivate"><h2 class="title">Xodimni faollashtirish</h2><p class="lead">Avval Xodim ID orqali Ownerga tasdiqlash so‘rovini yuboring. Owner shaxsingizni tekshirganidan keyin faollashtirish kodini beradi.</p><form id="activationRequestForm" class="stack"><div class="field"><label for="requestEmployeeCode">Xodim ID</label><input class="input" id="requestEmployeeCode" name="code" required maxlength="16" placeholder="Masalan: SL007"></div><button class="btn alt full" type="submit">Ownerga tasdiqlash so‘rovi yuborish</button></form><div class="notice">Owner tasdiqlamaguncha akkaunt faollashmaydi. Tasdiqdan keyin Ownerdan kodni olib, quyidagi maydonlarni to‘ldiring.</div><form id="activateForm"><div class="field"><label>Xodim ID</label><input class="input" name="code" required></div><div class="field"><label>Faollashtirish kodi</label><input class="input" name="activation" required autocomplete="off" maxlength="8" minlength="8" pattern="[A-Za-z0-9]{8}" autocapitalize="characters" placeholder="8 belgili kod (harf + raqam)" style="text-transform:uppercase"></div><div class="field"><label>Yangi parol (kamida 12 belgi)</label><input class="input" type="password" name="password" minlength="12" required></div><button class="btn full">Faollashtirish</button></form></div><div class="card hidden" id="screenOwner"><h2 class="title">Owner akkauntini birinchi marta faollashtirish</h2><p class="lead">Faqat server belgilagan Owner Telegram akkauntida, bir martalik sozlash uchun.</p><form id="ownerForm"><div class="field"><label>Yangi parol (kamida 12 belgi)</label><input class="input" name="password" type="password" minlength="12" required></div><div class="field"><label>Parolni takrorlang</label><input class="input" name="confirm_password" type="password" minlength="12" required></div><button class="btn full">Owner parolini o‘rnatish</button></form></div></div><section id="mfa" class="hidden"><div class="hero"><span class="tag">2-BOSQICH</span><h1>6 xonali PIN</h1><p id="mfaDesc" class="lead">Tasdiqlash...</p></div><div class="card"><form id="pinForm"><div class="field"><label>PIN kod</label><input class="input" id="pin" type="password" inputmode="numeric" autocomplete="one-time-code" maxlength="6" minlength="6" pattern="[0-9]{6}" required placeholder="● ● ● ● ● ●"></div><div id="confirmPinField" class="field hidden"><label>PIN kodni takrorlang</label><input class="input" id="pinConfirm" type="password" inputmode="numeric" maxlength="6" pattern="[0-9]{6}"></div><button class="btn full" type="submit">Tasdiqlash →</button></form><button id="backLogin" class="btn line full" style="margin-top:10px">Kirishga qaytish</button></div></section><section id="cabinet" class="hidden"><div class="bar"><div class="top"><div><div class="tag">QADAM OFFICE • STAFF</div><div style="font-weight:800;font-size:20px" id="who">Kabinet</div><span class="sub" id="role"></span></div><button class="btn line small" id="logout">Chiqish</button></div></div><div class="nav" id="nav" aria-label="Bo‘limlar"></div><div id="section" aria-live="polite"></div></section><p class="foot">QADAM OFFICE • Ichki tizim • umumiy maʼlumotlar bazasi</p></main>
+<script>
+'use strict';
+(()=>{
+const BASE='https://vpxvazxmidbqajlhdqxz.supabase.co/functions/v1/qadam-office-bot';
+const tg=window.Telegram?.WebApp;const $=id=>document.getElementById(id);
+function telegramData(){
+  const fromSdk=window.Telegram?.WebApp?.initData;
+  if(typeof fromSdk==='string'&&fromSdk.length>0)return fromSdk;
+  try{const h=new URLSearchParams(location.hash.replace(/^#/,''));const q=new URLSearchParams(location.search);return h.get('tgWebAppData')||q.get('tgWebAppData')||''}catch{return ''}
+}
+function diagnostic(){
+ const h=new URLSearchParams(location.hash.replace(/^#/,''));
+ return 'SDK: '+(window.Telegram?.WebApp?'bor':'yo‘q')+' · Telegram launch: '+(h.has('tgWebAppData')?'bor':'yo‘q')+' · URL: '+(location.protocol==='https:'?'HTTPS':'boshqa')+' · v55';
+}
+const state={initData:'',user:null,pending:null,mode:null,current:'home',busy:false,navSeq:0};
+const ICONS={"messenger":"<rect x=\"2\" y=\"3\" width=\"20\" height=\"15\" rx=\"5\"/><path d=\"m7 18-2 4 7-4\"/>","home":"<path d=\"m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z\"/>","employees":"<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75\"/>","crm":"<rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"3\"/><path d=\"M8 8h8M8 12h8M8 16h5\"/>","tasks":"<rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"3\"/><path d=\"m8 12 3 3 5-6\"/>","education":"<path d=\"m2 10 10-6 10 6-10 6-10-6ZM6 12v6c4 3 8 3 12 0v-6M22 10v7\"/>","finance":"<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M15 8h-4a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4H9m3-10v2m0 8v2\"/>","marketing":"<path d=\"m3 11 12-5v12L3 14zM15 9c3 0 5-2 5-4M15 15c3 0 5 2 5 4M6 15l2 5h3l-2-6\"/>","attendance":"<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 7v5l3 2\"/>","audit":"<path d=\"M12 2v3m0 14v3M4.9 4.9l2.1 2.1m10 10 2.1 2.1M2 12h3m14 0h3M4.9 19.1 7 17m10-10 2.1-2.1\"/><circle cx=\"12\" cy=\"12\" r=\"4\"/>"};
+ICONS.sections='<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>';
+ICONS.notifications='<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/>';
+ICONS.profile='<circle cx="12" cy="8" r="4"/><path d="M4 21c0-5 3.5-8 8-8s8 3 8 8"/>';
+
+// Distinct outline icons for each real function; inherit v90 purple theme.
+Object.assign(ICONS,{
+  'chat':'<path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-4 3v-6a7.5 7.5 0 1 1 18-4.5z"/><path d="M7 11h10M7 14h6"/>',
+  'finance-dashboard':'<path d="M3 20h18M6 16V9m6 7V4m6 12v-6"/><path d="m3 10 6-4 4 2 8-5"/>',
+  'salary-accounting':'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h3m4 0h1M8 16h8"/>',
+  'salary-supervision':'<rect x="3" y="5" width="18" height="15" rx="3"/><path d="M3 10h18M8 15h5"/>',
+  'salary-bulk':'<path d="M4 4h16v5H4zM6 9v12h12V9M9 14h6m-6 4h6"/>',
+  'salary-import':'<path d="M12 3v13m-4-4 4 4 4-4M4 18v3h16v-3"/>',
+  'finance-groups':'<circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2 20v-2c0-3 2.5-5 6-5s6 2 6 5v2m2-6c3 0 6 2 6 5v1"/>',
+  'salary-confirm':'<path d="M20 7 10 17l-5-5"/><rect x="2" y="2" width="20" height="20" rx="4"/>',
+  'students':'<circle cx="9" cy="7" r="3"/><path d="M3 20v-2c0-3 2-5 6-5s6 2 6 5v2M16 6h5m-2.5-2.5v5"/>',
+  'my-attendance':'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18m-14 5 3 3 6-6"/>',
+  'hr-attendance':'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 3"/>',
+  'leave-management':'<path d="M4 4h16v16H4zM8 2v4m8-4v4M4 9h16m-12 5h8"/>',
+  'my-leaves':'<path d="M4 20h16M8 16l8-8 3 3-8 8-4 1zM14 10l3 3"/>',
+  'performance':'<path d="M3 20h18M6 17v-5m6 5V6m6 11v-8"/><path d="m3 9 5-4 5 4 8-7"/>',
+  'kpi':'<circle cx="12" cy="12" r="9"/><path d="m7 13 3 3 7-8"/>',
+  'owner':'<path d="m2 7 5 4 5-8 5 8 5-4-2 13H4z"/>',
+  'settings':'<circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M19 5l-2 2M7 17l-2 2"/>'
+});
+const navIcon=id=>'<svg viewBox="0 0 24 24" aria-hidden="true">'+(ICONS[id]||ICONS.home)+'</svg>';
+const menu=[['home','Bosh sahifa'],['employees','Xodimlar'],['crm','CRM'],['tasks','Vazifalar'],['education','Ta’lim'],['finance','Moliya'],['marketing','Marketing'],['attendance','Davomat'],['audit','Audit']];
+const roles={owner:'Owner',director:'Direktor',education_manager:'O‘quv bo‘limi rahbari',hr:'HR',administrator:'Administrator',accountant:'Buxgalter',teacher:'O‘qituvchi',assistant_teacher:'Yordamchi ustoz',sales:'Sotuv',marketing:'Marketing',editor:'Kontent muharriri',targetologist:'Targetolog'};
+const esc=v=>String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+function show(id){for(const k of ['loading','auth','mfa','cabinet']){const el=$(k);if(el)el.classList.toggle('hidden',k!==id)}}
+function notify(msg,type='error'){const n=$('banner');n.className='notice '+(type==='good'?'good':'error');n.textContent=msg;try{n.scrollIntoView({block:'nearest',behavior:'smooth'})}catch{}}
+function clearMessage(){$('banner').classList.add('hidden')}
+function busy(flag){state.busy=flag;document.querySelectorAll('button').forEach(x=>x.disabled=flag)}
+async function api(path,data={},timeout=25000){if(!state.initData)throw Error('Telegram bot ichidagi Mini App orqali oching. Brauzerda to‘g‘ridan-to‘g‘ri kirib bo‘lmaydi.');const ctl=new AbortController();const timer=setTimeout(()=>ctl.abort(),timeout);try{const response=await fetch(BASE+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...data,initData:state.initData}),signal:ctl.signal,cache:'no-store'});let body;try{body=await response.json()}catch{throw Error('Server noto‘g‘ri javob qaytardi ('+response.status+')')}if(!response.ok||body.ok===false)throw Error(body.message||'So‘rov bajarilmadi ('+response.status+')');return body;}catch(e){if(e.name==='AbortError')throw Error('Server 25 soniyada javob bermadi. Internetni tekshirib, qayta urinib ko‘ring.');throw e;}finally{clearTimeout(timer)}}
+function localDate(offset=0){
+ const d=new Date(Date.now()+offset*86400000),p=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Tashkent',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d);
+ const get=t=>p.find(x=>x.type===t)?.value||'';
+ return get('year')+'-'+get('month')+'-'+get('day');
+}
+async function init(){
+ try{window.Telegram?.WebApp?.ready();window.Telegram?.WebApp?.expand();window.Telegram?.WebApp?.disableVerticalSwipes?.()}catch{}
+ state.initData=telegramData();
+ if(!state.initData){await new Promise(r=>setTimeout(r,1100));state.initData=telegramData()}
+ if(!state.initData){
+   show('auth');$('tgHelp').classList.remove('hidden');$('tgDiagnostics').textContent=diagnostic();
+   notify('Brauzer orqali xavfsiz kirish hali yoqilmagan. Hozircha QADAM OFFICE 2-botni Telegram Desktop ichidan oching.');return;
+ }
+ $('tgHelp').classList.add('hidden');clearMessage();
+ try{const me=await api('/me');if(me.ok&&me.staff){await enter(me.staff);return}}
+ catch(e){if(!/Kirish talab|401|tasdig‘i|yaroqsiz/i.test(e.message||''))console.warn('Session check:',e.message)}
+ show('auth');checkOwner();
+}
+$('retryTelegram').addEventListener('click',()=>{show('loading');init().catch(e=>{show('auth');notify(e.message)})});
+async function checkOwner(){try{const result=await api('/setup-status');$('tabOwner').classList.toggle('hidden',result.owner_first_setup_pending!==true);}catch{ $('tabOwner').classList.add('hidden');}}
+function authTab(screen){['login','activate','owner'].forEach(x=>{$('screen'+x[0].toUpperCase()+x.slice(1)).classList.toggle('hidden',x!==screen);$('tab'+x[0].toUpperCase()+x.slice(1)).classList.toggle('active',x===screen)});clearMessage();}
+document.querySelectorAll('[data-screen]').forEach(b=>b.addEventListener('click',()=>authTab(b.dataset.screen)));
+async function submit(event,callback){event.preventDefault();if(state.busy)return;busy(true);clearMessage();try{await callback()}catch(e){notify(e.message||'Noma’lum xato')}finally{busy(false)}}
+$('loginForm').addEventListener('submit',e=>submit(e,async()=>{const v=await api('/login',{code:$('empCode').value.trim().toUpperCase(),password:$('empPass').value});$('empPass').value='';if(!v.pending_id||!['pin_verify','pin_enroll'].includes(v.mode))throw Error('Server PIN bosqichini qaytarmadi');state.pending=v.pending_id;state.mode=v.mode;$('mfaDesc').textContent=v.message||'PIN kiriting';$('confirmPinField').classList.toggle('hidden',v.mode!=='pin_enroll');$('pinConfirm').required=v.mode==='pin_enroll';show('mfa');}));
+$('pinForm').addEventListener('submit',e=>submit(e,async()=>{const pin=$('pin').value;const isNew=state.mode==='pin_enroll';const v=await api(isNew?'/pin-enroll':'/pin-verify',{pending_id:state.pending,pin,...(isNew?{confirm_pin:$('pinConfirm').value}:{})});if(!v.ok)throw Error(v.message||'PIN rad etildi');$('pin').value='';$('pinConfirm').value='';state.pending=null;const me=await api('/me');if(!me.staff)throw Error('PIN tasdiqlandi, lekin sessiya tekshirilmadi. Ilovani yopib, qayta oching.');await enter(me.staff);}));
+$('ownerForm').addEventListener('submit',e=>submit(e,async()=>{const f=new FormData(e.target);const v=await api('/owner-first-setup',{password:f.get('password'),confirm_password:f.get('confirm_password')});e.target.reset();$('tabOwner').classList.add('hidden');authTab('login');notify(v.message||'Parol o‘rnatildi. Endi ID va parol bilan kiring.','good')}));
+$('activationRequestForm').addEventListener('submit',e=>submit(e,async()=>{const f=new FormData(e.target);const code=String(f.get('code')||'').trim().toUpperCase();const v=await api('/activation-request',{code});document.querySelector('#activateForm [name=code]').value=code;notify(v.message||'Ownerga so‘rov yuborildi','good')}));
+$('activateForm').addEventListener('submit',e=>submit(e,async()=>{const f=new FormData(e.target);const v=await api('/activate',{code:String(f.get('code')).trim().toUpperCase(),activation:String(f.get('activation')||'').trim().toUpperCase(),password:f.get('password')});e.target.reset();authTab('login');notify(v.message||'Xodim faollashtirildi','good')}));
+$('backLogin').addEventListener('click',()=>{state.pending=null;show('auth');authTab('login')});
+$('logout').addEventListener('click',()=>submit({preventDefault(){}},async()=>{await api('/app-logout');state.user=null;show('auth');authTab('login')}));
+
+const MENU_GROUPS=[
+ {id:'finance',title:'Moliya',desc:'Oylik, to‘lovlar, chek va Excel',icon:'finance',
+  items:[['finance-dashboard','Moliyaviy dashboard','Kirim, chiqim va qarzdorlik'],['finance','Oyliklarni tasdiqlash','Owner uchun hisob-kitoblar'],['salary-accounting','Oylik va cheklar','Rekvisit, chek va to‘lovlar'],['finance-groups','Guruhlar moliyasi','Ustozlar va yordamchilar ulushi'],['salary-bulk','Ommaviy oylik','Barcha xodimlar oyligi'],['salary-import','Excel import','Excel orqali maosh rejalari'],['salary-supervision','Oyliklar nazorati','Direktor tekshiruvi'],['salary-confirm','Mening oyligim','Oylikni oldim/olmadim']]},
+ {id:'people',title:'Xodimlar',desc:'Jamoa, kadrlar va vazifalar',icon:'employees',
+  items:[['employees','Xodimlar','Xodimlar kartasi va roli'],['tasks','Vazifalar','Topshiriqlarni boshqarish'],['my-attendance','Mening davomatim','Kelish va ketishni belgilash'],['attendance','Jamoa davomati','Xodimlar ishtiroki'],['hr-attendance','Kechikish va kelmaganlar','Jadval asosidagi davomat nazorati'],['my-leaves','Mening ta’tilim','Ta’tilga ariza yuborish'],['leave-management','Ta’til so‘rovlari','HR tavsiyasi va Owner qarori'],['performance','Xodimlar natijalari','Direktorning vazifalar nazorati'],['kpi','KPI va bonus tavsiyasi','0–100 ballik dastlabki ko‘rsatkich']]},
+ {id:'education',title:'O‘quv jarayoni',desc:'Guruhlar, darslar va ustozlar',icon:'education',
+  items:[['education','Guruhlar va darslar','O‘quv jarayonini boshqarish'],['students','O‘quvchilar va yangi foydalanuvchilar','ID, ism va telefon bo‘yicha qidiruv']]},
+ {id:'sales',title:'Sotuv va CRM',desc:'Mijozlar, savdo va kuzatuv',icon:'crm',
+  items:[['crm','CRM va sotuv','Mijoz va sotuv amallari']]},
+ {id:'marketing',title:'Marketing',desc:'Kontent, reklama va natijalar',icon:'marketing',
+  items:[['marketing','Marketing kabineti','Kampaniyalar va kontent']]},
+ {id:'communication',title:'Aloqa',desc:'Xabarlar va ichki muloqot',icon:'tasks',
+  items:[['messenger','Shaxsiy chatlar va guruh','Xodimlar guruhi va shaxsiy xabarlar'],['chat','Murojaatlar','Owner va bo‘limlarga murojaat'],['notifications','Bildirishnomalar','Yangi xabar va eslatmalar']]},
+ {id:'management',title:'Boshqaruv',desc:'Audit va muhim tekshiruvlar',icon:'audit',
+  items:[['audit','Tizim auditi','Lavozimlar va harakatlar']]}
+];
+function roleRoutes(role){
+ const base=['home','sections','profile','messenger','chat','notifications','salary-confirm','tasks','my-attendance','my-leaves'];
+
+ if(role==='owner')return new Set([...base,'hr-attendance','leave-management','performance','kpi','employees','employee-card','crm','education','students','finance','marketing','attendance','audit','salary-accounting','salary-supervision','finance-dashboard','salary-bulk','salary-import','finance-groups']);
+ if(role==='director')return new Set([...base,'hr-attendance','leave-management','performance','kpi','employees','education','students','salary-supervision','finance-dashboard']);
+ if(role==='administrator')return new Set([...base,'education','students','group-members']);
+ if(role==='education_manager')return new Set([...base,'education','students']);
+ if(role==='hr')return new Set([...base,'employees','attendance','hr-attendance','leave-management']);
+ if(role==='accountant')return new Set([...base,'students','finance','salary-accounting','finance-groups','finance-dashboard','salary-bulk','salary-import']);
+ if(role==='sales')return new Set([...base,'crm']);
+ if(['marketing','editor','targetologist'].includes(role))return new Set([...base,'marketing']);
+ if(['teacher','assistant_teacher'].includes(role))return new Set([...base,'education','students']);
+ return new Set(base);
+}
+function visibleGroups(){
+ return MENU_GROUPS.map(group=>({...group,items:group.items.filter(([route])=>state.allowedRoutes?.has(route))
+   .map(item=>item[0]==='finance'&&state.user?.role==='accountant'?['finance','Mukofotlar hisobi','Xodimlar mukofotlari va cheklar']:item)
+ })).filter(group=>group.items.length);
+}
+function routeCategory(route){return visibleGroups().find(group=>group.items.some(([id])=>id===route))?.id||null;}
+function directoryButtons(items){
+ return '<div class="hub-grid">'+items.map(item=>`<button type="button" class="hub-card" data-hub="${esc(item.id)}"><span class="hub-icon">${navIcon(item.icon||'home')}</span><span class="hub-card-body"><strong>${esc(item.title)}</strong><small>${esc(item.desc||'')}</small></span><span class="hub-chevron">›</span></button>`).join('')+'</div>';
+}
+function bindDirectoryButtons(){document.querySelectorAll('[data-hub]').forEach(button=>button.addEventListener('click',()=>navigate(button.dataset.hub)));}
+function quickRoutes(){
+ const role=state.user?.role;
+ const priorities={
+ owner:['finance-dashboard','salary-supervision','employees','tasks','audit','crm'],
+ director:['kpi','performance','hr-attendance','tasks','salary-supervision'],
+ administrator:['education','tasks','my-attendance','notifications'],
+ education_manager:['education','tasks','notifications'],
+ hr:['hr-attendance','leave-management','employees','tasks'],
+ accountant:['salary-accounting','finance-dashboard','my-attendance','salary-bulk'],
+ teacher:['education','tasks','my-attendance','salary-confirm'],
+ assistant_teacher:['education','tasks','my-attendance','salary-confirm'],
+ sales:['crm','tasks','salary-confirm'],
+ marketing:['marketing','tasks','notifications'],
+ editor:['marketing','tasks','notifications'],
+ targetologist:['marketing','tasks','notifications']
+ };
+ const labels={'performance':'Xodimlar natijalari','hr-attendance':'Davomat nazorati','leave-management':'Ta’til so‘rovlari','my-leaves':'Mening ta’tilim','my-attendance':'Mening davomatim',finance:'Moliya',employees:'Xodimlar',tasks:'Vazifalar',education:'Ta’lim',crm:'CRM',marketing:'Marketing',audit:'Audit','salary-supervision':'Oylik nazorati','finance-dashboard':'Moliyaviy hisobot','salary-accounting':'Oylik va cheklar','salary-bulk':'Oylik hisoblash','finance-groups':'Guruhlar moliyasi','salary-confirm':'Oylik tasdig‘i',notifications:'Xabarlar'};
+ const icons={'performance':'performance','hr-attendance':'hr-attendance','leave-management':'leave-management','my-leaves':'my-leaves','my-attendance':'my-attendance','finance-dashboard':'finance-dashboard','salary-supervision':'salary-supervision','salary-accounting':'salary-accounting','salary-bulk':'salary-bulk','finance-groups':'finance-groups','salary-confirm':'salary-confirm',notifications:'notifications'};
+ return (priorities[role]||['tasks','salary-confirm']).filter(id=>state.allowedRoutes.has(id)).slice(0,4)
+   .map(id=>({id,title:labels[id]||id,desc:visibleGroups().find(g=>g.items.some(x=>x[0]===id))?.title||'Tezkor kirish',icon:icons[id]||id}));
+}
+function renderMainNav(){
+ const preferred=[['home','Asosiy'],['sections','Bo‘limlar'],['messenger','Chat'],['notifications','Xabarlar'],['profile','Profil']];
+ const nav=preferred.filter(([id])=>state.allowedRoutes?.has(id));
+ $('nav').innerHTML=nav.map(([id,label])=>`<button type="button" data-nav="${id}" aria-label="${label}"><span class="nav-ico">${navIcon(id)}</span><span>${label}</span></button>`).join('');
+ $('nav').querySelectorAll('[data-nav]').forEach(button=>button.addEventListener('click',()=>navigate(button.dataset.nav)));
+}
+// Foreground-only alerts. Telegram push notifications require a separate server-side bot sender.
+let q90PollHandle=null,q90KnownIds=null,q90PollBusy=false;
+function q90Toast(title,body){
+ document.getElementById('q90LiveToast')?.remove();
+ const el=document.createElement('button');el.type='button';el.id='q90LiveToast';el.className='q90-live-toast';
+ el.innerHTML='<span aria-hidden="true">🔔</span><span><strong>'+esc(title)+'</strong><small>'+esc(body)+'</small></span>';
+ el.onclick=()=>{el.remove();navigate('notifications')};
+ document.body.appendChild(el);setTimeout(()=>el.remove(),7000);
+}
+async function q90RefreshUnread(){
+ if(!state.user||q90PollBusy||document.hidden)return;
+ q90PollBusy=true;
+ try{
+  const result=await api('/staff/ops/notifications',{},10000);
+  const items=Array.isArray(result.notifications)?result.notifications:[];
+  const unread=items.filter(x=>!x.read_at);
+  const ids=new Set(unread.map(x=>String(x.id)));
+  const prev=q90KnownIds;q90KnownIds=ids;
+  const nav=document.querySelector('[data-nav="notifications"]');
+  if(nav){nav.querySelector('#q90-notice-counter')?.remove();
+   if(unread.length){const badge=document.createElement('span');badge.id='q90-notice-counter';badge.textContent=String(Math.min(99,unread.length));nav.appendChild(badge);}
+  }
+  if(prev){const newest=unread.find(x=>!prev.has(String(x.id)));if(newest){q90Toast(newest.title||'Yangi xabar',newest.body||'Bildirishnomani oching');try{window.Telegram?.WebApp?.HapticFeedback?.notificationOccurred('success')}catch{}}}
+ }catch(e){console.debug('Notification refresh unavailable',e?.message)}
+ finally{q90PollBusy=false}
+}
+function q90StartAlerts(){
+ if(q90PollHandle)clearInterval(q90PollHandle);
+ q90KnownIds=null;q90RefreshUnread();
+ q90PollHandle=setInterval(q90RefreshUnread,30000);
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&state.user)q90RefreshUnread()});
+async function enter(staff){
+ state.user=staff;
+ state.allowedRoutes=roleRoutes(staff.role);
+ $('who').textContent=staff.full_name||'Kabinet';
+ $('role').textContent=(roles[staff.role]||staff.role)+' • '+staff.employee_code;
+ show('cabinet');
+ renderMainNav();
+ q90StartAlerts();
+ if(staff.role!=='owner'){
+   try{const check=await api('/staff/ops/profile-status');state.profileRequired=check.required&&!check.complete;}
+   catch(e){state.profileRequired=true;notify('Profil tekshirilmadi. Shaxsiy profilni oching.');}
+ }else state.profileRequired=false;
+ await navigate(state.profileRequired?'profile':'home');
+}
+async function navigate(tab){
+ if(tab.startsWith('group:')){
+   if(!visibleGroups().some(g=>g.id===tab.slice(6))){notify('Ushbu bo‘lim lavozimingiz uchun ochilmagan');return}
+ }else if(!state.allowedRoutes?.has(tab)){
+   notify('Ushbu sahifa lavozimingiz uchun ochilmagan');return;
+ }
+
+if(state.user?.role!=='owner'&&state.profileRequired&&tab!=='profile'){
+ tab='profile';
+}
+const previous=state.current;
+if(previous!==tab)state.previousScreen=previous;
+const seq=++state.navSeq;state.current=tab;document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===(['home','sections','messenger','notifications','profile'].includes(tab)?tab:'sections')));$('section').innerHTML='<div class="card"><span class="spin"></span> Ma’lumotlar yuklanmoqda...</div>';clearMessage();try{await render(tab)}catch(e){if(seq!==state.navSeq)return;$('section').innerHTML=`<div class="card"><h2 class="title">Ma’lumotlar ochilmadi</h2><div class="notice error">${esc(e.message||String(e))}</div><div class="actions"><button class="btn" id="retry">Qayta urinish</button><button class="btn alt" id="errorBack">Bo‘limlarga qaytish</button></div></div>`;$('retry').onclick=()=>navigate(tab);$('errorBack').onclick=()=>navigate('sections')}}
+const count=(n,label)=>`<div class="metric"><span>${esc(label)}</span><strong>${esc(n??0)}</strong></div>`;
+const wrapper=(title,html)=>{
+ const category=routeCategory(state.current);
+ const back=state.current==='home'||state.current==='profile'||state.current==='sections'?'':state.current.startsWith('group:')?
+   '<button class="hub-back" type="button" id="hubBack">‹ Barcha bo‘limlar</button>':
+   '<button class="hub-back" type="button" id="hubBack">‹ '+esc(category?MENU_GROUPS.find(g=>g.id===category)?.title||'Bo‘limlar':'Bo‘limlar')+'</button>';
+ return back+`<div class="row"><h2 class="title">${esc(title)}</h2><button class="btn alt small" id="refresh">↻ Yangilash</button></div>${html}`;
+};
+function inject(title,body){
+ const quick=state.current==='home'?'<div class="card q90-quick"><h3>Tezkor kirish</h3><p class="sub">Eng muhim amallar bir joyda</p>'+directoryButtons(quickRoutes())+'</div>':'';
+ $('section').innerHTML=wrapper(title,quick+body);
+ $('refresh').onclick=()=>navigate(state.current);
+ if($('hubBack'))$('hubBack').onclick=()=>navigate(state.current.startsWith('group:')?'sections':routeCategory(state.current)?'group:'+routeCategory(state.current):'sections');
+ if(state.current==='home')bindDirectoryButtons();
+}
+function list(rows,template,empty='Hozircha ma’lumot yo‘q'){return Array.isArray(rows)&&rows.length?rows.map(x=>`<div class="entry">${template(x)}</div>`).join(''):`<div class="empty">${esc(empty)}</div>`}
+function formHandler(id,fn){const el=$(id);if(el)el.addEventListener('submit',e=>submit(e,async()=>{await fn(new FormData(el));await navigate(state.current);notify('Amal bajarildi','good')}))}
+
+function qadamCsvParse(text){
+ const input=String(text).replace(/^\uFEFF/,'');const first=input.split(/\r?\n/,1)[0]||'';
+ const delimiter=[';',',','\t'].sort((a,b)=>first.split(b).length-first.split(a).length)[0];
+ const rows=[];let row=[],field='',quote=false;
+ for(let i=0;i<input.length;i++){
+   const ch=input[i];
+   if(quote){if(ch==='"'&&input[i+1]==='"'){field+='"';i++}else if(ch==='"'){quote=false}else field+=ch}
+   else if(ch==='"'){quote=true}
+   else if(ch===delimiter){row.push(field);field=''}
+   else if(ch==='\n'){row.push(field.replace(/\r$/,''));if(row.some(x=>x.trim()))rows.push(row);row=[];field=''}
+   else field+=ch;
+ }
+ if(quote)throw Error('CSV ichida yopilmagan qo‘shtirnoq bor');
+ row.push(field.replace(/\r$/,''));if(row.some(x=>x.trim()))rows.push(row);
+ return rows;
+}
+async function qadamXlsxParse(buffer){
+ const bytes=new Uint8Array(buffer),view=new DataView(buffer);const td=new TextDecoder();
+ const u16=p=>view.getUint16(p,true),u32=p=>view.getUint32(p,true);
+ let eocd=-1;for(let p=bytes.length-22;p>=Math.max(0,bytes.length-65557);p--)if(u32(p)===0x06054b50){eocd=p;break}
+ if(eocd<0)throw Error('Excel ZIP fayli noto‘g‘ri');
+ const entries=u16(eocd+10);if(entries>1000)throw Error('Fayl juda murakkab');
+ const files=new Map();let cur=u32(eocd+16);
+ for(let i=0;i<entries;i++){
+   if(u32(cur)!==0x02014b50)throw Error('Excel ZIP ro‘yxati noto‘g‘ri');
+   const method=u16(cur+10),size=u32(cur+20),nameLen=u16(cur+28),extra=u16(cur+30),comment=u16(cur+32),local=u32(cur+42);
+   const name=td.decode(bytes.slice(cur+46,cur+46+nameLen));
+   if(name.startsWith('xl/'))files.set(name,{method,size,local});
+   cur+=46+nameLen+extra+comment;
+ }
+ const read=async name=>{
+   const x=files.get(name);if(!x)return null;
+   if(x.size>6e6)throw Error('Excel varag‘i juda katta');
+   if(u32(x.local)!==0x04034b50)throw Error('Excel ZIP yozuvi buzilgan');
+   const start=x.local+30+u16(x.local+26)+u16(x.local+28);
+   const compressed=bytes.slice(start,start+x.size);
+   if(x.method===0)return td.decode(compressed);
+   if(x.method!==8||!('DecompressionStream' in window))throw Error('XLSXni ochib bo‘lmadi, CSV formatiga saqlang');
+   const ds=new DecompressionStream('deflate-raw');
+   const stream=new Blob([compressed]).stream().pipeThrough(ds);
+   const expanded=await new Response(stream).arrayBuffer();
+   if(expanded.byteLength>12e6)throw Error('Excel jadvali hajmi katta');
+   return td.decode(expanded);
+ };
+ const xml=t=>{const doc=new DOMParser().parseFromString(t,'application/xml');if(doc.getElementsByTagName('parsererror').length)throw Error('Excel XML noto‘g‘ri');return doc};
+ const sharedText=await read('xl/sharedStrings.xml');const shared=[];
+ if(sharedText){const d=xml(sharedText);for(const s of d.getElementsByTagName('si'))shared.push([...s.getElementsByTagName('t')].map(t=>t.textContent||'').join(''))}
+ const colIndex=letters=>[...letters.toUpperCase()].reduce((n,ch)=>n*26+ch.charCodeAt(0)-64,0)-1;
+ const names=[...files.keys()].filter(n=>/^xl\/worksheets\/sheet\d+\.xml$/.test(n)).sort((a,b)=>Number(a.match(/sheet(\d+)/)[1])-Number(b.match(/sheet(\d+)/)[1]));
+ for(const filename of names.slice(0,40)){
+   const data=await read(filename);if(!data)continue;
+   const doc=xml(data),out=[];
+   for(const node of doc.getElementsByTagName('row')){
+     const row=[];for(const cell of node.getElementsByTagName('c')){
+       const addr=cell.getAttribute('r')||'A1',index=colIndex(addr.match(/^[A-Z]+/i)?.[0]||'A');if(index>120)continue;
+       const type=cell.getAttribute('t'),v=cell.getElementsByTagName('v')[0]?.textContent||'';
+       row[index]=type==='s'?shared[Number(v)]||'':type==='inlineStr'?[...cell.getElementsByTagName('t')].map(x=>x.textContent||'').join(''):v;
+     }
+     if(row.some(v=>String(v||'').trim()))out.push(row);
+     if(out.length>270)break;
+   }
+   if(out.some(r=>r.some(v=>String(v||'').trim().toLowerCase()==='employee_code')))return out;
+ }
+ throw Error('Excel varag‘ida employee_code ustuni topilmadi. Namuna fayldan foydalaning.');
+}
+function qadamSalaryRows(matrix){
+ const clean=x=>String(x??'').trim().toLowerCase().replace(/[\s\-_()%.]+/g,'');
+ const aliases={
+   employee_code:['employee_code','xodim kodi','xodim id','код сотрудника'],
+   salary_type:['salary_type','oylik turi','тип оплаты'],
+   base_salary_uzs:['base_salary_uzs','asosiy oylik','asosiy maosh','оклад'],
+   commission_percent:['commission_percent','commission_pct','foiz','foiz %','комиссия %'],
+   commission_bps:['commission_bps'],
+   kpi_target:['kpi_target','kpi maqsad'],
+   kpi_bonus_uzs:['kpi_bonus_uzs','kpi bonus'],
+   effective_on:['effective_on','amal qilish sanasi','sana']
+ };
+ const hdr=matrix.findIndex(row=>Array.isArray(row)&&row.some(x=>clean(x)==='employeecode'));
+ if(hdr<0)throw Error('employee_code sarlavhasi topilmadi. Namuna fayldan foydalaning.');
+ const headers=matrix[hdr].map(clean),indexes={};
+ for(const [k,names] of Object.entries(aliases)){
+   indexes[k]=headers.findIndex(h=>names.some(n=>clean(n)===h));
+ }
+ for(const required of ['employee_code','salary_type','base_salary_uzs','effective_on'])
+   if(indexes[required]<0)throw Error(required+' ustuni kerak');
+ if(indexes.commission_percent<0&&indexes.commission_bps<0)throw Error('commission_percent yoki commission_bps ustuni kerak');
+ const result=[],toNumber=x=>{
+   const s=String(x??'').trim().replace(/\s/g,'').replace(',','.');
+   return s===''?0:Number(s);
+ };
+ const date=x=>{
+   const s=String(x??'').trim();
+   if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
+   if(/^\d{2}\.\d{2}\.\d{4}$/.test(s)){const [d,m,y]=s.split('.');return y+'-'+m+'-'+d}
+   const n=Number(s);
+   if(Number.isInteger(n)&&n>20000&&n<100000)return new Date(Date.UTC(1899,11,30+n)).toISOString().slice(0,10);
+   return s;
+ };
+ for(let i=hdr+1;i<matrix.length;i++){
+   const cells=matrix[i]||[],get=k=>indexes[k]<0?'':String(cells[indexes[k]]??'').trim();
+   if(!cells.some(x=>String(x??'').trim()))continue;
+   const pct=indexes.commission_bps>=0?toNumber(get('commission_bps')):toNumber(get('commission_percent'))*100;
+   const record={employee_code:get('employee_code').toUpperCase(),salary_type:get('salary_type').toLowerCase(),
+      base_salary_uzs:toNumber(get('base_salary_uzs')),commission_bps:Math.round(pct),
+      kpi_target:toNumber(get('kpi_target')),kpi_bonus_uzs:toNumber(get('kpi_bonus_uzs')),
+      effective_on:date(get('effective_on'))};
+   if(!record.employee_code)throw Error('Excel '+(i+1)+'-qator: xodim kodi bo‘sh');
+   for(const key of ['base_salary_uzs','commission_bps','kpi_target','kpi_bonus_uzs'])
+     if(!Number.isFinite(record[key]))throw Error('Excel '+(i+1)+'-qator: '+key+' raqam emas');
+   result.push(record);
+ }
+ if(result.length<1||result.length>250)throw Error('1–250 ta xodim qatori bo‘lishi kerak');
+ return result;
+}
+
+async function showPublicStaffProfile(staffId,host){
+ const r=await api('/staff/ops/office-staff-public-profile',{staff_id:staffId});
+ const e=r.employee||{},p=r.profile||{};
+ const el=document.createElement('div');el.className='card msg-public-profile';
+ el.innerHTML='<div class="msg-grouphead">'+(r.photo_signed_url?'<img src="'+esc(r.photo_signed_url)+'" alt="Profil rasmi" style="width:66px;height:66px;border-radius:50%;object-fit:cover">':'<div class="msg-avatar">'+esc(String(e.full_name||'?').slice(0,1))+'</div>')+'<div><h3>'+esc(e.full_name||'Xodim')+'</h3><p class="sub">'+esc(roles[e.role]||e.role)+' · '+esc(e.employee_code||'')+'</p></div></div><p class="sub">'+esc(p.position_title||'')+' '+esc(p.department||'')+'</p><p>'+esc(p.biography||'O‘zi haqida ma’lumot kiritilmagan')+'</p>';
+ const old=host.querySelector('.msg-public-profile');if(old)old.remove();host.append(el);
+}
+function q90Avatar(person){
+ const name=String(person?.full_name||person?.name||'?');
+ const initial=esc(name.trim().slice(0,1).toUpperCase()||'?');
+ const src=person?.photo_signed_url||person?.avatar_url||person?.photo_url||'';
+ const image=typeof src==='string'&&/^https:\/\//i.test(src)?'<img loading="lazy" referrerpolicy="no-referrer" alt="" src="'+esc(src)+'">':'';
+ return '<span class="msg-avatar" aria-label="'+esc(name)+'">'+(image||initial)+'</span>';
+}
+
+
+async function q91LoadChatAvatars(people){
+ const contacts=(people||[]).filter(p=>p?.id&&!p.photo_signed_url&&!p.avatar_url&&!p.photo_url).slice(0,18);
+ if(!contacts.length)return;
+ const worker=async()=>{
+  while(contacts.length){
+   const person=contacts.shift();
+   if(state.current!=='messenger'||state.messengerMode==='group')return;
+   try{
+    const result=await api('/staff/ops/office-staff-public-profile',{staff_id:person.id},8500);
+    const url=result?.photo_signed_url;
+    if(!url||!/^https:\/\//i.test(url))continue;
+    const btn=[...document.querySelectorAll('[data-contact]')].find(el=>el.dataset.contact===String(person.id));
+    if(!btn)continue;
+    const circle=btn.querySelector('.msg-avatar');
+    if(circle){
+      circle.textContent='';
+      const img=document.createElement('img');img.alt='';img.loading='lazy';img.referrerPolicy='no-referrer';img.src=url;circle.append(img);
+    }
+   }catch(e){/* Profile photo is optional; keep the initial as fallback. */}
+  }
+ };
+ await Promise.all([worker(),worker(),worker()]);
+}
+function q91OwnerPortrait(profile){
+ const url=profile?.photo_signed_url||profile?.profile?.photo_signed_url||profile?.photo_url||'';
+ const img=(typeof url==='string'&&/^https:\/\//i.test(url))?'<img src="'+esc(url)+'" alt="Owner profil rasmi" loading="eager">':'<svg viewBox="0 0 24 24" aria-label="Profil rasmi mavjud emas"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-5 3-8 8-8s8 3 8 8"/></svg>';
+ return '<div class="q91-owner-picture">'+img+'</div>';
+}
+function q91Welcome(profile){
+ return '<div class="hero q90-hero"><div><span class="tag">QADAM AKADEMIYA · OWNER</span><h1 class="q91-owner-title">Xush kelibsiz, Owner!</h1><p class="lead q91-owner-sub">'+esc(state.user?.full_name||'Boshqaruv paneli')+'</p></div>'+q91OwnerPortrait(profile)+'</div>';
+}
+function q91Stat(value,label,icon){
+ return '<div class="q91-metric"><div class="q91-metric-icon">'+navIcon(icon)+'</div><div class="q91-metric-content"><span class="q91-metric-value">'+esc(value??'—')+'</span><span class="q91-metric-label">'+esc(label)+'</span></div></div>';
+}
+function chatClock(date){try{return new Date(date).toLocaleTimeString('uz-UZ',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Tashkent'})}catch{return ''}}
+function chatDay(date){try{return new Date(date).toLocaleDateString('uz-UZ',{day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Tashkent'})}catch{return ''}}
+function chatMessagesHTML(messages,kind){
+ if(!messages.length)return '<div class="tg-empty">Hozircha yozishma yo‘q. Birinchi xabarni yuboring.</div>';
+ let previous='';
+ return messages.map(m=>{
+  const day=chatDay(m.created_at),divider=day!==previous?'<div class="tg-day"><span>'+esc(day)+'</span></div>':'';
+  previous=day;
+  const mine=Boolean(m.is_mine);
+  const sender=kind==='group'?'<div class="tg-sender">'+esc(m.sender_name||'Xodim')+'</div>':'';
+  const ticks=mine?'<span class="tg-ticks">'+(m.read_at?'✓✓':'✓')+'</span>':'';
+  const canDelete=mine||kind==='direct'||(kind==='group'&&state.user.role==='owner');
+  const erase=canDelete?'<button type="button" class="tg-erase" data-chat-delete="'+esc(m.id)+'" data-kind="'+esc(kind)+'" title="Xabarni o‘chirish" aria-label="Xabarni o‘chirish">×</button>':'';
+  return divider+'<div class="tg-bubble '+(mine?'mine':'')+'">'+sender+'<div class="tg-body">'+esc(m.message||'')+'</div><div class="tg-foot">'+erase+'<span>'+esc(chatClock(m.created_at))+'</span>'+ticks+'</div></div>';
+ }).join('');
+}
+function chatWireDelete(){
+ document.querySelectorAll('[data-chat-delete]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{
+  if(!confirm('Xabar suhbat tarixidan barcha ishtirokchilar uchun o‘chirilsinmi?'))return;
+  await api('/staff/ops/office-chat-delete',{message_id:Number(btn.dataset.chatDelete),kind:btn.dataset.kind});
+  await navigate('messenger');
+ }));
+}
+function chatScrollEnd(){const el=document.querySelector('.tg-message-area');if(el)el.scrollTop=el.scrollHeight}
+function biometricTestMessage(text,isSuccess=false){
+ const el=$('bioTestStatus');if(!el)return;
+ el.textContent=text;el.className='bio-status '+(isSuccess?'bio-status-ok':'');
+}
+function initializeBiometricTest(){
+ const button=$('biometricTestButton'),settings=$('biometricSettingsButton');
+ if(!button||!settings)return;
+ const manager=tg?.BiometricManager;
+ if(!manager||typeof manager.init!=='function'||typeof manager.requestAccess!=='function'||typeof manager.authenticate!=='function'){
+   biometricTestMessage('Bu Telegram versiyasida biometrik test API mavjud emas. ID, parol va PIN ishlashda davom etadi.');
+   return;
+ }
+ let working=false;
+ function updateUI(){
+   if(!manager.isInited){biometricTestMessage('Telegram biometrik imkoniyati tekshirilmoqda...');return}
+   if(!manager.isBiometricAvailable){
+     biometricTestMessage('Bu qurilma yoki Telegram biometrik tasdiqlashni taklif qilmayapti.');
+     button.disabled=true;return;
+   }
+   button.disabled=false;
+   const type=manager.biometricType==='face'?'Face ID':manager.biometricType==='finger'?'Touch ID':'Biometrik tasdiqlash';
+   const denied=manager.isAccessRequested&&!manager.isAccessGranted;
+   biometricTestMessage(type+' mavjud. '+(manager.isAccessGranted?'Ruxsat berilgan. Sinovni boshlashingiz mumkin.':denied?'Telegram ruxsati rad etilgan. Sozlamalardan qayta tekshiring.':'Sinovni bosib ruxsat so‘rang.'));
+   settings.classList.toggle('hidden',!denied||typeof manager.openSettings!=='function');
+ }
+ try{manager.init(updateUI)}catch(err){biometricTestMessage('Biometrik tekshiruv boshlanmadi: '+String(err?.message||err))}
+ button.onclick=()=>{
+   if(working)return;
+   working=true;button.disabled=true;
+   const finish=()=>{working=false;if(button.isConnected)button.disabled=false};
+   const next=()=>{
+     try{
+       biometricTestMessage('Telegram Face ID tasdiqlashni so‘ramoqda...');
+       manager.authenticate({reason:'QADAM OFFICE Face ID sinovi. Akkauntga kirish o‘zgarmaydi.'},(ok)=>{
+         if(!button.isConnected)return;
+         // Biometrik token qabul qilinmaydi, saqlanmaydi yoki serverga yuborilmaydi.
+         biometricTestMessage(ok?'Face ID sinovi muvaffaqiyatli! Kirish usuli hozircha o‘zgarmadi.':'Biometrik tasdiqlash bekor qilindi yoki rad etildi. PIN orqali kirish ishlaydi.',!!ok);
+         finish();
+       });
+     }catch(err){biometricTestMessage('Face ID testi ishlamadi: '+String(err?.message||err));finish()}
+   };
+   try{
+     if(!manager.isBiometricAvailable){biometricTestMessage('Biometrik tasdiqlash mavjud emas.');finish();return}
+     if(manager.isAccessGranted){next();return}
+     biometricTestMessage('Telegram biometrik ruxsat so‘ramoqda...');
+     manager.requestAccess({reason:'QADAM OFFICE Face ID sinovi uchun ruxsat'},allowed=>{
+       if(!button.isConnected)return;
+       if(!allowed){biometricTestMessage('Telegram Face ID ruxsati berilmadi. Sozlamalarni tekshiring.');settings.classList.toggle('hidden',typeof manager.openSettings!=='function');finish();return}
+       next();
+     });
+   }catch(err){biometricTestMessage('Ruxsatni tekshirishda xato: '+String(err?.message||err));finish()}
+ };
+ settings.onclick=()=>{try{manager.openSettings()}catch(err){biometricTestMessage('Sozlamalarni ochib bo‘lmadi: '+String(err?.message||err))}};
+}
+async function render(tab){const owner=state.user.role==='owner';
+ if(tab==='sections'){
+  inject('Barcha bo‘limlar','<div class="hero"><h1>QADAM OFFICE</h1><p class="lead">Kerakli yo‘nalishni tanlang. Sizga faqat lavozimingizga tegishli bo‘limlar ko‘rsatiladi.</p></div>'+directoryButtons(visibleGroups().map(g=>({id:'group:'+g.id,title:g.title,desc:g.desc,icon:g.icon}))));
+  bindDirectoryButtons();return;
+ }
+ if(tab.startsWith('group:')){
+  const key=tab.slice(6),group=visibleGroups().find(g=>g.id===key);
+  if(!group)throw Error('Ushbu bo‘lim uchun ruxsat yo‘q');
+  inject(group.title,'<div class="hero"><h1>'+esc(group.title)+'</h1><p class="lead">'+esc(group.desc)+'</p></div>'+directoryButtons(group.items.map(([id,title,desc])=>({id,title,desc,icon:group.icon}))));
+  bindDirectoryButtons();return;
+ }
+
+
+if(tab==='messenger'){
+ const mode=state.messengerMode||'private';
+ const studentChatAllowed=['administrator','accountant','teacher','assistant_teacher'].includes(state.user.role);
+ const tabs="<div class='msg-tabs'><button type='button' id='modePrivate' class='btn "+(mode==='private'?'':'alt')+"'>Shaxsiy chatlar</button><button type='button' id='modeGroup' class='btn "+(mode==='group'?'':'alt')+"'>Xodimlar guruhi</button>"+(studentChatAllowed?"<button type='button' id='modeStudents' class='btn "+(mode==='student'?'':'alt')+"'>O‘quvchilar</button>":"")+"</div>";
+ const hasOpenConversation=mode==='private'?Boolean(state.directStaffId):mode==='student'?Boolean(state.selectedChatStudentId):false;
+ const chatBack="<div class='tg-backbar'><button type='button' id='tgBack' class='tg-back-button' aria-label='Orqaga qaytish'>‹ <span>"+(hasOpenConversation?'Chatlar':'Bo‘limlar')+"</span></button><span class='tg-back-title'>"+(mode==='group'?'Xodimlar guruhi':mode==='student'?'O‘quvchilar':'Shaxsiy chatlar')+"</span></div>";
+
+ if(mode==='group'){
+   const [settings,data]=await Promise.all([api('/staff/ops/office-chat-settings'),api('/staff/ops/chat-list',{channel:'general',requester_staff_id:null})]);
+   const group=settings.group||{},messages=data.messages||[];
+   const groupInfo="<div class='card'><div class='msg-grouphead'><div class='msg-avatar'>Q</div><div><h3>QADAM OFFICE • Xodimlar</h3><p class='sub'>"+(settings.members||[]).length+" ta faol xodim · Admin: Owner</p></div></div><button class='btn alt small' id='groupMembersBtn'>Guruh ma’lumotlari va a’zolar</button></div>";
+   const manage="<div class='card' id='groupManage' style='display:none'><h3>Guruh a’zolari</h3>"+list(settings.members||[],x=>"<strong>"+esc(x.full_name)+"</strong><div class='sub'>"+esc(roles[x.role]||x.role)+" · "+esc(x.employee_code)+"</div><div class='actions'><button type='button' class='btn small alt' data-group-profile='"+esc(x.employee_code)+"'>Profil</button>"+(state.user.role==='owner'&&x.role!=='owner'?"<button type='button' class='btn small alt' data-member-mute='"+esc(x.id)+"' data-can-post='"+(x.can_post?'false':'true')+"'>"+(x.can_post?'Yozishni cheklash':'Yozishga ruxsat')+"</button>":'')+"</div>")+
+   (state.user.role==='owner'?"<label class='msg-setting'><input id='onlyOwnerPosts' type='checkbox' "+(group.owner_only_post?'checked':'')+"> Faqat Owner xabar yozsin</label><button class='btn small' id='saveGroupSettings'>Saqlash</button>":"<p class='sub'>Guruh yozish huquqlarini faqat Owner o‘zgartiradi.</p>")+"</div>";
+   const bubbles="<div class='tg-message-area' id='msgScroll'>"+chatMessagesHTML(messages,'group')+"</div>";
+   inject('Chat',chatBack+tabs+groupInfo+manage+"<div class='card'>"+bubbles+(group.can_post?"<form id='staffGroupSend' class='msg-compose'><input class='input' name='message' maxlength='2000' required placeholder='Guruhga xabar yozing...'><button class='btn' type='submit'>➤</button></form>":"<div class='notice'>Hozir guruhga faqat Owner xabar yozishi mumkin.</div>")+"<button class='btn alt small' id='refreshMessages' type='button'>Yangilash</button></div>");
+   $('groupMembersBtn').onclick=()=>{$('groupManage').style.display=$('groupManage').style.display==='none'?'block':'none'};
+   if($('saveGroupSettings'))$('saveGroupSettings').onclick=()=>submit({preventDefault(){}},async()=>{await api('/staff/ops/office-chat-settings-save',{owner_only_post:$('onlyOwnerPosts').checked});await navigate('messenger')});
+   document.querySelectorAll('[data-member-mute]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{await api('/staff/ops/office-chat-member-post-save',{staff_id:btn.dataset.memberMute,can_post:btn.dataset.canPost==='true'});await navigate('messenger')}));
+   document.querySelectorAll('[data-group-profile]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{const worker=(settings.members||[]).find(x=>x.employee_code===btn.dataset.groupProfile);if(!worker)throw Error('Xodim topilmadi');await showPublicStaffProfile(worker.id,$('groupManage'))}));
+
+   chatWireDelete();chatScrollEnd();
+   if($('staffGroupSend'))formHandler('staffGroupSend',async d=>{await api('/staff/ops/chat-send',{channel:'general',requester_staff_id:null,message:String(d.get('message')||'').trim()})});
+ }else if(mode==='student'){
+   if(!studentChatAllowed)throw Error('O‘quvchi bilan chat ruxsati yo‘q');
+   const r=await api('/staff/ops/office-student-chat-contacts');
+   const students=r.students||[],chosen=students.find(x=>x.id===state.selectedChatStudentId);
+   const cards="<div class='card'><h3>O‘quvchilar bilan suhbat</h3><p class='sub'>Sizga biriktirilgan guruhlar va ruxsat etilgan o‘quvchilar.</p><input class='input' id='chatStudentSearch' maxlength='80' placeholder='O‘quvchi ismi yoki QADAM ID'><div id='chatStudentContacts'>"+(students.length?students.map(x=>"<button class='msg-contact' type='button' data-chat-student='"+esc(x.id)+"'><span class='msg-avatar'>"+esc((x.full_name||'?').slice(0,1))+"</span><span><strong>"+esc(x.full_name)+"</strong><small>"+esc(x.qadam_id||'')+" · "+esc((x.groups||[]).join(', '))+"</small></span></button>").join(''):"<p class='sub'>Hozircha guruhingizda o‘quvchilar mavjud emas.</p>")+"</div></div>";
+   let conversation='';
+   if(chosen){
+     const data=await api('/staff/ops/office-student-chat-list',{student_id:chosen.id}),messages=data.messages||[];
+     conversation="<div class='card'><div class='msg-grouphead'><div class='msg-avatar'>"+esc((chosen.full_name||'?').slice(0,1))+"</div><div><strong>"+esc(chosen.full_name)+"</strong><p class='sub'>"+esc(chosen.qadam_id||'')+" · "+esc((chosen.groups||[]).join(', '))+"</p></div></div><div class='tg-message-area'>"+chatMessagesHTML(messages,'student')+"</div><form class='msg-compose' id='studentStaffSend'><input class='input' maxlength='2000' required name='message' placeholder='O‘quvchiga yozing...'><button class='btn' type='submit'>➤</button></form><button class='btn alt small' id='refreshMessages' type='button'>Yangilash</button></div>";
+   }
+   inject('Chat',chatBack+tabs+cards+conversation+(r.truncated?"<div class='notice'>Ro‘yxatda 1000 tagacha o‘quvchi ko‘rsatiladi.</div>":""));
+   document.querySelectorAll('[data-chat-student]').forEach(btn=>btn.onclick=()=>{state.selectedChatStudentId=btn.dataset.chatStudent;navigate('messenger')});
+   $('chatStudentSearch').oninput=e=>{const q=String(e.target.value||'').toLowerCase();document.querySelectorAll('[data-chat-student]').forEach(btn=>{const s=students.find(x=>x.id===btn.dataset.chatStudent);btn.style.display=s&&[s.full_name,s.qadam_id].some(v=>String(v||'').toLowerCase().includes(q))?'flex':'none'})};
+   chatWireDelete();chatScrollEnd();
+   if($('studentStaffSend'))formHandler('studentStaffSend',async d=>{await api('/staff/ops/office-student-chat-send',{student_id:chosen.id,message:String(d.get('message')||'').trim()})});
+ }else{
+   const threads=await api('/staff/ops/office-direct-threads');
+   const people=threads.contacts||[],chosen=people.find(x=>x.id===state.directStaffId);
+   const listHtml="<div class='tg-list'><div class='tg-titlebar'><h3>Chatlar</h3><span class='tg-write-ico'>✎</span></div><div class='tg-search'><span>⌕</span><input id='contactSearch' placeholder='Qidirish' maxlength='80' aria-label='Suhbatdoshni qidirish'></div><div id='contactList'>"+(people.length?people.map(x=>"<button type='button' class='tg-contact' data-contact='"+esc(x.id)+"'>"+q90Avatar(x)+"<span class='tg-contact-middle'><strong>"+esc(x.full_name)+"</strong><small>"+esc(x.last_message||roles[x.role]||x.role)+"</small></span><span class='tg-contact-meta'><time>"+(x.last_message_at?esc(chatClock(x.last_message_at)):'')+"</time>"+(x.unread_count?"<span class='tg-unread'>"+esc(x.unread_count)+"</span>":"")+"</span></button>").join(''):"<p class='tg-empty'>Hozircha suhbatdosh mavjud emas.</p>")+"</div></div>";
+   let chatHtml="";
+   if(chosen){
+     const [data,portrait]=await Promise.all([api('/staff/ops/office-direct-list',{staff_id:chosen.id}),api('/staff/ops/office-staff-public-profile',{staff_id:chosen.id},10000).catch(()=>null)]),msgs=data.messages||[];
+     if(portrait?.photo_signed_url)chosen.photo_signed_url=portrait.photo_signed_url;
+     chatHtml="<div class='card q91-chatroom'><div class='q91-chathead'>"+q90Avatar(chosen)+"<div><strong>"+esc(chosen.full_name)+"</strong><small>"+esc(roles[chosen.role]||chosen.role)+" · "+esc(chosen.employee_code)+"</small></div><button type='button' id='contactProfileBtn' class='btn alt small'>Profil</button></div><div class='tg-message-area'>"+chatMessagesHTML(msgs,'direct')+"</div><form class='msg-compose' id='dmForm'><input class='input' name='message' maxlength='2000' required placeholder='Xabar yozing...'><button type='submit' class='btn' aria-label='Xabarni yuborish'>➤</button></form><button type='button' class='btn alt small' id='refreshMessages'>↻ Yangilash</button></div>";
+   }
+   inject('Chat',chatBack+(chosen?'':tabs+listHtml)+chatHtml);
+   document.querySelectorAll('[data-contact]').forEach(btn=>btn.onclick=()=>{state.directStaffId=btn.dataset.contact;navigate('messenger')});
+   if(!chosen)q91LoadChatAvatars(people);
+   if($('contactSearch'))$('contactSearch').oninput=e=>{const q=e.target.value.toLocaleLowerCase('uz').trim();document.querySelectorAll('[data-contact]').forEach(btn=>{const p=people.find(x=>x.id===btn.dataset.contact);btn.style.display=p&&[p.full_name,p.employee_code].some(v=>String(v||'').toLocaleLowerCase('uz').includes(q))?'flex':'none'})};
+   chatWireDelete();chatScrollEnd();
+   if($('dmForm'))formHandler('dmForm',async d=>{await api('/staff/ops/office-direct-send',{staff_id:chosen.id,message:String(d.get('message')||'').trim()})});
+   if($('contactProfileBtn'))$('contactProfileBtn').onclick=()=>submit({preventDefault(){}},async()=>{await showPublicStaffProfile(chosen.id,$('contactProfileBtn').closest('.card'))});
+ }
+ $('tgBack').onclick=()=>{
+  if(mode==='private'&&state.directStaffId){state.directStaffId=null;return navigate('messenger')}
+  if(mode==='student'&&state.selectedChatStudentId){state.selectedChatStudentId=null;return navigate('messenger')}
+  if(state.previousScreen&&state.previousScreen!=='messenger'&&state.allowedRoutes.has(state.previousScreen))return navigate(state.previousScreen);
+  return navigate('sections');
+ };
+ $('modePrivate').onclick=()=>{state.messengerMode='private';navigate('messenger')};
+ $('modeGroup').onclick=()=>{state.messengerMode='group';navigate('messenger')};
+ if($('modeStudents'))$('modeStudents').onclick=()=>{state.messengerMode='student';navigate('messenger')};
+ if($('refreshMessages'))$('refreshMessages').onclick=()=>navigate('messenger');
+ return;
+}
+if(tab==='chat'){
+ const r=await api('/staff/ops/chat-threads');
+ const threads=r.threads||[];
+ const label=x=>x.title||x.channel;
+ const current=threads.find(x=>x.channel===state.chatChannel&&String(x.requester_staff_id||'')===String(state.chatRequester||''))||threads[0];
+ if(!current){inject('Ichki chat','<div class="card">Hozircha suhbatlar mavjud emas.</div>');return;}
+ state.chatChannel=current.channel;state.chatRequester=current.requester_staff_id;
+ const data=await api('/staff/ops/chat-list',{channel:current.channel,requester_staff_id:current.requester_staff_id});
+ const messages=data.messages||[];
+ const choices=threads.map((x,i)=>`<option value="${i}" ${x===current?'selected':''}>${esc(label(x))}</option>`).join('');
+ const guidance=current.channel==='payment'?'<div class="notice">Bu kanal faqat to‘lovni qanday amalga oshirish bo‘yicha savollar uchun. Shaxsiy maosh va moliyaviy hisobotlar bu yerda muhokama qilinmaydi.</div>':
+ current.channel==='owner'?'<div class="notice">Bu suhbat maxfiy: faqat siz va Owner ko‘ra olasiz.</div>':
+ current.channel==='director'?'<div class="notice">Bu suhbatni faqat siz va Direktor ko‘ra oladi.</div>':'';
+ inject('Ichki chat',`<div class="card"><label>Suhbatni tanlang</label><select class="input" id="chatThread">${choices}</select></div>`+guidance+
+ `<div class="card"><h3>${esc(label(current))}</h3><div style="max-height:450px;overflow-y:auto;padding:8px 0">${messages.length?messages.map(x=>`<div style="margin:10px 0;padding:12px;border:1px solid var(--border);border-radius:12px;background:${x.is_mine?'var(--panel2)':'var(--panel)'}"><div class="sub">${esc(x.sender_name)} · ${esc(new Date(x.created_at).toLocaleString('uz-UZ'))}</div><div style="white-space:pre-wrap;overflow-wrap:anywhere;margin-top:5px">${esc(x.message)}</div></div>`).join(''):'<p class="sub">Hozircha xabar yo‘q. Birinchi xabarni yuboring.</p>'}</div><form id="chatSend" class="stack"><textarea class="input" name="message" required minlength="1" maxlength="2000" rows="3" placeholder="Xabaringizni yozing..."></textarea><button class="btn" type="submit">Xabar yuborish</button></form><button class="btn alt" id="chatRefresh" type="button" style="margin-top:10px">Xabarlarni yangilash</button></div>`);
+ $('chatThread').onchange=v=>{const selection=threads[Number(v.target.value)];if(selection){state.chatChannel=selection.channel;state.chatRequester=selection.requester_staff_id;navigate('chat')}};
+ $('chatRefresh').onclick=()=>navigate('chat');
+ formHandler('chatSend',async f=>{const msg=String(f.get('message')||'').trim();if(!msg)throw Error('Xabarni kiriting');await api('/staff/ops/chat-send',{channel:current.channel,requester_staff_id:current.requester_staff_id,message:msg})});
+ return;
+}
+if(tab==='notifications'){
+ const r=await api('/staff/ops/notifications');
+ const items=r.notifications||[];
+ const unread=items.filter(x=>!x.read_at).length;
+ inject('Bildirishnomalar',`<div class="grid">${count(items.length,'Jami xabarlar')}${count(unread,'O‘qilmagan')}</div><div class="card"><h3>Yangi xabarlar va topshiriqlar</h3>${list(items,x=>`<div class="row"><strong>${esc(x.title)} ${!x.read_at?'<span class="pill">Yangi</span>':''}</strong><span class="sub">${esc(new Date(x.created_at).toLocaleString('uz-UZ'))}</span></div><p class="lead">${esc(x.body)}</p>${!x.read_at?`<button type="button" class="btn small alt" data-notification-read="${esc(x.id)}">O‘qildi</button>`:''}`)}</div>`);
+ document.querySelectorAll('[data-notification-read]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{await api('/staff/ops/notification-read',{id:Number(btn.dataset.notificationRead)});await navigate('notifications')}));
+ return;
+}
+if(tab==='employee-card'){
+ if(!owner)throw Error('Bu bo‘lim faqat Owner uchun');
+ const id=state.selectedStaffId;if(!id)throw Error('Xodim tanlanmagan');
+ const r=await api('/owner/employee-card',{staff_id:id}),e=r.employee||{},p=r.profile||{};
+ const diff=(date)=>{if(!date)return 'Kiritilmagan';const start=new Date(date),ms=Date.now()-start.getTime();return Number.isFinite(ms)&&ms>=0?Math.floor(ms/86400000)+' kun':'Kiritilmagan'};
+ const birthday=(()=>{if(!p.birth_date)return 'Kiritilmagan';const pieces=p.birth_date.split('-').map(Number);let target=new Date();target.setHours(0,0,0,0);target.setFullYear(target.getFullYear(),pieces[1]-1,pieces[2]);if(target.getTime()<new Date().setHours(0,0,0,0))target.setFullYear(target.getFullYear()+1);return Math.round((target.getTime()-new Date().setHours(0,0,0,0))/86400000)+' kun'})();
+ inject('Xodim kartasi',`<div class="card"><button class="btn alt small" id="backToEmployees">← Xodimlar</button><div style="display:flex;align-items:center;gap:15px;margin:16px 0"><div style="width:90px;height:90px;border-radius:16px;overflow:hidden;background:var(--panel2);display:flex;align-items:center;justify-content:center">${r.photo_signed_url?`<img src="${esc(r.photo_signed_url)}" alt="Xodim rasmi" style="width:100%;height:100%;object-fit:cover">`:'<span>Rasm yo‘q</span>'}</div><div><h2>${esc(e.full_name)}</h2><div class="sub">${esc(roles[e.role]||e.role)} · ${esc(e.employee_code)}</div><span class="pill">${e.is_active?'Faol':'Faol emas'}</span></div></div><div class="grid">${count(esc(p.phone||'—'),'Telefon')}${count(esc(e.telegram_id||'—'),'Telegram ID')}${count(esc(p.birth_date||'—'),'Tug‘ilgan sana')}${count(birthday,'Tug‘ilgan kunigacha')}${count(diff(p.started_on||e.created_at),'Ishlagan muddat')}${count(r.last_login?new Date(r.last_login).toLocaleString('uz-UZ'):'—','Oxirgi kirish')}</div><p><strong>O‘zi haqida:</strong> ${esc(p.biography||'Kiritilmagan')}</p></div><div class="card"><h3>Oyliklar tarixi</h3>${list(r.payroll||[],x=>`<strong>${esc(x.period_month)} — ${Number(x.total_uzs||0).toLocaleString('uz-UZ')} so‘m</strong><div class="sub">Holati: ${esc(x.status)} · Bonus: ${Number(x.bonus_uzs||0).toLocaleString('uz-UZ')} so‘m</div>`)}</div><div class="card"><h3>Mukofot va sertifikatlar tarixi</h3>${list(r.rewards||[],x=>`<strong>${x.kind==='bonus'?'Pul mukofoti':'Yaxshi xodim sertifikati'} · ${esc(x.status)}</strong><div class="sub">${esc(x.reason)} ${x.amount_uzs?'· '+Number(x.amount_uzs).toLocaleString('uz-UZ')+' so‘m':''}</div>${x.kind==='certificate'&&x.certificate_code?`<button type="button" class="btn small alt" data-cert-print="${esc(x.certificate_code)}" data-cert-reason="${esc(x.reason)}" data-cert-date="${esc(x.created_at)}">PDF sertifikat / QR</button>`:''}`)}</div>${e.is_active&&e.role!=='owner'?`<div class="card"><h3>Pul mukofoti</h3><form id="employeeBonus" class="stack"><input type="number" class="input" name="amount_uzs" min="1000" max="1000000000" step="1000" placeholder="Summa (so‘m)" required><textarea class="input" name="reason" required minlength="3" maxlength="1000" placeholder="Mukofot sababi"></textarea><button class="btn">Buxgalterga mukofot so‘rovi yuborish</button></form></div><div class="card"><h3>Yaxshi xodim sertifikati</h3><form id="employeeCertificate" class="stack"><textarea class="input" name="reason" required minlength="3" maxlength="1000" placeholder="Sertifikat sababi"></textarea><button class="btn">Sertifikatni qayd qilish</button></form><p class="sub">Sertifikat yaratilgach uning raqami va QR orqali tasdiqlanish havolasi paydo bo‘ladi. PDF uchun chop etish oynasidan saqlang.</p></div><div class="card"><h3>Akkaunt nazorati</h3><button class="btn alt" id="disableEmployee">Xodimlar safidan chiqarish (akkauntni bloklash)</button></div>`:''}`);
+ $('backToEmployees').onclick=()=>navigate('employees');
+ document.querySelectorAll('[data-cert-print]').forEach(btn=>btn.onclick=()=>{
+ const code=btn.dataset.certPrint;
+ if(!/^QO-[A-F0-9]{24}$/.test(code))return notify('Sertifikat raqami noto‘g‘ri');
+ const url='https://vpxvazxmidbqajlhdqxz.supabase.co/functions/v1/qadam-office-bot/certificate/verify?code='+encodeURIComponent(code);
+ const safe=v=>String(v||'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+ const w=window.open('','_blank');
+ if(!w){notify('PDF oynasi bloklandi. Brauzerda yangi oyna ochishga ruxsat bering.');return;}
+ const doc=`<!doctype html><html lang="uz"><head><meta charset="utf-8"><title>QADAM OFFICE | Sertifikat</title><style>body{margin:0;font-family:Georgia,serif;color:#15233b;background:#f6f6f6}.sheet{box-sizing:border-box;width:297mm;min-height:210mm;padding:26mm;margin:20px auto;background:white;border:8px double #ba9957;text-align:center}h1{font-size:40px;letter-spacing:4px;margin:25px 0}h2{font-size:32px}.reason{font-size:20px;max-width:700px;margin:15px auto 30px;line-height:1.5}.small{font-family:Arial,sans-serif;font-size:14px;color:#617080}.verify{overflow-wrap:anywhere;font:12px Arial,sans-serif;margin-top:18px}#qr{display:flex;justify-content:center;margin:15px}.print{position:fixed;top:10px;right:10px}button{padding:12px 22px;cursor:pointer}@page{size:A4 landscape;margin:0}@media print{body{background:white}.sheet{margin:0;width:297mm;min-height:210mm}.print{display:none}}</style></head><body><div class="print"><button onclick="window.print()">PDF saqlash / Chop etish</button></div><main class="sheet"><div class="small">QADAM AKADEMIYA • QADAM OFFICE</div><h1>FAXRIY SERTIFIKAT</h1><p class="small">Yaxshi xodim mukofoti</p><h2>${safe(e.full_name)}</h2><p class="reason">${safe(btn.dataset.certReason)}</p><p>Berilgan sana: ${safe(String(btn.dataset.certDate).slice(0,10))}</p><p class="small">Sertifikat raqami: ${safe(code)}</p><div id="qr"></div><div class="verify">${safe(url)}</div><p class="small">QR kod orqali hujjatning haqiqiyligini tekshirish mumkin.</p></main><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script><script>if(window.QRCode)new QRCode(document.getElementById('qr'),{text:${JSON.stringify(url)},width:120,height:120});<\/script></body></html>`;
+ w.document.open();w.document.write(doc);w.document.close();
+ });
+
+ if($('employeeBonus'))formHandler('employeeBonus',async f=>{await api('/owner/reward-create',{staff_id:id,kind:'bonus',amount_uzs:Number(f.get('amount_uzs')),reason:f.get('reason')});await navigate('employee-card')});
+ if($('employeeCertificate'))formHandler('employeeCertificate',async f=>{await api('/owner/reward-create',{staff_id:id,kind:'certificate',reason:f.get('reason')});await navigate('employee-card')});
+ if($('disableEmployee'))$('disableEmployee').onclick=()=>submit({preventDefault(){}},async()=>{if(!confirm('Bu xodim akkaunti bloklanadi va faol sessiyalari yopiladi. Davom etilsinmi?'))return;await api('/owner/set-active',{staff_id:id,is_active:false});await navigate('employees')});
+ return;
+}
+if(tab==='profile'){
+ const [r,config]=await Promise.all([api('/staff/ops/my-profile'),api('/staff/ops/office-chat-preferences')]);const p=r.profile||{},prefs=config.settings||{};
+ if(state.user.role!=='owner')state.profileRequired=!r.complete;
+ inject('Shaxsiy profil',`<div class="card"><div class="msg-grouphead">${r.photo_signed_url?`<img src="${esc(r.photo_signed_url)}" alt="Profil rasmi" style="height:58px;width:58px;object-fit:cover;border-radius:50%">`:'<span class="msg-avatar">👤</span>'}<div><strong>${esc(state.user.full_name||'Xodim')}</strong><p class="sub">${esc(roles[state.user.role]||state.user.role)} · ${esc(state.user.employee_code||'')}</p></div></div><h3>Akkaunt sozlamalari</h3><p class="sub">Shaxsiy profil, rasm, til va bildirishnomalarni shu yerdan boshqaring.</p><form class="stack" id="officePreferences"><label>Til / Язык</label><select class="input" name="language"><option value="uz" ${prefs.language==='uz'?'selected':''}>O‘zbekcha</option><option value="ru" ${prefs.language==='ru'?'selected':''}>Русский</option></select><label class="msg-setting"><input type="checkbox" name="message_notifications" ${prefs.message_notifications!==false?'checked':''}> Xabar bildirishnomalari</label><button class="btn" type="submit">Sozlamalarni saqlash</button></form><div class="bio-test-card"><h3>Face ID sinovi — faqat tekshirish</h3><p class="sub">iPhone Telegram biometrik ruxsatini va yuz orqali tasdiqlashni tekshiradi. Akkaunt, PIN va login sozlamalari o‘zgarmaydi.</p><div class="bio-status" id="bioTestStatus" role="status" aria-live="polite">Telegram Face ID imkoniyati tekshirilmoqda...</div><button class="btn alt full" type="button" id="biometricTestButton" disabled>Face ID’ni sinash</button><button class="btn line full hidden" type="button" id="biometricSettingsButton" style="margin-top:8px">Telegram Face ID ruxsatlari</button></div><p class="sub">Til tanlovi saqlanadi; butun ilovaning tarjimasi keyingi yangilanishda kengaytiriladi.</p></div>${state.profileRequired?'<div class="notice error">Ish kabineti uchun rasm, telefon raqami, tug‘ilgan sana va o‘zingiz haqingizdagi ma’lumot majburiy. Barchasini kiriting.</div>':'<div class="notice good">Profil to‘ldirilgan. Barcha ruxsat etilgan bo‘limlar ochiq.</div>'}<div class="card"><h3>Profil rasmi</h3><div style="display:flex;align-items:center;gap:12px">${r.photo_signed_url?`<img src="${esc(r.photo_signed_url)}" alt="Profil rasmi" style="height:94px;width:94px;object-fit:cover;border-radius:14px">`:'<span class="pill">Rasm majburiy</span>'}</div><input type="file" class="input" id="avatarFile" accept="image/jpeg,image/png,image/webp"><button id="uploadAvatar" class="btn" type="button">Rasmni yuklash</button><p class="sub">JPEG, PNG yoki WEBP — maksimum 1 MB.</p></div><div class="card"><h3>Profil ma’lumotlari</h3><form id="profileSave" class="stack"><div class="field"><label>Telefon raqami</label><input class="input" name="phone" type="tel" minlength="7" maxlength="32" required value="${esc(p.phone||'')}" placeholder="+998..."></div><div class="field"><label>Tug‘ilgan sana</label><input class="input" name="birth_date" type="date" required value="${esc(p.birth_date||'')}"></div><div class="field"><label>O‘zingiz haqingizda</label><textarea class="input" name="biography" maxlength="1000">${esc(p.biography||'')}</textarea></div><div class="notice">Profil ma’lumotlari va rasmni to‘liq kiriting.</div><button class="btn">Profilni saqlash</button></form></div>`);
+ initializeBiometricTest();
+ formHandler('officePreferences',async f=>{await api('/staff/ops/office-chat-preferences-save',{language:String(f.get('language')),message_notifications:f.has('message_notifications')})});
+ $('uploadAvatar').onclick=()=>submit({preventDefault(){}},async()=>{
+ const file=$('avatarFile').files?.[0];if(!file)throw Error('Rasmni tanlang');
+ if(file.size>1048576||file.size<100)throw Error('Rasm maksimal 1 MB bo‘lishi kerak');
+ if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw Error('Faqat JPEG, PNG, WEBP');
+ const b64=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.onerror=reject;reader.readAsDataURL(file)});
+ await api('/staff/ops/upload-avatar',{mime:file.type,image_base64:b64},45000);
+ await navigate('profile');
+ });
+ formHandler('profileSave',async f=>{await api('/staff/ops/save-profile',{phone:f.get('phone'),birth_date:f.get('birth_date'),biography:f.get('biography')});await navigate('profile')});return;
+}
+if(tab==='group-members'){
+ if(state.user.role!=='administrator')throw Error('Guruh a’zolarini faqat Administrator boshqaradi');
+ const gid=state.selectedGroupId;if(!gid)throw Error('Guruh tanlanmagan');
+ const r=await api('/staff/ops/group-members',{group_id:gid});
+ const group=r.group||{},members=r.members||[];
+ inject('Guruh o‘quvchilari',`<div class="card"><button class="btn alt small" id="groupMembersBack">← Guruhlarga qaytish</button><h3>${esc(group.name||'Guruh')}</h3><div class="grid">${count(members.length,'Hozirgi o‘quvchilar')}${count(r.admitted_total||0,'Jami qabul qilingan')}${count(r.remaining||0,'Qolgan doimiy o‘rin')}</div><p class="sub">Limit: 30 nafar. Chiqarilgan o‘quvchining o‘rni qayta to‘ldirilmaydi.</p></div><div class="card"><h3>O‘quvchini QADAM ID orqali topish</h3><form id="findStudent" class="stack"><input name="qadam_id" class="input" required minlength="3" maxlength="35" placeholder="O‘quvchi QADAM ID"><button class="btn">IDni tekshirish</button></form><div id="studentLookupResult"></div></div><div class="card"><h3>Guruhdagi o‘quvchilar</h3>${list(members,x=>`<strong>${esc(x.full_name)} <span class="pill">${esc(x.qadam_id||'—')}</span></strong><div class="sub">Qo‘shilgan: ${esc(new Date(x.joined_at).toLocaleString('uz-UZ'))}</div><button class="btn small alt" type="button" data-remove-member="${esc(x.user_id)}">Guruhdan chiqarish</button>`)}</div>`);
+ $('groupMembersBack').onclick=()=>navigate('education');
+ $('findStudent').addEventListener('submit',event=>submit(event,async()=>{const f=new FormData($('findStudent'));
+ const x=await api('/staff/ops/student-lookup',{group_id:gid,qadam_id:String(f.get('qadam_id')||'').trim().toUpperCase()});
+ const s=x.student;
+ $('studentLookupResult').innerHTML=`<div class="entry"><strong>${esc(s.full_name)} · ${esc(s.qadam_id)}</strong><div class="sub">${s.payment_approved?'Aynan shu kurs uchun tasdiqlangan to‘lov mavjud':'Ushbu kurs uchun tasdiqlangan to‘lov topilmadi'}</div>${s.payment_approved&&group.status==='open'&&r.remaining>0?`<button class="btn small" id="addFoundStudent">Guruhga qabul qilish</button>`:'<p class="sub">Hozir ushbu o‘quvchini guruhga qo‘shish mumkin emas.</p>'}</div>`;
+ if($('addFoundStudent'))$('addFoundStudent').onclick=()=>submit({preventDefault(){}},async()=>{
+   if(!confirm('Ushbu o‘quvchini guruhga qabul qilasizmi?'))return;
+   await api('/staff/ops/group-member-add',{group_id:gid,user_id:s.id});await navigate('group-members');
+ });
+ }));
+ document.querySelectorAll('[data-remove-member]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{
+   const reason=prompt('Guruhdan chiqarish sababi (kamida 3 belgi):','');
+   if(reason===null)return;if(reason.trim().length<3)throw Error('Sabab kamida 3 belgidan iborat bo‘lsin');
+   if(!confirm('O‘quvchi chiqarilsa, uning o‘rni qayta to‘ldirilmaydi. Tasdiqlaysizmi?'))return;
+   await api('/staff/ops/group-member-remove',{group_id:gid,user_id:btn.dataset.removeMember,reason:reason.trim()});await navigate('group-members');
+ }));
+ return;
+}
+if(tab==='education' && ['administrator','education_manager','director'].includes(state.user.role)){
+ const r=await api('/staff/ops/workspace');const groups=r.groups||[],courses=r.courses||[],teachers=r.teachers||[],lessons=r.lessons||[];
+ const admin=state.user.role==='administrator',educator=state.user.role==='education_manager';
+ const creator=admin?`<div class="card"><h3>Yangi guruh ochish</h3><form class="stack" id="officeNewGroup"><input class="input" name="name" required minlength="3" placeholder="Guruh nomi"><select name="course_id" class="input" required><option value="">Kursni tanlang</option>${courses.map(x=>`<option value="${esc(x.id)}">${esc(x.title)}</option>`).join('')}</select><p class="sub">Guruh avval «Jadval kutilmoqda» holatida ochiladi. O‘quv bo‘limi ustoz va jadvalni tasdiqlaydi.</p><button class="btn">Guruh yaratish</button></form></div>`:'';
+ const education=educator?`<div class="card"><h3>Ustoz biriktirish</h3><form id="assignTeacher" class="stack"><select class="input" name="group_id" required><option value="">Guruhni tanlang</option>${groups.filter(x=>x.status!=='closed').map(x=>`<option value="${esc(x.id)}">${esc(x.name)}</option>`).join('')}</select><select class="input" name="teacher_id" required><option value="">Ustozni tanlang</option>${teachers.map(x=>`<option value="${esc(x.id)}">${esc(x.full_name)}</option>`).join('')}</select><button class="btn">Ustozni biriktirish</button></form></div><div class="card"><h3>Dars jadvali</h3><form id="officeLesson" class="stack"><select class="input" name="group_id" required><option value="">Guruhni tanlang</option>${groups.filter(x=>x.status!=='closed').map(x=>`<option value="${esc(x.id)}">${esc(x.name)}</option>`).join('')}</select><input class="input" name="title" minlength="3" maxlength="160" placeholder="Dars mavzusi" required><label>Boshlanish</label><input class="input" name="starts_at" type="datetime-local" required><label>Tugash</label><input class="input" name="ends_at" type="datetime-local" required><button class="btn">Dars jadvaliga qo‘shish</button></form></div>`:'';
+ inject('Guruhlar va darslar',`<div class="grid">${count(groups.length,'Guruhlar')}${count(groups.filter(x=>x.status==='pending_schedule').length,'Jadval kutilmoqda')}${count(lessons.length,'Darslar')}</div>`+creator+education+`<div class="card"><h3>Guruhlar</h3>${list(groups,x=>`<strong>${esc(x.name)} <span class="pill">${esc(x.status==='pending_schedule'?'Jadval kutilmoqda':x.status)}</span></strong><div class="sub">Sig‘im: ${esc(x.capacity||30)} • Ustoz: ${esc(teachers.find(t=>t.id===x.staff_teacher_id)?.full_name||'Tayinlanmagan')}</div>${admin?`<button type="button" class="btn small alt" data-group-members="${esc(x.id)}">O‘quvchilarni boshqarish</button>`:''}${educator&&x.status==='pending_schedule'?`<button class="btn small" data-approve-group="${esc(x.id)}">Jadvalni tasdiqlash va faollashtirish</button>`:''}`)}</div><div class="card"><h3>Darslar</h3>${list(lessons,x=>`<strong>${esc(x.title)}</strong><span class="sub">${esc(groups.find(g=>g.id===x.group_id)?.name||'Guruh')} • ${esc(new Date(x.starts_at).toLocaleString('uz-UZ'))}</span>${educator?`<button class="btn small alt" data-lesson-reschedule="${esc(x.id)}">Dars vaqtini o‘zgartirish</button>`:''}`)}</div>`);
+ if(admin)document.querySelectorAll('[data-group-members]').forEach(btn=>btn.onclick=()=>{state.selectedGroupId=btn.dataset.groupMembers;navigate('group-members')});
+ if(admin)formHandler('officeNewGroup',f=>api('/staff/ops/create-group',{name:f.get('name'),course_id:f.get('course_id')}));
+ if(educator){formHandler('assignTeacher',f=>api('/staff/ops/assign-teacher',{group_id:f.get('group_id'),teacher_id:f.get('teacher_id')}));
+ formHandler('officeLesson',f=>api('/staff/ops/create-lesson',{group_id:f.get('group_id'),title:f.get('title'),starts_at:new Date(f.get('starts_at')).toISOString(),ends_at:new Date(f.get('ends_at')).toISOString()}));
+ document.querySelectorAll('[data-lesson-reschedule]').forEach(btn=>btn.onclick=()=>{
+ const lesson=lessons.find(x=>x.id===btn.dataset.lessonReschedule);if(!lesson)return;
+ const from=prompt('Yangi boshlanish: YYYY-MM-DD HH:MM (Toshkent vaqti)',new Date(lesson.starts_at).toLocaleString('sv-SE',{timeZone:'Asia/Tashkent'}).slice(0,16));if(from===null)return;
+ const to=prompt('Yangi tugash: YYYY-MM-DD HH:MM (Toshkent vaqti)',new Date(lesson.ends_at).toLocaleString('sv-SE',{timeZone:'Asia/Tashkent'}).slice(0,16));if(to===null)return;
+ const iso=(v)=>{const x=v.trim().replace(' ','T');if(!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(x))throw Error('Sana YYYY-MM-DD HH:MM bo‘lishi kerak');return new Date(x+':00+05:00').toISOString()};
+ submit({preventDefault(){}},async()=>{const v=await api('/staff/ops/lesson-reschedule',{lesson_id:lesson.id,starts_at:iso(from),ends_at:iso(to)});await navigate('education');notify(v.message,'good')});
+ });
+ document.querySelectorAll('[data-approve-group]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{const v=await api('/staff/ops/activate-group',{group_id:btn.dataset.approveGroup});notify(v.message||'Tasdiqlandi','good');await navigate('education')}));
+ }return;
+}
+if(tab==='home'&&state.user.role==='director'){
+ const results=await Promise.allSettled([api('/staff/ops/manager-tasks'),api('/staff/ops/director-finance')]);
+ const tasks=results[0].status==='fulfilled'?results[0].value.tasks||[]:null;
+ const finance=results[1].status==='fulfilled'?results[1].value:null;
+ inject('Direktor boshqaruv paneli',`<div class="hero"><h1>Direktor kabineti</h1><p class="lead">Xodimlar, topshiriqlar va moliya ko‘rsatkichlarining qisqacha nazorati</p></div><div class="grid">${count(tasks?tasks.length:'—','Topshiriqlar')}${count(tasks?tasks.filter(x=>x.status==='review').length:'—','Tekshiruvdagi vazifalar')}${count(finance?Number(finance.payroll_total_uzs||0).toLocaleString('uz-UZ'):'—','Joriy oy maosh qaydlari, so‘m')}</div>${!tasks||!finance?'<div class="notice">Ma’lumotlarning bir qismi olinmadi. Qayta yangilang.</div>':''}<div class="card"><h3>Tezkor ishlar</h3><button class="btn" id="directorTasksJump">Vazifalarni boshqarish</button></div><div class="notice">Direktor moliyani faqat ko‘radi; to‘lov, maosh va pul chiqarishni o‘zgartira olmaydi.</div>`);
+ $('directorTasksJump').onclick=()=>navigate('tasks');
+ return;
+}
+if(tab==='home'){if(owner){
+ // Show shell immediately; finance and staff data still come from live authorized API calls.
+ const ownerRenderSeq=state.navSeq;
+ inject('Owner boshqaruv paneli',q91Welcome(null)+'<div class="q91-metrics">'+q91Stat('…','Xodimlar','employees')+q91Stat('…','Guruhlar','education')+'</div><div class="card"><h3>Moliyaviy ko‘rsatkichlar</h3><span class="spin"></span><p class="sub">Serverdan yangilanmoqda...</p></div>');
+ const results=await Promise.allSettled([
+  api('/owner/overview'),
+  api('/owner/executive-dashboard',{from:localDate(-30),to:localDate()}),
+  api('/staff/ops/my-profile',{},10000)
+ ]);
+ if(ownerRenderSeq!==state.navSeq||state.current!=='home')return;
+ const overview=results[0].status==='fulfilled'?results[0].value:null;
+ const report=results[1].status==='fulfilled'?results[1].value:null;
+ const stats=overview?.stats||{},fin=report?.derived||{};
+ const errors=[];
+ if(!overview)errors.push('Xodimlar va CRM: '+(results[0].reason?.message||'yuklanmadi'));
+ if(!report)errors.push('Moliyaviy hisobot: '+(results[1].reason?.message||'yuklanmadi'));
+ const errorHtml=errors.length?'<div class="notice error">'+errors.map(esc).join('<br>')+'<p class="tiny">Qolgan bo‘limlardan foydalanish mumkin. Yangilash tugmasini bosing.</p></div>':'';
+ inject('Owner boshqaruv paneli',q91Welcome(results[2].status==='fulfilled'?results[2].value:null)+errorHtml+`<div class="q91-sectionhead">${navIcon('audit')} Umumiy statistika</div><div class="q91-metrics">${q91Stat(overview?stats.staff:'—','Jami xodimlar','employees')}${q91Stat(overview?stats.active:'—','Faol xodimlar','profile')}${q91Stat(overview?stats.leads:'—','CRM lidlar','crm')}${q91Stat(overview?stats.groups:'—','Guruhlar','education')}</div><div class="card"><h3 class="q91-sectionhead">${navIcon('finance')} Moliyaviy ko‘rsatkichlar</h3><div class="q91-metrics">${q91Stat(report?Number(fin.revenue_uzs||0).toLocaleString('uz-UZ'):'—','Kirim · so‘m','finance')}${q91Stat(report?Number(fin.recorded_outflow_uzs||0).toLocaleString('uz-UZ'):'—','Chiqim · so‘m','finance')}${q91Stat(report?Number(fin.net_before_payroll_uzs||0).toLocaleString('uz-UZ'):'—','Maoshgacha farq · so‘m','audit')}</div><p class="tiny">Bank balansi yoki auditdan o‘tgan sof foyda emas.</p></div><div class="card"><h3>Xodimlar</h3>${overview?list(overview.employees,x=>`<strong>${esc(x.full_name)} <span class="pill">${esc(x.employee_code)}</span></strong><span class="sub">${esc(roles[x.role]||x.role)} • ${x.is_active?'Faol':'Faol emas'}</span>`):'<div class="empty">Hozircha ma’lumot olinmadi</div>'}</div>`);
+
+}else{const d=await api('/staff/my-dashboard');inject('Shaxsiy kabinet',`<div class="hero"><h1>Xush kelibsiz!</h1><p class="lead">${esc(state.user.full_name)} • ${esc(roles[state.user.role]||state.user.role)}</p></div><div class="grid">${count((d.tasks||[]).length,'Vazifalar')}${count((d.attendance||[]).length,'Davomat qaydlari')}</div><div class="card"><h3>Bugungi ish</h3><div class="actions"><button class="btn" id="checkin">Ishga keldim</button><button class="btn alt" id="checkout">Ishdan chiqdim</button></div></div><div class="card"><h3>Vazifalarim</h3>${list(d.tasks,x=>`<strong>${esc(x.title)}</strong><span class="sub">${esc(x.status)} • ${esc(x.priority)}</span>`)}</div>`);$('checkin').onclick=()=>workTime('check-in');$('checkout').onclick=()=>workTime('check-out');}return;}
+if(tab==='employees'&&state.user.role==='director'){
+ const r=await api('/staff/ops/staff-directory');
+ inject('Direktor — jamoa',`<div class="grid">${count((r.employees||[]).length,'Jami xodimlar')}${count((r.employees||[]).filter(x=>x.is_active).length,'Faol xodimlar')}</div><div class="card"><h3>Jamoaning ish holati</h3>${list(r.employees||[],x=>`<strong>${esc(x.full_name)} <span class="pill">${esc(x.employee_code)}</span></strong><div class="sub">${esc(roles[x.role]||x.role)} · ${x.is_active?'Faol':'Faol emas'} · ${esc(x.profile?.employment_status||'Ish holati kiritilmagan')}</div>`)}</div>`);
+ return;
+}
+if(tab==='employees'&&state.user.role==='hr'){
+ const r=await api('/staff/ops/staff-directory');
+ inject('HR — xodimlar',`<div class="grid">${count((r.employees||[]).length,'Jami xodimlar')}${count((r.employees||[]).filter(x=>x.is_active).length,'Faol')}${count((r.employees||[]).filter(x=>!x.is_active).length,'Faol emas')}</div><div class="card"><h3>Xodimlar ro‘yxati</h3>${list(r.employees||[],x=>`<strong>${esc(x.full_name)} <span class="pill">${esc(x.employee_code)}</span></strong><div class="sub">${esc(roles[x.role]||x.role)} · ${x.is_active?'Faol':'Faol emas'} · ${esc(x.profile?.department||'Bo‘lim ko‘rsatilmagan')}</div>${x.role!=='owner'?`<button type="button" class="btn small alt" data-hr-edit="${esc(x.id)}">Ish ma’lumotlarini tahrirlash</button>`:''}`)}</div><div class="notice">HR bo‘lim va ish boshlagan sanani tahrirlaydi. Xodimni bloklash va maoshlarni o‘zgartirish Owner/Buxgalter vakolatida.</div><div id="hrEditArea"></div>`);
+ document.querySelectorAll('[data-hr-edit]').forEach(btn=>btn.onclick=()=>{
+   const w=(r.employees||[]).find(x=>x.id===btn.dataset.hrEdit);if(!w)return;
+   $('hrEditArea').innerHTML=`<div class="card"><h3>${esc(w.full_name)} — ish ma’lumotlari</h3><form id="hrEditForm" class="stack"><input name="department" class="input" maxlength="100" placeholder="Bo‘lim" value="${esc(w.profile?.department||'')}"><input name="position_title" class="input" maxlength="120" placeholder="Lavozim nomi" value="${esc(w.profile?.position_title||'')}"><label>Ish boshlagan sana</label><input name="started_on" type="date" class="input" value="${esc(w.profile?.started_on||'')}"><button class="btn">Saqlash</button></form></div>`;
+   formHandler('hrEditForm',f=>api('/staff/ops/hr-profile-save',{staff_id:w.id,department:f.get('department'),position_title:f.get('position_title'),started_on:f.get('started_on')}));
+ });
+ return;
+}
+if(tab==='employees'&&state.user.role==='hr'){
+ const r=await api('/staff/ops/office-staff-search',{query:state.staffSearchTerm||''});
+ inject('Xodimlar qidiruvi',`<div class="card"><h3>Xodimni topish</h3><form class="stack" id="staffSearchForm"><input class="input" name="term" maxlength="100" placeholder="Ism, familiya, xodim ID, telefon, tug‘ilgan sana" value="${esc(state.staffSearchTerm||'')}"><button class="btn">Qidirish</button></form></div><div class="card"><h3>Natijalar (${(r.staff||[]).length})</h3>${list(r.staff||[],x=>`<strong>${esc(x.full_name)} · ${esc(x.employee_code)}</strong><div class="sub">${esc(roles[x.role]||x.role)} · ${esc(x.phone||'Telefon kiritilmagan')} · ${esc(x.birth_date||'Sana kiritilmagan')}</div>`)}</div>`);
+ formHandler('staffSearchForm',async f=>{state.staffSearchTerm=String(f.get('term')||'').trim()});
+ return;
+}
+if(tab==='employees'){const r=await api('/owner/hr-list');const workers=r.employees||[];const pending=workers.filter(x=>x.activation_requested_at&&!x.activation_approved_at&&!x.is_active);const approvedPending=workers.filter(x=>x.activation_approved_at&&!x.is_active);inject('Xodimlar va HR',`<div class="card"><h3>🔎 Xodim qidiruvi</h3><form class="stack" id="ownerStaffSearch"><input class="input" name="term" maxlength="100" placeholder="ID, ism, familiya, telefon yoki tug‘ilgan sana" value="${esc(state.staffSearchTerm||'')}"><button class="btn">Qidirish</button></form><div id="ownerStaffSearchResults" class="sub">Xodimlarni izlash uchun qidiruvdan foydalaning.</div></div><div class="card"><h3>🔐 Owner tasdig‘ini kutayotgan xodimlar (${pending.length})</h3>${pending.length?pending.map(x=>`<div class="entry"><strong>${esc(x.full_name)} <span class="pill">${esc(x.employee_code)}</span></strong><div class="sub">${esc(roles[x.role]||x.role)} • So‘rov: ${esc(new Date(x.activation_requested_at).toLocaleString('uz-UZ'))}</div><div class="actions"><button class="btn small" type="button" data-activation-decide="${esc(x.id)}" data-approve="yes">Tasdiqlash</button><button class="btn alt small" type="button" data-activation-decide="${esc(x.id)}" data-approve="no">Rad etish</button></div></div>`).join(''):'<p class="sub">Hozircha yangi so‘rov yo‘q.</p>'}</div><div class="card"><h3>🔑 Tasdiqlangan, kirishni kutayotgan xodimlar (${approvedPending.length})</h3>${approvedPending.length?approvedPending.map(x=>`<div class="entry"><strong>${esc(x.full_name)} <span class="pill">${esc(x.employee_code)}</span></strong><div class="sub">Owner tasdiqlagan • Parol hali o‘rnatilmagan</div><button type="button" class="btn small" data-regenerate-activation="${esc(x.id)}">Yangi 8 belgili kod yaratish</button></div>`).join(''):'<p class="sub">Bunday xodim hozircha yo‘q.</p>'}</div><div class="card"><h3>Yangi xodim yaratish</h3><form id="newStaff" class="stack"><input class="input" name="full_name" placeholder="Xodim F.I.Sh." minlength="3" required><select class="input" name="role" required><option value="">Lavozimni tanlang</option>${Object.entries(roles).filter(([id])=>id!=='owner').map(([id,label])=>`<option value="${id}">${esc(label)}</option>`).join('')}</select><input class="input" name="telegram_id" placeholder="Xodimning Telegram ID raqami" inputmode="numeric" required><button class="btn">Xodim yaratish</button></form><p class="tiny">Yangi xodim ID orqali Ownerga kirish so‘rovini yuboradi. Owner tasdiqlagach bir martalik kod yaratiladi.</p></div><div class="card"><h3>Xodimlar (${workers.length})</h3>${list(workers,x=>`<strong>${esc(x.full_name)} <span class="pill">${esc(x.employee_code)}</span></strong><div class="sub">${esc(roles[x.role]||x.role)} • ${esc(x.profile?.department||'Bo‘lim belgilanmagan')} • ${x.is_active?'Faol':'Faol emas'}</div><div class="actions"><button type="button" class="btn small alt" data-staff-card="${esc(x.id)}">Profilni ko‘rish</button>${x.role!=='owner'?`<button type="button" class="btn small alt" data-staff-role="${esc(x.id)}">Lavozimni almashtirish</button>`:''}</div>`)}</div>`);document.querySelectorAll('[data-staff-role]').forEach(btn=>btn.onclick=()=>{
+ const employee=workers.find(x=>x.id===btn.dataset.staffRole);if(!employee||employee.role==='owner')return;
+ const options=Object.entries(roles).filter(([id])=>id!=='owner');
+ const box=document.createElement('div');box.className='card';
+ const title=document.createElement('h3');title.textContent='Lavozimni almashtirish — '+employee.full_name;
+ const select=document.createElement('select');select.className='input';options.forEach(([id,label])=>{const opt=document.createElement('option');opt.value=id;opt.textContent=label;opt.selected=id===employee.role;select.appendChild(opt)});
+ const desc=document.createElement('p');desc.className='notice';desc.textContent='Lavozim o‘zgarganda oldingi maxsus huquqlar va ochiq sessiyalar bekor qilinadi. Xodim qayta kirishi kerak.';
+ const save=document.createElement('button');save.type='button';save.className='btn';save.textContent='Yangi lavozimni tasdiqlash';
+ save.onclick=()=>submit({preventDefault(){}},async()=>{if(select.value===employee.role)return;if(!confirm(employee.full_name+' uchun lavozimni '+roles[select.value]+' ga o‘zgartirasizmi?'))return;const r=await api('/owner/change-role',{staff_id:employee.id,role:select.value});await navigate('employees');notify(r.message||'Lavozim yangilandi','good')});
+ box.append(title,select,desc,save);$('section').prepend(box);box.scrollIntoView({block:'start',behavior:'smooth'});
+});
+document.querySelectorAll('[data-staff-card]').forEach(btn=>btn.onclick=()=>{state.selectedStaffId=btn.dataset.staffCard;navigate('employee-card')});document.querySelectorAll('[data-activation-decide]').forEach(button=>button.addEventListener('click',()=>submit({preventDefault(){}},async()=>{const id=button.dataset.activationDecide;const approve=button.dataset.approve==='yes';if(!confirm(approve?'Ushbu xodim sizning haqiqiy xodimingiz ekanini tasdiqlaysizmi?':'Xodimning kirish so‘rovini rad etasizmi?'))return;const result=await api('/owner/activation-decide',{staff_id:id,approve});if(result.activation_code)alert('Xodim ID: '+result.employee_code+'\\nBir martalik kod (24 soat):\\n'+result.activation_code+'\\nKodni faqat haqiqiy xodimga bering.');await navigate('employees');notify(result.message||'Bajarildi','good')})));
+document.querySelectorAll('[data-regenerate-activation]').forEach(button=>button.addEventListener('click',()=>submit({preventDefault(){}},async()=>{if(!confirm('Bu xodim uchun yangi 8 belgili kod yaratiladi. Oldingi kod bekor bo‘ladi. Davom etilsinmi?'))return;const v=await api('/owner/activation-regenerate',{staff_id:button.dataset.regenerateActivation});await navigate('employees');const panel=document.createElement('div');panel.className='card';panel.style.border='2px solid #ff791e';const heading=document.createElement('h3');heading.textContent='🔐 '+v.employee_code+' — yangi faollashtirish kodi';const codeText=document.createElement('div');codeText.style.cssText='font-size:30px;font-weight:900;letter-spacing:5px;user-select:all;overflow-wrap:anywhere;padding:12px 0';codeText.textContent=v.activation_code;const info=document.createElement('p');info.className='lead';info.textContent='24 soat amal qiladi. Telegram: '+(v.telegram_delivery==='delivered'?'yuborildi ✅':'yuborilmadi ⚠️ — ushbu oynadan oling. Owner 2-botga /start yuborganini tekshiring.');const copy=document.createElement('button');copy.type='button';copy.className='btn small';copy.textContent='Kodni nusxalash';copy.onclick=async()=>{try{await navigator.clipboard.writeText(v.activation_code);notify('Kod nusxalandi','good')}catch{notify('Kodni belgilab qo‘lda nusxalang')}};panel.append(heading,codeText,info,copy);$('section').prepend(panel);panel.scrollIntoView({block:'start',behavior:'smooth'})})));
+formHandler('ownerStaffSearch',async f=>{state.staffSearchTerm=String(f.get('term')||'').trim();const d=await api('/staff/ops/office-staff-search',{query:state.staffSearchTerm});$('ownerStaffSearchResults').innerHTML=list(d.staff||[],x=>'<strong>'+esc(x.full_name)+' · '+esc(x.employee_code)+'</strong><div class="sub">'+esc(roles[x.role]||x.role)+' · '+esc(x.phone||'Telefon kiritilmagan')+' · '+esc(x.birth_date||'Sana kiritilmagan')+'</div>')});
+formHandler('newStaff',async f=>{const r=await api('/owner/create-staff',{full_name:f.get('full_name'),role:f.get('role'),telegram_id:f.get('telegram_id')});alert('Xodim yaratildi. ID: '+r.employee?.employee_code+'\nXodim o‘z Telegramidan Ownerga kirish so‘rovini yuborishi kerak.');});return;}
+if(tab==='crm'){const r=await api('/crm/list');inject('CRM va mijozlar',`<div class="grid">${count((r.leads||[]).length,'Ko‘rsatilgan lidlar')}${count((r.leads||[]).filter(x=>!x.assigned_to).length,'Biriktirilmagan')}</div><div class="card">${list(r.leads,x=>`<strong>${esc(x.customer?.full_name||x.customer?.qadam_id||'Mijoz')} <span class="pill">${esc(x.status)}</span></strong><div class="sub">${esc(x.customer?.phone||'Telefon kiritilmagan')} • ${esc(x.interested_course||'Kurs ko‘rsatilmagan')}</div><div class="tiny">${x.assigned_to?'Menejer biriktirilgan':'Hozircha menejer biriktirilmagan'}</div>`)}</div>`);return;}
+if(tab==='tasks'&&state.user.role==='director'){
+ const r=await api('/staff/ops/manager-tasks'),tasks=r.tasks||[],staff=r.employees||[];
+ inject('Direktor — vazifalar',`<div class="grid">${count(tasks.length,'Barcha vazifalar')}${count(tasks.filter(x=>x.can_review===true).length,'Tekshiruvga kelgan')}${count(tasks.filter(x=>x.status==='completed').length,'Yakunlangan')}</div><div class="card"><h3>Xodimga topshiriq</h3><form id="directorCreateTask" class="stack"><input name="title" class="input" minlength="3" maxlength="200" required placeholder="Topshiriq nomi"><textarea name="description" class="input" maxlength="4000" placeholder="Tavsif"></textarea><select class="input" name="assigned_to" required><option value="">Mas’ul xodim</option>${staff.filter(x=>!['owner','director'].includes(x.role)).map(x=>`<option value="${esc(x.id)}">${esc(x.full_name)} · ${esc(roles[x.role]||x.role)}</option>`).join('')}</select><select class="input" name="priority"><option value="normal">Oddiy</option><option value="high">Muhim</option><option value="urgent">Shoshilinch</option><option value="low">Past</option></select><label>Muddat (ixtiyoriy)</label><input type="datetime-local" name="due_at" class="input"><button class="btn">Topshiriq yuborish</button></form></div><div class="card"><h3>Vazifalar</h3>${list(tasks,x=>`<strong>${esc(x.title)} <span class="pill">${esc(x.status)}</span></strong><div class="sub">Mas’ul: ${esc(staff.find(s=>s.id===x.assigned_to)?.full_name||'Xodim')} · ${esc(x.priority)}</div><p class="sub">${esc(x.description||'')}</p>${x.can_review===true?`<div class="actions"><button type="button" class="btn small" data-director-review="${esc(x.id)}" data-result="completed">Tasdiqlash</button><button type="button" class="btn small alt" data-director-review="${esc(x.id)}" data-result="returned">Qaytarish</button></div>`:''}`)}</div>`);
+ formHandler('directorCreateTask',async f=>api('/staff/ops/manager-task-create',{title:f.get('title'),description:f.get('description'),assigned_to:f.get('assigned_to'),priority:f.get('priority'),due_at:f.get('due_at')?new Date(f.get('due_at')).toISOString():null}));
+ document.querySelectorAll('[data-director-review]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{const note=prompt('Vazifaga izoh (ixtiyoriy)','');if(note===null)return;await api('/staff/ops/manager-task-review',{task_id:btn.dataset.directorReview,status:btn.dataset.result,review_note:note});await navigate('tasks')}));
+ return;
+}
+if(tab==='my-attendance'){
+ const r=await api('/staff/my-dashboard'),records=r.attendance||[];
+ const fmt=v=>v?new Date(v).toLocaleString('uz-UZ',{timeZone:'Asia/Tashkent'}):'—';
+ const now=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tashkent',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+ const p=k=>now.find(x=>x.type===k)?.value||'';
+ const today=p('year')+'-'+p('month')+'-'+p('day');
+ const current=records.find(x=>x.work_date===today);
+ inject('Mening davomatim',`<div class="card"><h3>Bugungi davomat · ${esc(today)}</h3><div class="grid">${count(fmt(current?.check_in),'Ishga kelish')}${count(fmt(current?.check_out),'Ishdan ketish')}</div><div class="actions">${!current?.check_in?'<button class="btn" type="button" id="clockIn">Ishga keldim</button>':''}${current?.check_in&&!current?.check_out?'<button class="btn alt" type="button" id="clockOut">Ishdan ketdim</button>':''}</div>${current?.check_out?'<div class="notice">Bugungi davomat yakunlangan.</div>':''}</div><div class="card"><h3>Oxirgi davomatlar</h3>${list(records,x=>`<strong>${esc(x.work_date)}</strong><div class="sub">Keldi: ${esc(fmt(x.check_in))} · Ketdi: ${esc(fmt(x.check_out))}</div>`)}</div>`);
+ if($('clockIn'))$('clockIn').onclick=()=>submit({preventDefault(){}},async()=>{await api('/staff/check-in');await navigate('my-attendance')});
+ if($('clockOut'))$('clockOut').onclick=()=>submit({preventDefault(){}},async()=>{await api('/staff/check-out');await navigate('my-attendance')});
+ return;
+}
+if(tab==='tasks'){
+ const r=owner?await api('/owner/task-list'):await api('/staff/my-dashboard');
+ const tasks=r.tasks||[];let ownerForm='';
+ if(owner){
+   const members=((await api('/owner/overview')).employees||[]).filter(x=>x.is_active&&x.role!=='owner');
+   ownerForm=`<div class="card"><h3>Vazifa yaratish</h3><form id="createTask" class="stack"><input class="input" name="title" required minlength="3" placeholder="Vazifa nomi"><textarea class="input" name="description" maxlength="4000" placeholder="Tavsif"></textarea><select class="input" name="assigned_to" required><option value="">Mas’ul xodim</option>${members.map(x=>`<option value="${esc(x.id)}">${esc(x.full_name)} — ${esc(roles[x.role]||x.role)}</option>`).join('')}</select><select name="priority" class="input"><option value="normal">Oddiy</option><option value="high">Muhim</option><option value="urgent">Shoshilinch</option><option value="low">Past</option></select><label>Topshirish muddati (ixtiyoriy)</label><input class="input" name="due_at" type="datetime-local"><button class="btn">Vazifa yaratish</button></form></div>`;
+ }
+ inject('Vazifalar',ownerForm+`<div class="card"><h3>${owner?'Jamoa vazifalari':'Mening vazifalarim'}</h3>${list(tasks,x=>`<strong>${esc(x.title)} <span class="pill">${esc(x.status)}</span></strong><div class="sub">${esc(x.description||'')} • ${esc(x.priority)}${x.due_at?' • Muddat: '+esc(new Date(x.due_at).toLocaleString('uz-UZ')):''}</div>${x.review_note?`<div class="notice">${esc(x.review_note)}</div>`:''}${!owner&&['new','returned'].includes(x.status)?`<button type="button" class="btn small" data-task-start="${esc(x.id)}">Ishni boshlash</button>`:''}${!owner&&x.status==='in_progress'?`<button type="button" class="btn small" data-task-submit="${esc(x.id)}">Tekshiruvga yuborish</button>`:''}${owner&&x.status==='review'?`<div class="actions"><button type="button" class="btn small" data-owner-review="${esc(x.id)}" data-review-status="completed">Tasdiqlash</button><button type="button" class="btn small alt" data-owner-review="${esc(x.id)}" data-review-status="returned">Qaytarish</button></div>`:''}`)}</div>`);
+ if(owner){
+   formHandler('createTask',async f=>api('/owner/task-create',{title:f.get('title'),description:f.get('description'),assigned_to:f.get('assigned_to'),priority:f.get('priority'),due_at:f.get('due_at')?new Date(f.get('due_at')).toISOString():null}));
+   document.querySelectorAll('[data-owner-review]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{const note=prompt('Topshiriq bo‘yicha izoh (ixtiyoriy)','');if(note===null)return;await api('/owner/task-review',{task_id:btn.dataset.ownerReview,status:btn.dataset.reviewStatus,review_note:note});await navigate('tasks')}));
+ }else{
+   document.querySelectorAll('[data-task-start]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{await api('/staff/task-update',{task_id:btn.dataset.taskStart,status:'in_progress'});await navigate('tasks')}));
+   document.querySelectorAll('[data-task-submit]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{
+     const link=prompt('Bajarilgan ish havolasi (ixtiyoriy, https://...)','');if(link===null)return;
+     await api('/staff/task-update',{task_id:btn.dataset.taskSubmit,status:'review',result_url:link.trim()});await navigate('tasks')
+   }));
+ }
+ return;
+}
+if(tab==='education'&&owner){
+ const results=await Promise.all([api('/owner/education-list'),api('/owner/placement-overview')]);
+ const r=results[0],placement=results[1],groups=r.groups||[],plans=placement.plans||[],courses=placement.courses||[];
+ const courseName=id=>courses.find(x=>x.id===id)?.title||id;
+ inject('Owner — o‘quv jarayoni',`<div class="grid">${count(groups.length,'Guruhlar')}${count(courses.length,'Kurslar')}${count((placement.mappings||[]).length,'Tarif-kurs mosliklari')}</div><div class="card"><h3>Tarifni kursga biriktirish</h3><p class="sub">Administrator o‘quvchini to‘lov asosida guruhga olishi uchun tarif qaysi kursga tegishli ekanini belgilang. Bir tarif faqat bir kursga bog‘lanadi.</p><form id="ownerPlanMap" class="stack"><select class="input" name="plan_id" required><option value="">Tarifni tanlang</option>${plans.map(p=>`<option value="${esc(p.id)}">${esc(p.name)} · ${esc(p.code)}</option>`).join('')}</select><select name="course_id" class="input" required><option value="">Kursni tanlang</option>${courses.map(x=>`<option value="${esc(x.id)}">${esc(x.title)}</option>`).join('')}</select><button class="btn">Tarif–kurs mosligini saqlash</button></form></div><div class="card"><h3>Hozirgi mosliklar</h3>${list(placement.mappings||[],x=>`<strong>${esc(plans.find(p=>p.id===x.plan_id)?.name||'Tarif')}</strong><div class="sub">${esc(courseName(x.course_id))}</div>`)}</div><div class="card"><h3>Guruhlar</h3>${list(groups,x=>`<strong>${esc(x.name)} <span class="pill">${esc(x.status)}</span></strong><div class="sub">${esc(courseName(x.course_id))} · Sig‘im: ${esc(x.capacity||30)}</div>`)}</div>`);
+ formHandler('ownerPlanMap',async f=>{if(!confirm('Tarifni tanlangan kursga bog‘laysizmi?'))return;await api('/owner/placement-map',{plan_id:f.get('plan_id'),course_id:f.get('course_id')})});
+ return;
+}
+if(tab==='students'){
+ const permitted=['owner','director','administrator','education_manager','teacher','assistant_teacher','accountant'];
+ if(!permitted.includes(state.user.role))throw Error('O‘quvchilar uchun ruxsat mavjud emas');
+ const term=state.studentSearchTerm||'';
+ const r=term.length>=2?await api('/staff/ops/office-student-search',{query:term}):{students:[],message:'Qidirish uchun kamida 2 belgi kiriting'};
+ const people=r.students||[],editable=['owner','administrator','education_manager'].includes(state.user.role);
+ const cards=list(people,x=>'<strong>'+esc(x.full_name)+' <span class="pill">'+esc(x.qadam_id||'ID mavjud emas')+'</span></strong><div class="sub">'+(x.groups.length?'Guruh: '+esc(x.groups.join(', ')):'Guruhga biriktirilmagan')+'</div>'+(x.phone?'<div class="sub">Telefon: '+esc(x.phone)+'</div>':'')+(x.birth_date?'<div class="sub">Tug‘ilgan sana: '+esc(x.birth_date)+'</div>':'')+(x.is_new?'<div class="sub">Guruhga hali qabul qilinmagan</div>':'')+(editable?'<form data-student-birth-form="'+esc(x.id)+'" class="stack"><label>Tug‘ilgan sana</label><input class="input" type="date" max="'+new Date().toISOString().slice(0,10)+'" name="birth_date" required value="'+esc(x.birth_date||'')+'"><button class="btn small" type="submit">Sanani saqlash</button></form>':''));
+ inject('O‘quvchilar qidiruvi','<div class="card"><h3>O‘quvchi va yangi foydalanuvchini topish</h3><form id="studentSearchForm" class="stack"><input class="input" name="query" maxlength="100" placeholder="QADAM ID, ism, familiya, telefon yoki tug‘ilgan sana" value="'+esc(term)+'" required minlength="2"><button class="btn">Qidirish</button></form><p class="sub">Ustoz faqat o‘z guruhidagi o‘quvchilarni ko‘radi. Telefon va tug‘ilgan sana cheklangan lavozimlar uchun ochiq.</p></div><div class="card"><h3>Natijalar ('+people.length+')</h3>'+cards+'</div><div class="notice">'+esc(r.message||'')+' '+(r.truncated?'Qidiruv oxirgi 1000 foydalanuvchi bo‘yicha bajarildi.':'')+'</div>');
+ formHandler('studentSearchForm',async d=>{state.studentSearchTerm=String(d.get('query')||'').trim()});
+ document.querySelectorAll('[data-student-birth-form]').forEach(form=>form.addEventListener('submit',e=>submit(e,async()=>{const d=new FormData(form);await api('/staff/ops/office-student-directory-save',{student_id:form.dataset.studentBirthForm,birth_date:String(d.get('birth_date')||'')});await navigate('students')})));
+ return;
+}
+if(tab==='education'){const r=owner?await api('/owner/education-list'):await api('/staff/my-groups');const groups=r.groups||[];inject('O‘quv jarayoni',`<div class="grid">${count(groups.length,'Guruhlar')}${count((r.courses||[]).length,'Kurslar')}${count((r.lessons||[]).length,'Darslar')}</div><div class="card"><h3>Guruhlar</h3>${list(groups,x=>`<strong>${esc(x.name||x.title||'Guruh')} <span class="pill">${esc(x.status||'')}</span></strong><div class="sub">${esc(x.starts_at||'')} • Limit: ${esc(x.capacity??30)}</div>`)}</div>${owner?`<div class="card"><h3>Kurslar</h3>${list(r.courses,x=>`<strong>${esc(x.title)}</strong><span class="sub">${x.is_published?'Nashr qilingan':'Yopiq'}</span>`)}</div>`:''}`);return;}
+
+if(tab==='salary-confirm'){
+ const r=await api('/staff/ops/salary-my'),rows=r.rows||[];
+ const money=v=>Number(v||0).toLocaleString('uz-UZ')+' so‘m';
+ inject('Mening oyligim',`<div class="card"><h3>Oylik to‘lovlari va tasdiqlash</h3><p class="sub">Oyliklar har oyning 1–5-kunlari to‘lanishi kerak. Buxgalter chek yuborganidan keyin olgan-olmaganingizni belgilang.</p>${list(rows,x=>`<strong>${esc(x.period_month)} — ${money(x.total_uzs)}</strong><div class="sub">Hisob holati: ${esc(x.status)} · Tasdiq: ${esc(x.transfer?.employee_response||'Chek yo‘q')}</div>${x.transfer?.employee_response==='pending'?`<div class="actions"><button class="btn small" type="button" data-salary-answer="${esc(x.id)}" data-answer="received">Ha, oldim</button><button class="btn small alt" type="button" data-salary-answer="${esc(x.id)}" data-answer="not_received">Yo‘q, hali olmadim</button></div>`:''}`)}</div><div class="notice">«Olmadim» tanlansa, Direktor va Ownerga murojaat keladi. Ular vaziyatni tekshiradi.</div>`);
+ document.querySelectorAll('[data-salary-answer]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{
+ const no=btn.dataset.answer==='not_received';
+ const note=no?prompt('Pul kelmagan bo‘lsa izohingizni yozing (ixtiyoriy)',''):'';if(note===null)return;
+ if(!confirm(no?'Oylik kelmaganini tasdiqlaysizmi?':'Oylikni olganingizni tasdiqlaysizmi?'))return;
+ const v=await api('/staff/ops/salary-confirm',{payroll_id:btn.dataset.salaryAnswer,answer:btn.dataset.answer,note:note||''});
+ await navigate('salary-confirm');notify(v.message,'good');
+ }));
+ return;
+}
+if(tab==='salary-supervision'){
+ if(!['owner','director'].includes(state.user.role))throw Error('Direktor yoki Owner huquqi kerak');
+ const r=await api('/staff/ops/salary-supervision'),rows=r.rows||[];
+ const disputes=rows.filter(x=>x.confirmation==='not_received'),pending=rows.filter(x=>x.confirmation==='pending');
+ const money=x=>Number(x||0).toLocaleString('uz-UZ')+' so‘m';
+ inject('Direktor — oyliklar nazorati',`<div class="grid">${count(rows.length,'Maosh yozuvlari')}${count(pending.length,'Xodim tasdig‘i kutilmoqda')}${count(disputes.length,'Olmaganini bildirganlar')}${count(rows.filter(x=>x.status==='approved').length,'To‘lovga tayyor')}</div><div class="card"><h3>1–5 sana nazorati va xodim javoblari</h3><p class="sub">${esc(r.payment_window)}</p>${list(rows,x=>`<strong>${esc(x.staff_name)} — ${money(x.total_uzs)}</strong><div class="sub">Davr: ${esc(x.period_month)} · ${esc(x.status)} · Tasdiq: ${esc(x.confirmation)} · Nazorat: ${esc(x.director_status||'—')}</div>${x.receipt_exists?`<div class="actions"><button type="button" class="btn small alt" data-director-receipt="${esc(x.id)}">Chekni ochish</button><button type="button" class="btn small alt" data-director-salary="${esc(x.id)}" data-review="reviewed">Tekshirildi</button><button type="button" class="btn small" data-director-salary="${esc(x.id)}" data-review="escalated">Muammo bor</button></div>`:''}`)}</div>`);
+ document.querySelectorAll('[data-director-receipt]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{
+   const v=await api('/staff/ops/salary-supervision-receipt',{payroll_id:btn.dataset.directorReceipt});
+   window.open(v.url,'_blank','noopener,noreferrer');
+ }));
+ document.querySelectorAll('[data-director-salary]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{const v=await api('/staff/ops/salary-director-review',{payroll_id:btn.dataset.directorSalary,status:btn.dataset.review});await navigate('salary-supervision');notify(v.message,'good')}));
+ return;
+}
+
+if(tab==='finance-dashboard'){
+ if(!['owner','accountant','director'].includes(state.user.role))throw Error('Moliya huquqi kerak');
+ const today=new Date(),defaultMonth=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-01';
+ const period=state.v86Period||defaultMonth,endpoint=state.user.role==='director'?'/staff/ops/financial-dashboard':'/finance/financial-dashboard';
+ const result=await api(endpoint,{period_month:period});
+ const money=x=>Number(x||0).toLocaleString('uz-UZ')+' so‘m';
+ inject('Moliyaviy boshqaruv',`<div class="hero"><h1>${state.user.role==='director'?'Direktor — moliyaviy nazorat':'Moliyaviy dashboard'}</h1><p class="lead">Tasdiqlangan tushumlar, xarajatlar, oylik majburiyatlari va nizolar</p></div><div class="card"><form id="dashboardMonth" class="stack"><label>Hisobot oyi</label><input type="month" class="input" name="period" value="${esc(period.slice(0,7))}" required><button class="btn alt">Yangilash</button></form></div><div class="grid">${count(money(result.approved_payment_uzs),'Tasdiqlangan kurs to‘lovlari')}${count(money(result.approved_other_income_uzs),'Boshqa tasdiqlangan kirim')}${count(money(result.approved_finance_expense_uzs),'Tasdiqlangan xarajat')}${count(money(result.approved_refunds_uzs),'Qaytarilgan to‘lovlar')}${count(money(result.recorded_salary_paid_uzs),'To‘langan deb qayd etilgan oylik')}${count(money(result.recorded_salary_unpaid_uzs),'To‘lov kutilayotgan oylik')}${count(result.outstanding_disputes,'Oylik nizolari')}${count(result.unconfirmed_paid_salaries,'Xodim tasdig‘i kutilmoqda')}</div><div class="card"><h3>Hisoblangan operatsion qoldiq</h3><h2>${money(result.preliminary_cash_flow_before_salary_reconciliation_uzs)}</h2><p class="sub">Bu bankdagi qoldiq yoki sof foyda emas. Moliyaviy yozuvlarda oylik xarajati bo‘lsa, uni ikki marta ayirmaslik uchun oyliklar alohida ko‘rsatilgan.</p><p><strong>Davr:</strong> ${esc(period)} · ${result.period_closed?'Yopilgan':'Ochiq'}</p></div><div class="notice">${esc(result.warning)}${result.truncated?' Ma’lumotlar soni cheklangan — katta hajmli hisobotni tekshiring.':''}</div>`);
+ $('dashboardMonth').addEventListener('submit',event=>submit(event,async()=>{state.v86Period=String(new FormData($('dashboardMonth')).get('period'))+'-01';await navigate('finance-dashboard')}));
+ return;
+}
+if(tab==='salary-bulk'){
+ if(!['owner','accountant'].includes(state.user.role))throw Error('Oyliklarni boshqarish huquqi yo‘q');
+ const today=new Date(),period=state.v86Period||today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-01';
+ const [preview,closeState]=await Promise.all([api('/finance/salary-bulk-preview',{period_month:period}),api('/finance/salary-period-status',{period_month:period})]);
+ const rows=preview.rows||[],eligible=rows.filter(x=>x.eligible);
+ inject('Ommaviy oylik hisoblash',`<div class="card"><h3>Davr va hisob-kitoblar</h3><form id="bulkMonth" class="stack"><input type="month" name="period" class="input" required value="${esc(period.slice(0,7))}"><button class="btn alt">Davrni tanlash</button></form><div class="grid">${count(preview.ready,'Hisoblashga tayyor')}${count(preview.skipped,'E’tibor talab qiladi')}${count(closeState.payroll_count,'Oyliklar')}${count(closeState.incomplete,'Tasdiq kutilmoqda')}</div></div><div class="card"><h3>Xodimlar holati</h3>${list(rows,x=>`<strong>${esc(x.full_name)} · ${esc(roles[x.role]||x.role)}</strong><div class="sub">${x.eligible?'Hisoblashga tayyor':esc(x.reason)} · Ustoz guruhlar ulushi: ${Number(x.group_commission_uzs||0).toLocaleString('uz-UZ')} so‘m</div>`)}</div><div class="card"><h3>Oylik loyihalarini yaratish</h3><p class="sub">Har bir faol xodimning maosh rejasiga ko‘ra hisoblanadi. Ustozlar guruh sof tushumidagi foiz asosida. Sotuvchilar uchun ushbu ommaviy amalda sotuv tushumi va KPI qiymati kiritilmasa 0 olinadi. Noto‘g‘ri summani Owner tasdiqlashidan oldin tuzatish mumkin.</p><button class="btn" type="button" id="bulkGenerate" ${eligible.length&&!preview.closed?'':'disabled'}>Ommaviy hisoblashni boshlash</button></div>`+
+ (state.user.role==='owner'?`<div class="card"><h3>Hisobot oyini yopish</h3><p class="sub">Barcha faol xodimlarning oyligi yaratilgan, cheki yuklangan, xodim «Oldim» deb tasdiqlagan va nizo ochiq bo‘lmasligi kerak. Yopilgach oylik summalari qulflanadi.</p><textarea class="input" id="closeSalaryNote" maxlength="1000" placeholder="Yakuniy izoh"></textarea><button type="button" class="btn alt" id="closeSalaryPeriod" ${closeState.closed?'disabled':''}>Oyni yopish</button><div class="sub">${closeState.closed?'Yopilgan davr: '+esc(closeState.closed.closed_at):'Davr ochiq'}</div></div>`:''));
+ $('bulkMonth').addEventListener('submit',event=>submit(event,async()=>{state.v86Period=String(new FormData($('bulkMonth')).get('period'))+'-01';await navigate('salary-bulk')}));
+ $('bulkGenerate').onclick=()=>submit({preventDefault(){}},async()=>{if(!confirm(eligible.length+' nafar xodim uchun oylik loyihasini yaratasizmi?'))return;
+   const r=await api('/finance/salary-bulk-create',{period_month:period,commission_inputs:{},kpi_inputs:{}});
+   await navigate('salary-bulk');notify((r.result?.created||0)+' ta oylik loyihasi yaratildi','good')});
+ if(state.user.role==='owner')$('closeSalaryPeriod').onclick=()=>submit({preventDefault(){}},async()=>{
+   if(!confirm('Hisobot oyini butunlay yopasizmi? Barcha xodimlar tasdig‘i va cheklar mavjudligini tekshiring.'))return;
+   const r=await api('/finance/salary-period-close',{period_month:period,note:$('closeSalaryNote').value});
+   await navigate('salary-bulk');notify(r.message,'good');
+ });
+ return;
+}
+
+if(tab==='salary-import'){
+ if(!['owner','accountant'].includes(state.user.role))throw Error('Excel importi uchun huquq yo‘q');
+ const staff=(await api('/finance/salary-cards-list')).staff||[];
+ const names=new Map(staff.map(x=>[String(x.employee_code).toUpperCase(),x.full_name]));
+ const lines=state.v86ExcelRows||[],preview=state.v86ExcelPreview;
+ inject('Excel import — maosh rejalari',`<div class="card"><h3>XLSX yoki CSV orqali import</h3><p class="sub">Faqat maosh rejalarini yangilaydi. Cheklar, to‘lov kartalari va to‘langan oyliklar import qilinmaydi. 1–250 qatorni tanlang, avval tekshiring, keyin bazaga saqlang.</p><button type="button" class="btn alt" id="excelTemplate">Namuna CSV — xodim kodlari bilan</button><div style="margin-top:16px"><label>Excel (.xlsx) yoki CSV fayl</label><input class="input" type="file" id="salaryExcelFile" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></div><div class="notice">Ustunlar: employee_code, salary_type, base_salary_uzs, commission_percent, kpi_target, kpi_bonus_uzs, effective_on. Sana: YYYY-MM-DD. Foiz 50 yozilsa 50% deb olinadi.</div></div>`+
+ `<div class="card"><h3>Tekshiruv — ${lines.length} qator</h3>${lines.length?`<button type="button" class="btn" id="validateExcel">1. Bazada tekshirish</button>`:'<p class="sub">Import uchun fayl tanlang.</p>'}${preview?`<div class="grid">${count(preview.valid||0,'To‘g‘ri')}${count(preview.invalid||0,'Xato')}</div>${list(preview.errors||[],x=>`<strong>Qator ${esc(x.row)} — ${esc(x.employee_code)}</strong><div class="sub">${esc(x.reason)}</div>`)}${preview.invalid===0?`<button class="btn" type="button" id="applyExcel">2. Maosh rejalarini bazaga saqlash</button>`:''}`:''}${list(lines.slice(0,15),x=>`<strong>${esc(x.employee_code)} — ${esc(names.get(x.employee_code)||'Xodim kodi tekshiriladi')}</strong><div class="sub">${esc(x.salary_type)} · ${Number(x.base_salary_uzs).toLocaleString('uz-UZ')} so‘m · ${(x.commission_bps/100).toLocaleString('uz-UZ')}% · ${esc(x.effective_on)}</div>`)}${lines.length>15?'<p class="sub">Dastlabki 15 qator ko‘rsatildi.</p>':''}</div>`);
+ $('excelTemplate').onclick=()=>{
+   const entries=staff.filter(x=>x.is_active).map(x=>[x.employee_code,'fixed',x.role==='sales'?2000000:0,0,0,0,new Date().toISOString().slice(0,7)+'-01']);
+   const table=[['employee_code','salary_type','base_salary_uzs','commission_percent','kpi_target','kpi_bonus_uzs','effective_on'],...entries];
+   const csv='\uFEFF'+table.map(row=>row.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(';')).join('\r\n');
+   const file=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(file);
+   const a=document.createElement('a');a.href=url;a.download='QADAM_oylik_import_namuna.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ };
+ $('salaryExcelFile').onchange=async()=>{
+   const file=$('salaryExcelFile').files?.[0];if(!file)return;
+   if(file.size>5000000)throw Error('Excel fayl hajmi 5 MB dan oshmasin');
+   try{
+     const matrix=file.name.toLowerCase().endsWith('.xlsx')?
+       await qadamXlsxParse(await file.arrayBuffer()):qadamCsvParse(await file.text());
+     state.v86ExcelRows=qadamSalaryRows(matrix);
+     state.v86ExcelPreview=null;
+     await navigate('salary-import');
+   }catch(e){notify(e.message||'Excelni ochib bo‘lmadi','bad')}
+ };
+ if($('validateExcel'))$('validateExcel').onclick=()=>submit({preventDefault(){}},async()=>{
+    state.v86ExcelPreview=await api('/finance/salary-import-plans',{rows:state.v86ExcelRows,preview:true});
+    await navigate('salary-import');
+ });
+ if($('applyExcel'))$('applyExcel').onclick=()=>submit({preventDefault(){}},async()=>{
+   if(!state.v86ExcelPreview||state.v86ExcelPreview.invalid)throw Error('Avval tekshiruvni muvaffaqiyatli o‘tkazing');
+   if(!confirm(state.v86ExcelRows.length+' ta maosh rejasini bazaga yozasizmi?'))return;
+   const result=await api('/finance/salary-import-plans',{rows:state.v86ExcelRows,preview:false});
+   state.v86ExcelRows=[];state.v86ExcelPreview=null;await navigate('salary-import');notify(result.message,'good');
+ });
+ return;
+}
+if(tab==='salary-accounting'){
+ if(!['owner','accountant'].includes(state.user.role))throw Error('Moliya ruxsati kerak');
+ const results=await Promise.all([api('/finance/salary-cards-list'),api('/finance/salary-transfer-list'),api('/finance/payroll-list')]);
+ const cardList=results[0],payments=results[1],plans=results[2],people=cardList.staff||[],money=v=>Number(v||0).toLocaleString('uz-UZ')+' so‘m';
+ const selected=people;
+ inject('Buxgalteriya — oylik kartalari va chek',`<div class="grid">${count(people.length,'Xodimlar')}${count(people.filter(x=>x.card).length,'Karta kiritilgan')}${count((payments.payroll||[]).filter(x=>x.status==='approved').length,'Chek kutmoqda')}${count((payments.payroll||[]).filter(x=>x.transfer?.employee_response==='not_received').length,'E’tirozlar')}</div><div class="card"><h3>Excel hisobot eksporti</h3><p class="sub">Oyliklar, ustozlar foizi, bonus, ushlanma, to‘lov holati, xodim javobi va Direktor nazorati Excelda ochiladigan jadvalga chiqariladi. Maxfiy karta raqamlari eksport qilinmaydi.</p><button class="btn alt" type="button" id="salaryPayrollExport">Barcha oyliklarni Excel CSV formatida olish</button></div><div class="card"><h3>Xodim oylik kartasi</h3><form id="salaryCardSave" class="stack"><select name="staff_id" class="input" required><option value="">Xodimni tanlang</option>${people.map(x=>`<option value="${esc(x.id)}">${esc(x.full_name)} · ${esc(roles[x.role]||x.role)}</option>`).join('')}</select><input name="card_number" class="input" inputmode="numeric" placeholder="16–19 xonali karta raqami" required minlength="16" maxlength="24"><input name="card_holder" class="input" required minlength="3" maxlength="120" placeholder="Karta egasi"><input name="bank_name" class="input" maxlength="120" placeholder="Bank nomi"><button class="btn">Karta rekvizitlarini saqlash</button></form><div class="notice">Karta raqami faqat Buxgalter va Owner moliya kabinetida mavjud. Xodimlar chatiga yuborilmaydi.</div></div><div class="card"><h3>Saqlangan kartalar</h3>${list(people,x=>`<strong>${esc(x.full_name)}</strong><div class="sub">${x.card?`**** **** **** ${esc(x.card.card_number.slice(-4))} · ${esc(x.card.card_holder)} · ${esc(x.card.bank_name||'')}`:'Karta kiritilmagan'}</div>${x.card?`<button type="button" class="btn small alt" data-show-salary-card="${esc(x.id)}">To‘liq karta raqamini ko‘rish</button>`:''}`)}</div><div class="card"><h3>Barcha xodimlarning oylik rejalari</h3><p class="sub">Asosiy maosh va komissiya barcha lavozimlarga kiritiladi. Sotuvchilarning komissiyasi 3% dan oshmasligi kerak.</p><form id="payrollPolicyForm" class="stack"><select name="staff_id" class="input" required><option value="">Xodimni tanlang</option>${selected.map(x=>`<option value="${esc(x.id)}">${esc(x.full_name)} · ${esc(roles[x.role]||x.role)}</option>`).join('')}</select><select name="salary_type" class="input"><option value="fixed">Doimiy oylik</option><option value="mixed">Oylik + foiz</option><option value="commission">Faqat foiz</option></select><label>Asosiy oylik (so‘m)</label><input name="base_salary_uzs" type="number" min="0" class="input" required value="0"><label>Komissiya (%)</label><input name="percent" type="number" step="0.01" min="0" max="100" class="input" required value="0"><label>KPI maqsadi</label><input name="kpi_target" type="number" min="0" class="input" value="0"><label>KPI bonusi (so‘m)</label><input name="kpi_bonus_uzs" type="number" min="0" class="input" value="0"><label>Kuchga kirish sanasi</label><input name="effective_on" type="date" class="input" required value="${new Date().toISOString().slice(0,7)}-01"><button class="btn">Oylik rejasini saqlash</button></form><div class="sub">${(plans.plans||[]).length} ta maosh rejasi bazada bor. O‘zgarishlar auditda saqlanadi; hisoblangan oylik Owner tomonidan tasdiqlanadi.</div></div><div class="card"><h3>Har bir xodimning oylik loyihasini tayyorlash</h3><p class="sub">Barcha 12 lavozim uchun alohida oylik rejasi va davriy hisob-kitob saqlanishi mumkin. Oylik summasi xodimning rejasidan olinadi; foizli oylikda hisoblash bazasi kiritiladi. Yakuniy tasdiq Ownerda.</p><form id="salaryDraftForm" class="stack"><select name="staff_id" class="input" required><option value="">Xodim</option>${selected.map(x=>`<option value="${esc(x.id)}">${esc(x.full_name)} — ${esc(roles[x.role]||x.role)}</option>`).join('')}</select><label>Hisoblanadigan oy</label><input class="input" type="month" name="period_month" required value="${new Date().toISOString().slice(0,7)}"><label>Komissiya hisoblanadigan tushum (so‘m)</label><input class="input" type="number" name="commission_base_uzs" min="0" value="0" required><label>KPI natijasi</label><input class="input" type="number" name="kpi_actual" min="0" value="0" required><label>Ushlanmalar (so‘m)</label><input class="input" type="number" name="deductions_uzs" min="0" value="0" required><textarea class="input" name="note" maxlength="1000" placeholder="Hisob-kitob izohi"></textarea><button class="btn">Oylik loyihasini yaratish</button></form></div><div class="card"><h3>Ustoz / yordamchi oyligini avtomatik hisoblash</h3><p class="sub">Har bir guruh uchun saqlangan foiz va tasdiqlangan sof tushum asosida rasmiy oylik loyihasi yaratiladi. Foiz 50% bo‘lishi shart emas, har bir ustozniki alohida.</p><form id="autoTeacherDraft" class="stack"><select name="staff_id" required class="input"><option value="">Ustoz yoki yordamchi</option>${selected.filter(x=>['teacher','assistant_teacher'].includes(x.role)).map(x=>`<option value="${esc(x.id)}">${esc(x.full_name)} — ${esc(roles[x.role]||x.role)}</option>`).join('')}</select><input type="month" class="input" name="period_month" required value="${new Date().toISOString().slice(0,7)}"><button class="btn">Guruh tushumidan oylik hisoblash</button></form></div><div class="card"><h3>Tasdiqlanmagan oylik summalarini tahrirlash</h3><p class="sub">Buxgalter barcha lavozimlar uchun summalarni tahrirlaydi. Faqat «draft» holati; Owner tasdiqlagach summalar bu yerdan o‘zgarmaydi. Har bir tuzatish auditda qayd etiladi.</p><form id="editSalaryDraft" class="stack"><select class="input" name="payroll_id" required><option value="">Oylik loyihasini tanlang</option>${(payments.payroll||[]).filter(x=>x.status==='draft').map(x=>`<option value="${esc(x.id)}">${esc(x.staff_name)} · ${esc(x.period_month)} · ${money(x.total_uzs)}</option>`).join('')}</select><label>Asosiy oylik</label><input type="number" class="input" name="base_uzs" min="0" required value="0"><label>Foizdan hisoblangan summa (so‘m)</label><input type="number" class="input" name="commission_uzs" min="0" required value="0"><label>Bonus</label><input type="number" class="input" name="bonus_uzs" min="0" required value="0"><label>Ushlanma</label><input type="number" class="input" name="deductions_uzs" min="0" required value="0"><textarea name="note" class="input" maxlength="1000" placeholder="Nima uchun o‘zgartirildi?"></textarea><button class="btn">Oylik loyihasini yangilash</button></form></div><div class="card"><h3>To‘lov cheki yuklash</h3><form id="uploadSalaryReceipt" class="stack"><select name="payroll_id" class="input" required><option value="">Owner tasdiqlagan oylikni tanlang</option>${(payments.payroll||[]).filter(x=>x.status==='approved'&&!x.transfer).map(x=>`<option value="${esc(x.id)}">${esc(x.staff_name)} · ${esc(x.period_month)} · ${money(x.total_uzs)}</option>`).join('')}</select><input type="file" name="receipt" class="input" accept="image/jpeg,image/png,image/webp,application/pdf" required><button class="btn">Chekni yuklash va xodimga yuborish</button></form><p class="sub">JPG/PNG/WEBP/PDF — 5 MB gacha. Chek yopiq omborda saqlanadi. Xodimga «Oylikni oldingizmi?» xabari yuboriladi.</p></div><div class="card"><h3>Oylik to‘lovlari tarixi</h3>${list(payments.payroll||[],x=>`<strong>${esc(x.staff_name)} — ${money(x.total_uzs)}</strong><div class="sub">${esc(x.period_month)} · ${esc(x.status)} · Xodim javobi: ${esc(x.transfer?.employee_response||'Chek yo‘q')}</div>${x.transfer?`<button class="btn small alt" type="button" data-receipt-show="${esc(x.id)}">Chekni ko‘rish</button>`:''}`)}</div>`);
+ const editForm=$('editSalaryDraft');
+ const draftSelect=editForm?.querySelector('[name="payroll_id"]');
+ if(draftSelect)draftSelect.onchange=()=>{
+   const p=(payments.payroll||[]).find(x=>x.id===draftSelect.value);
+   if(!p)return;
+   for(const field of ['base_uzs','commission_uzs','bonus_uzs','deductions_uzs']){
+     const input=editForm.querySelector('[name="'+field+'"]');if(input)input.value=String(p[field]||0);
+   }
+ };
+ formHandler('editSalaryDraft',async d=>{
+   const v=await api('/finance/payroll-draft-adjust',{
+    payroll_id:d.get('payroll_id'),base_uzs:Number(d.get('base_uzs')),
+    commission_uzs:Number(d.get('commission_uzs')),bonus_uzs:Number(d.get('bonus_uzs')),
+    deductions_uzs:Number(d.get('deductions_uzs')),note:d.get('note')
+   });
+   await navigate('salary-accounting');notify(v.message,'good');
+ });
+ formHandler('autoTeacherDraft',async d=>{const v=await api('/finance/payroll-auto-draft',{staff_id:d.get('staff_id'),period_month:String(d.get('period_month'))+'-01'});await navigate('salary-accounting');notify(v.message,'good')});
+ formHandler('salaryDraftForm',async d=>{await api('/finance/payroll-draft',{staff_id:d.get('staff_id'),period_month:String(d.get('period_month'))+'-01',commission_base_uzs:Number(d.get('commission_base_uzs')),kpi_actual:Number(d.get('kpi_actual')),deductions_uzs:Number(d.get('deductions_uzs')),note:d.get('note')});await navigate('salary-accounting')});
+ document.querySelectorAll('[data-show-salary-card]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{
+   if(!confirm('Karta raqami maxfiy. Faqat oylik o‘tkazish uchun ko‘rasizmi?'))return;
+   const v=await api('/finance/salary-card-reveal',{staff_id:btn.dataset.showSalaryCard});
+   const panel=document.createElement('div');panel.className='card';
+   const heading=document.createElement('h3');heading.textContent='Karta rekvizitlari (vaqtinchalik)';
+   const value=document.createElement('p');value.style.cssText='font-weight:700;font-size:20px;letter-spacing:2px;overflow-wrap:anywhere';value.textContent=v.card.card_number;
+   const detail=document.createElement('p');detail.textContent=v.card.card_holder+' · '+(v.card.bank_name||'');
+   const hide=document.createElement('button');hide.className='btn small alt';hide.textContent='Yopish';hide.onclick=()=>panel.remove();
+   panel.append(heading,value,detail,hide);$('section').prepend(panel);panel.scrollIntoView({block:'start'});
+ }));
+ $('salaryPayrollExport').onclick=()=>{
+    const names=new Map(people.map(x=>[x.id,x]));
+    const rows=[['Davr','Xodim kodi','Xodim','Lavozim','Asosiy oylik','Foizdan oylik','Bonus','Ushlanmalar','Jami oylik','Hisob holati','Chek','Xodim tasdig‘i','Direktor ko‘rigi','To‘langan sana']];
+    for(const x of payments.payroll||[]){
+      const who=names.get(x.staff_id)||{};
+      rows.push([x.period_month,who.employee_code||'',who.full_name||'',roles[who.role]||who.role||'',
+        Number(x.base_uzs||0),Number(x.commission_uzs||0),Number(x.bonus_uzs||0),
+        Number(x.deductions_uzs||0),Number(x.total_uzs||0),x.status||'',
+        x.transfer?'Bor':'Yo‘q',x.transfer?.employee_response||'',
+        x.transfer?.director_status||'',x.paid_at||'']);
+    }
+    const safe=v=>{let value=String(v??'');if(/^[=+@-]/.test(value)&&typeof v!=='number')value="'"+value;return '"'+value.replace(/"/g,'""')+'"'};
+    const csv='\uFEFF'+rows.map(x=>x.map(safe).join(';')).join('\r\n');
+    const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+    const a=document.createElement('a');a.href=url;a.download='QADAM_barcha_xodimlar_oyliklari.csv';
+    document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ };
+ formHandler('salaryCardSave',async d=>{await api('/finance/salary-card-save',{staff_id:d.get('staff_id'),card_number:d.get('card_number'),card_holder:d.get('card_holder'),bank_name:d.get('bank_name')});await navigate('salary-accounting')});
+ const salaryRoleSelect=document.querySelector('#payrollPolicyForm [name="staff_id"]');
+ if(salaryRoleSelect)salaryRoleSelect.onchange=()=>{
+  const who=people.find(x=>x.id===salaryRoleSelect.value),input=$('payrollPolicyForm').querySelector('[name="base_salary_uzs"]');
+  if(input)input.value=who?.role==='sales'?'2000000':'0';
+ };
+ formHandler('payrollPolicyForm',async d=>{const selectedStaff=people.find(x=>x.id===d.get('staff_id'));const pct=Number(d.get('percent'));if(selectedStaff?.role==='sales'&&pct>3)throw Error('Sotuv menejerlari uchun komissiya maksimal 3%');await api('/finance/payroll-plan-save',{staff_id:d.get('staff_id'),salary_type:d.get('salary_type'),base_salary_uzs:Number(d.get('base_salary_uzs')),commission_bps:Math.round(pct*100),kpi_target:Number(d.get('kpi_target')||0),kpi_bonus_uzs:Number(d.get('kpi_bonus_uzs')||0),effective_on:d.get('effective_on')});await navigate('salary-accounting')});
+ document.querySelectorAll('[data-receipt-show]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{
+   const v=await api('/finance/salary-receipt-view',{payroll_id:btn.dataset.receiptShow});window.open(v.url,'_blank','noopener,noreferrer');
+ }));
+ $('uploadSalaryReceipt').addEventListener('submit',event=>submit(event,async()=>{const d=new FormData($('uploadSalaryReceipt'));const file=d.get('receipt');if(!(file instanceof File)||file.size>5242880||file.size<100)throw Error('Chek 5MB gacha bo‘lishi kerak');if(!['image/jpeg','image/png','image/webp','application/pdf'].includes(file.type))throw Error('Fayl turi noto‘g‘ri');const base64=await new Promise((resolve,reject)=>{const fr=new FileReader();fr.onload=()=>resolve(String(fr.result).split(',')[1]);fr.onerror=reject;fr.readAsDataURL(file)});const v=await api('/finance/salary-receipt-upload',{payroll_id:d.get('payroll_id'),mime:file.type,file_base64:base64});await navigate('salary-accounting');notify(v.message,'good')}));
+ return;
+}
+if(tab==='finance-groups'){
+ if(!['owner','accountant'].includes(state.user.role))throw Error('Moliya ruxsati mavjud emas');
+ const today=new Date();
+ const selected=state.financePeriod||(`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-01`);
+ const r=await api('/finance/group-shares-report',{period_month:selected});
+ const rows=r.rows||[],employee=r.staff||[],ownerFinance=['owner','accountant'].includes(state.user.role);
+ const currency=v=>Number(v||0).toLocaleString('uz-UZ')+' so‘m';
+ const active=employee.filter(x=>x.is_active&&['teacher','assistant_teacher'].includes(x.role));
+ inject('Guruhlar moliyasi',`<div class="card"><h3>Hisobot davri</h3><form id="financeMonthForm" class="stack"><input type="month" class="input" name="month" value="${esc(selected.slice(0,7))}" required><button class="btn alt">Oyni ko‘rsatish</button></form><div class="grid">${count(currency(r.total?.net_uzs),'Sof tushum')}${count(currency(r.total?.employee_total_uzs),'Ustozlar va yordamchilar')}${count(currency(r.total?.academy_uzs),'Akademiya qoldig‘i')}${count(rows.length,'Guruhlar')}</div></div>`+
+ (ownerFinance?`<div class="card"><h3>Ustoz va yordamchi ulushini belgilash</h3><p class="sub">Masalan, Najim ustoz 50% olsa, guruh sof tushumining 50% ustozga, qolganidan boshqa xodim ulushi ajratilgach akademiyaga hisoblanadi. Bitta guruhdagi jami ulush 100% dan oshmaydi.</p><form id="officeGroupShareForm" class="stack"><select name="group_id" class="input" required><option value="">Guruhni tanlang</option>${rows.map(x=>`<option value="${esc(x.group_id)}">${esc(x.group_name)}</option>`).join('')}</select><select name="staff_id" class="input" required><option value="">Ustoz yoki yordamchi</option>${active.map(x=>`<option value="${esc(x.id)}">${esc(x.full_name)} — ${esc(roles[x.role]||x.role)}</option>`).join('')}</select><label>Ulush (%) — 0 dan 100 gacha</label><input class="input" type="number" name="percent" min="0" max="100" step="0.01" required placeholder="50"><button class="btn">Ulushni saqlash</button></form><p class="sub">Asosiy ustoz avval guruhga O‘quv bo‘limi tomonidan biriktirilgan bo‘lishi kerak. Yordamchi ustoz alohida tanlanadi.</p></div>`:'')+
+ `<div class="card"><h3>Guruhlar bo‘yicha hisobot</h3><button class="btn alt small" type="button" id="financeExportCsv">Excel (CSV) eksport</button><p class="sub">${esc(r.source||'')}</p>${list(rows,x=>`<strong>${esc(x.group_name)} <span class="pill">${esc(x.status)}</span></strong><div class="sub">To‘lov qilgan o‘quvchilar: ${x.paying_students} • To‘lovlar: ${x.approved_payments}</div><div class="sub">Tushum: ${currency(x.gross_uzs)} • Qaytarim: ${currency(x.refund_uzs)}</div><div><strong>Sof tushum: ${currency(x.net_uzs)}</strong></div>${(x.allocations||[]).map(y=>`<div class="sub">${esc(y.full_name)} (${esc(roles[y.role]||y.role)}) — ${(y.share_bps/100).toLocaleString('uz-UZ')}%: ${currency(y.amount_uzs)}</div>`).join('')}<div><strong>Akademiya ulushi: ${currency(x.academy_uzs)}</strong></div><div class="sub">Belgilangan jami ulush: ${(x.allocated_bps/100).toLocaleString('uz-UZ')}%</div>`)}</div><div class="notice">${esc(r.warning||'Hisobot haqiqiy tasdiqlangan tushumlarga asoslanadi.')}</div>`);
+ $('financeMonthForm').addEventListener('submit',ev=>submit(ev,async()=>{const period=new FormData($('financeMonthForm')).get('month');state.financePeriod=String(period)+'-01';await navigate('finance-groups')}));
+ if(ownerFinance)formHandler('officeGroupShareForm',async d=>{await api('/finance/group-share-save',{group_id:d.get('group_id'),staff_id:d.get('staff_id'),percent:Number(d.get('percent'))});await navigate('finance-groups')});
+ $('financeExportCsv').onclick=()=>{
+   const values=[['Oy','Guruh ID','Guruh','Kurs ID','O‘quvchilar','To‘lovlar soni','Tushum (so‘m)','Qaytarim (so‘m)','Sof tushum (so‘m)','Xodim ID','Xodim','Lavozim','Ulush (%)','Xodim oyligi (so‘m)','Akademiya ulushi (so‘m)']];
+   for(const x of rows){
+     if(!x.allocations?.length){values.push([selected,x.group_id,x.group_name,x.course_id,x.paying_students,x.approved_payments,x.gross_uzs,x.refund_uzs,x.net_uzs,'','Ustoz ulushi belgilanmagan','',0,0,x.academy_uzs]);continue;}
+     x.allocations.forEach((y,j)=>values.push([selected,x.group_id,x.group_name,x.course_id,j===0?x.paying_students:'',j===0?x.approved_payments:'',j===0?x.gross_uzs:'',j===0?x.refund_uzs:'',j===0?x.net_uzs:'',y.staff_id,y.full_name,y.role,y.share_bps/100,y.amount_uzs,j===0?x.academy_uzs:'']));
+   }
+   const escapeCsv=v=>`"${String(v??'').replace(/"/g,'""')}"`;
+   const csv='\uFEFF'+values.map(x=>x.map(escapeCsv).join(';')).join('\r\n');
+   const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+   const link=document.createElement('a');const href=URL.createObjectURL(blob);link.href=href;link.download='QADAM_guruh_oyliklari_'+selected+'.csv';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(href),1000);
+ };
+ return;
+}
+if(tab==='finance'&&state.user.role==='accountant'){
+ const r=await api('/staff/ops/rewards-accounting'),ledger=await api('/staff/ops/reward-ledger'),pending=(r.rewards||[]).filter(x=>x.status==='pending');
+ inject('Buxgalteriya — mukofotlar',`<div class="grid">${count(pending.length,'To‘lov kutmoqda')}${count((r.rewards||[]).length,'Mukofotlar')}</div><div class="card"><h3>Mukofot to‘lovlari</h3>${list(r.rewards||[],x=>`<strong>${esc((r.staff||[]).find(z=>z.id===x.staff_id)?.full_name||'Xodim')} — ${Number(x.amount_uzs||0).toLocaleString('uz-UZ')} so‘m</strong><div class="sub">${esc(x.reason)} • ${esc(x.status)}</div>${x.status==='pending'?`<button type="button" class="btn small" data-reward-paid="${esc(x.id)}">To‘lov amalga oshirilganini tasdiqlash</button>`:''}`)}</div><div class="notice">Bu tugma bankdan pul o‘tkazmaydi. Faqat haqiqiy to‘lovdan so‘ng bosing.</div><div class="card"><h3>Mukofotlarning oylik hisobi (ish haqi bilan takror qo‘shilmaydi)</h3>${list(ledger.summary||[],x=>`<strong>${esc(x.period_month)} — ${esc((r.staff||[]).find(s=>s.id===x.staff_id)?.full_name||'Xodim')}</strong><div class="sub">To‘langan: ${Number(x.paid_uzs||0).toLocaleString('uz-UZ')} so‘m · Kutilmoqda: ${Number(x.pending_uzs||0).toLocaleString('uz-UZ')} so‘m</div>`)}</div>`);
+ document.querySelectorAll('[data-reward-paid]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{if(!confirm('Haqiqiy pul to‘langanini tasdiqlaysizmi?'))return;await api('/staff/ops/reward-paid',{reward_id:btn.dataset.rewardPaid});await navigate('finance')}));
+ return;
+}
+if(tab==='finance'){
+ const r=await api('/finance/payroll-list'),pending=(r.payroll||[]).filter(x=>x.status==='draft');
+ inject('Owner — moliya va maoshlar',`<div class="grid">${count((r.payroll||[]).length,'Maosh qaydlari')}${count(pending.length,'Owner tasdig‘ini kutmoqda')}${count((r.plans||[]).length,'Maosh rejalari')}${count((r.refunds||[]).length,'Qaytarim yozuvlari')}</div><div class="card"><h3>Oylik loyihalari va tasdiqlash</h3>${list(r.payroll||[],x=>`<strong>${Number(x.total_uzs||0).toLocaleString('uz-UZ')} so‘m <span class="pill">${esc(x.status)}</span></strong><div class="sub">${esc(x.period_month)} • ${esc((r.staff||[]).find(a=>a.id===x.staff_id)?.full_name||'Xodim')}</div><div class="sub">Asosiy oylik: ${Number(x.base_uzs||0).toLocaleString('uz-UZ')} · Foiz: ${Number(x.commission_uzs||0).toLocaleString('uz-UZ')} · Bonus: ${Number(x.bonus_uzs||0).toLocaleString('uz-UZ')} · Ushlanma: ${Number(x.deductions_uzs||0).toLocaleString('uz-UZ')}</div>${x.status==='draft'?`<button class="btn small" type="button" data-owner-salary-approve="${esc(x.id)}">Oylikni tasdiqlash</button>`:''}`)}</div><div class="notice">Buxgalter hisoblagan oylikni Owner tasdiqlaydi. Keyin Buxgalter chek yuklaydi. Bankdan pul avtomatik o‘tkazilmaydi.</div>`);
+ document.querySelectorAll('[data-owner-salary-approve]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{
+   if(!confirm('Oylik summasini tekshirib, tasdiqlaysizmi?'))return;
+   const v=await api('/finance/payroll-approve',{payroll_id:btn.dataset.ownerSalaryApprove});await navigate('finance');notify(v.message||'Oylik tasdiqlandi','good');
+ }));
+ return;
+}
+if(tab==='marketing'){const r=await api('/marketing/dashboard');inject('Marketing',`<div class="grid">${count((r.campaigns||[]).length,'Kampaniyalar')}${count((r.content||[]).length,'Kontentlar')}${count((r.gifts||[]).length,'Sovg‘alar')}${count((r.orders||[]).length,'Buyurtmalar')}</div><div class="card"><h3>Kampaniyalar</h3>${list(r.campaigns,x=>`<strong>${esc(x.name)} <span class="pill">${esc(x.status)}</span></strong><div class="sub">${esc(x.channel)} • ${Number(x.spent_uzs||0).toLocaleString('uz-UZ')} so‘m sarf</div>`)}</div><div class="card"><h3>Kontent</h3>${list(r.content,x=>`<strong>${esc(x.title)}</strong><div class="sub">${esc(x.channel)} • ${esc(x.status)}</div>`)}</div>`);return;}
+
+if(tab==='my-leaves'){
+ const r=await api('/staff/my-leaves'),items=r.requests||[];
+ const kinds={annual:"Yillik ta’til",unpaid:"Ish haqi saqlanmagan",sick:"Kasallik",other:"Boshqa"};
+ inject('Mening ta’tilim',`<div class="card"><h3>Yangi ta’til arizasi</h3><form class="stack" id="leaveRequest"><label>Ta’til turi</label><select class="input" name="leave_type" required><option value="annual">Yillik ta’til</option><option value="unpaid">Ish haqi saqlanmagan</option><option value="sick">Kasallik</option><option value="other">Boshqa</option></select><label>Boshlanish sanasi</label><input type="date" class="input" name="starts_on" required><label>Tugash sanasi</label><input type="date" class="input" name="ends_on" required><textarea class="input" name="reason" maxlength="1000" placeholder="Ta’til sababi (ixtiyoriy)"></textarea><button class="btn">Ta’til arizasini yuborish</button></form><p class="sub">HR tavsiya beradi, yakuniy qarorni Owner qabul qiladi.</p></div><div class="card"><h3>Mening arizalarim</h3>${list(items,x=>`<strong>${esc(kinds[x.leave_type]||x.leave_type)} <span class="pill">${esc(x.status)}</span></strong><div class="sub">${esc(x.starts_on)} — ${esc(x.ends_on)}</div>${x.review_note?`<p class="sub">Izoh: ${esc(x.review_note)}</p>`:''}${x.status==='pending'?`<button class="btn small alt" type="button" data-leave-cancel="${esc(x.id)}">Bekor qilish</button>`:''}`)}</div>`);
+ formHandler('leaveRequest',async d=>{if(String(d.get('starts_on'))>String(d.get('ends_on')))throw Error('Ta’til sanalarini tekshiring');await api('/staff/leave-request',{leave_type:d.get('leave_type'),starts_on:d.get('starts_on'),ends_on:d.get('ends_on'),reason:d.get('reason')})});
+ document.querySelectorAll('[data-leave-cancel]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{if(!confirm('Arizani bekor qilasizmi?'))return;await api('/staff/leave-cancel',{request_id:btn.dataset.leaveCancel});await navigate('my-leaves')}));
+ return;
+}
+if(tab==='hr-attendance'){
+ if(!['owner','hr','director'].includes(state.user.role))throw Error('Davomat nazorati huquqi yo‘q');
+ const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tashkent',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+ const parts=k=>today.find(x=>x.type===k)?.value||'';
+ const todayStr=parts('year')+'-'+parts('month')+'-'+parts('day');
+ const fromDefault=todayStr.slice(0,7)+'-01';
+ const from=state.hrAttendanceFrom||fromDefault,to=state.hrAttendanceTo||todayStr;
+ const [r,schedules]=await Promise.all([api('/staff/ops/hr-attendance-report',{from,to}),api('/staff/ops/hr-schedule-list')]),items=r.rows||[];
+ const fmt=x=>Number(x||0).toLocaleString('uz-UZ');
+ const absent=items.reduce((v,x)=>v+x.absent,0),late=items.reduce((v,x)=>v+x.late,0);
+ inject('Davomat nazorati',`<div class="card"><h3>Hisobot davri</h3><form id="hrAttendanceDates" class="stack"><label>Dan</label><input name="from" type="date" class="input" required value="${esc(from)}"><label>Gacha</label><input name="to" type="date" class="input" required value="${esc(to)}"><button class="btn alt">Ko‘rsatish</button></form><div class="grid">${count(fmt(items.length),'Faol xodimlar')}${count(fmt(late),'Kechikishlar')}${count(fmt(absent),'Kelmagan kunlar')}${count(fmt(r.no_schedule_count),'Jadvalsiz xodimlar')}</div></div>${['owner','hr'].includes(state.user.role)?`<div class="card"><h3>Xodim ish jadvali</h3><p class="sub">Kechikish va kelmagan kunlarni hisoblash uchun har bir xodimning ish kunlarini kiriting. Jadvalsiz xodim kelmagan deb hisoblanmaydi.</p><form id="hrScheduleSave" class="stack"><select name="staff_id" class="input" required><option value="">Xodimni tanlang</option>${(schedules.staff||[]).filter(x=>state.user.role==='owner'||x.role!=='owner').map(x=>`<option value="${esc(x.id)}">${esc(x.full_name)} · ${esc(roles[x.role]||x.role)}</option>`).join('')}</select><select name="weekday" class="input" required><option value="1">Dushanba</option><option value="2">Seshanba</option><option value="3">Chorshanba</option><option value="4">Payshanba</option><option value="5">Juma</option><option value="6">Shanba</option><option value="7">Yakshanba</option></select><label>Ish boshlanishi</label><input type="time" name="starts_at" class="input" required value="09:00"><label>Ish tugashi</label><input type="time" name="ends_at" class="input" required value="18:00"><button class="btn">Jadvalni saqlash</button></form><p class="sub">Jadvaldagi yozuvlar: ${(schedules.schedules||[]).length}</p></div>`:''}<div class="card"><h3>Xodimlar davomati</h3>${list(items,x=>`<strong>${esc(x.full_name)} <span class="pill">${esc(roles[x.role]||x.role)}</span></strong><div class="sub">Ish kunlari: ${x.scheduled} · Kelgan: ${x.present} · Kechikkan: ${x.late} · Kelmagan: ${x.absent}</div><div class="sub">Tasdiqlangan ta’til: ${x.approved_leave} · Hali tugamagan smena: ${x.open_shifts}</div>`)}</div><div class="notice">${(r.warnings||[]).map(esc).join(' ')}</div>${r.truncated?'<div class="notice">Ma’lumotlar soni cheklangan, to‘liq audit uchun davrni qisqartiring.</div>':''}`);
+ if($('hrScheduleSave'))formHandler('hrScheduleSave',async d=>{
+  await api('/staff/ops/hr-schedule-save',{staff_id:d.get('staff_id'),weekday:Number(d.get('weekday')),starts_at:d.get('starts_at'),ends_at:d.get('ends_at')});
+  await navigate('hr-attendance');
+ });
+ $('hrAttendanceDates').addEventListener('submit',ev=>submit(ev,async()=>{const d=new FormData($('hrAttendanceDates'));state.hrAttendanceFrom=String(d.get('from'));state.hrAttendanceTo=String(d.get('to'));await navigate('hr-attendance')}));
+ return;
+}
+if(tab==='leave-management'){
+ if(!['owner','hr','director'].includes(state.user.role))throw Error('Ta’til boshqaruviga ruxsat yo‘q');
+ const r=await api('/staff/ops/hr-leave-list'),items=r.requests||[],ownerLeave=state.user.role==='owner',hrLeave=['owner','hr'].includes(state.user.role);
+ inject('Ta’til so‘rovlari',`<div class="grid">${count(items.length,'Jami arizalar')}${count(items.filter(x=>x.status==='pending').length,'Javob kutilmoqda')}${count(items.filter(x=>x.status==='approved').length,'Tasdiqlangan')}${count(items.filter(x=>x.status==='rejected').length,'Rad etilgan')}</div><div class="card"><h3>Arizalar</h3>${list(items,x=>`<strong>${esc(x.employee_name)} <span class="pill">${esc(x.status)}</span></strong><div class="sub">${esc(x.leave_type)} · ${esc(x.starts_on)} — ${esc(x.ends_on)}</div>${x.reason?`<div class="sub">Sabab: ${esc(x.reason)}</div>`:''}${x.hr_recommendation?`<div class="sub">HR tavsiyasi: ${esc(x.hr_recommendation.recommendation)} · ${esc(x.hr_recommendation.note)}</div>`:''}${x.review_note?`<div class="sub">Owner izohi: ${esc(x.review_note)}</div>`:''}${x.status==='pending'&&hrLeave?`<button class="btn small alt" data-leave-recommend="${esc(x.id)}" type="button">HR tavsiyasi</button>`:''}${x.status==='pending'&&ownerLeave?`<div class="actions"><button class="btn small" type="button" data-leave-decide="${esc(x.id)}" data-decision="approved">Tasdiqlash</button><button class="btn small alt" type="button" data-leave-decide="${esc(x.id)}" data-decision="rejected">Rad etish</button></div>`:''}`)}</div>`);
+ document.querySelectorAll('[data-leave-recommend]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{
+ const decision=prompt('HR tavsiyasi: tasdiqlash uchun approve, rad uchun reject yozing','approve');if(decision===null)return;
+ if(!['approve','reject'].includes(decision.trim()))throw Error('approve yoki reject kiriting');
+ const note=prompt('Tavsiya izohi (kamida 3 belgi)','');if(note===null)return;
+ await api('/staff/ops/hr-leave-recommend',{request_id:btn.dataset.leaveRecommend,recommendation:decision.trim(),note:note.trim()});
+ await navigate('leave-management')}));
+ document.querySelectorAll('[data-leave-decide]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{
+ const note=prompt('Owner qarori izohi (ixtiyoriy)','');if(note===null)return;
+ if(!confirm('Ta’til arizasi bo‘yicha yakuniy qarorni tasdiqlaysizmi?'))return;
+ await api('/owner/leave-review',{request_id:btn.dataset.leaveDecide,status:btn.dataset.decision,review_note:note.trim()});
+ await navigate('leave-management')}));
+ return;
+}
+if(tab==='kpi'){
+ if(!['owner','director'].includes(state.user.role))throw Error('KPI paneliga ruxsat yo‘q');
+ const date=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tashkent',year:'numeric',month:'2-digit'}).formatToParts(new Date());
+ const year=date.find(x=>x.type==='year')?.value||'',month=date.find(x=>x.type==='month')?.value||'';
+ const selected=state.kpiMonth||year+'-'+month;
+ const r=await api('/staff/ops/kpi-preview',{month:selected});
+ const rows=r.rows||[],fmt=x=>Number(x||0).toLocaleString('uz-UZ');
+ inject('KPI va bonus tavsiyasi',`<div class="card"><h3>Hisobot oyi</h3>
+ <form id="kpiMonthForm" class="stack"><input class="input" name="month" type="month" value="${esc(selected)}" required max="${esc(year+'-'+month)}"><button class="btn">Hisobotni ko‘rsatish</button></form>
+ <p class="sub">${esc(r.formula||'')}.</p></div>
+ <div class="grid">${count(rows.length,'Xodimlar')}${count(rows.filter(x=>x.score!==null).length,'KPI hisoblangan')}${count(rows.filter(x=>x.eligible).length,'Bonus tavsiya')}${count(fmt(rows.reduce((n,x)=>n+Number(x.suggested_bonus_uzs||0),0))+' so‘m','Tavsiya summasi')}</div>
+ <div class="card"><h3>Xodimlar KPI hisoboti</h3>${list(rows,x=>`<strong>${esc(x.full_name)} <span class="pill">${esc(roles[x.role]||x.role)}</span></strong>
+ <div class="sub">KPI: ${x.score===null?'Ma’lumot yetarli emas':esc(x.score)+' / 100'} · Maqsad: ${esc(x.bonus_target)} / 100</div>
+ <div class="sub">Topshiriqlar: ${fmt(x.completed)}/${fmt(x.task_count)} · Davomat: ${fmt(x.present)}/${fmt(x.attendance_days)} · Kechikish: ${fmt(x.late)}</div>
+ <div class="sub">Bonus tavsiyasi: ${fmt(x.suggested_bonus_uzs)} so‘m · ${x.eligible?'Mezon bajarilgan':'Tavsiya yo‘q'}</div>`)}</div>
+ <div class="notice">${esc(r.warning||'')} ${r.truncated?'Hisobot ayrim yozuvlar bilan cheklangan.':''} Mezonlar dastlabki hisob bo‘lib, pul o‘tkazish yoki mukofotni tasdiqlash hisoblanmaydi.</div>`);
+ formHandler('kpiMonthForm',async d=>{state.kpiMonth=String(d.get('month'));await navigate('kpi')});
+ return;
+}
+if(tab==='performance'){
+ if(!['owner','director'].includes(state.user.role))throw Error('Direktor ruxsati yo‘q');
+ const tzParts=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tashkent',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+ const part=k=>tzParts.find(x=>x.type===k)?.value||'';
+ const todayStr=part('year')+'-'+part('month')+'-'+part('day');
+ const from=state.hrAttendanceFrom||todayStr.slice(0,7)+'-01',to=state.hrAttendanceTo||todayStr;
+ const [perfResult,attendanceResult]=await Promise.allSettled([
+   api('/staff/ops/director-performance'),
+   api('/staff/ops/hr-attendance-report',{from,to})
+ ]);
+ if(perfResult.status!=='fulfilled')throw perfResult.reason;
+ const r=perfResult.value,items=r.rows||[];
+ const a=attendanceResult.status==='fulfilled'?attendanceResult.value:null;
+ const byStaff=new Map((a?.rows||[]).map(x=>[x.staff_id,x]));
+ const total=x=>items.reduce((sum,item)=>sum+Number(item[x]||0),0);
+ const fmt=x=>Number(x||0).toLocaleString('uz-UZ');
+ inject('Xodimlar natijalari',`<div class="grid">${count(items.length,'Xodimlar')}${count(total('total'),'Vazifalar')}${count(total('completed'),'Yakunlangan')}${count(total('overdue'),'Muddati o‘tgan')}</div>
+ <div class="card"><h3>Davomat bilan bog‘langan nazorat</h3>
+ <p class="sub">Davr: ${esc(from)} — ${esc(to)} (Toshkent). Topshiriq va davomat ko‘rsatkichlari alohida baholanadi.</p>
+ ${a?`<div class="grid">${count(fmt((a.rows||[]).reduce((v,x)=>v+Number(x.late||0),0)),'Kechikishlar')}${count(fmt((a.rows||[]).reduce((v,x)=>v+Number(x.absent||0),0)),'Kelmagan kunlar')}${count(fmt(a.no_schedule_count),'Jadvalsiz xodimlar')}</div>`:'<div class="notice">Davomat ma’lumotlarini olib bo‘lmadi. Topshiriq hisoboti alohida ko‘rsatilmoqda.</div>'}
+ <p class="sub">Jadvali yo‘q xodim kelmagan hisoblanmaydi. Tasdiqlangan ta’til va tugamagan smena kelmaslik sifatida baholanmaydi.</p></div>
+ <div class="card"><h3>Xodimlar kesimida</h3>${list(items,x=>{
+   const att=byStaff.get(x.staff_id);
+   return `<strong>${esc(x.full_name)} <span class="pill">${esc(roles[x.role]||x.role)}</span></strong>
+   <div class="sub">Vazifalar: ${fmt(x.total)} · Yakunlangan: ${fmt(x.completed)} · Jarayonda: ${fmt(x.in_progress)} · Tekshiruvda: ${fmt(x.review)} · Muddati o‘tgan: ${fmt(x.overdue)}</div>
+   <div class="sub">Topshiriq bajarilishi: ${x.completion_percent===null?'Hisoblanmagan':esc(x.completion_percent)+'%'}</div>
+   ${!a?'<div class="sub">Davomat: ma’lumot yuklanmadi</div>':!att?'<div class="sub">Davomat: xodim bo‘yicha ma’lumot yo‘q</div>':Number(att.scheduled||0)===0?'<div class="sub">Davomat: ish jadvali kiritilmagan, baholanmaydi</div>':`<div class="sub">Davomat: ${fmt(att.present)} kelgan · ${fmt(att.late)} kechikkan · ${fmt(att.absent)} kelmagan · ${fmt(att.approved_leave)} tasdiqlangan ta’til · ${fmt(att.open_shifts)} ochiq smena</div>`}
+   `;
+ })}</div>
+ <div class="notice">${esc(r.note||'')} ${r.truncated||a?.truncated?'Hisobotda ayrim ma’lumotlar cheklangan.':''} KPI yakuniy bahosi faqat topshiriqlar va davomat bilan belgilanmaydi.</div>`);
+ return;
+}
+if(tab==='attendance'){
+ if(!['owner','hr'].includes(state.user.role))throw Error('Davomat uchun ruxsat yo‘q');
+ const r=await api('/staff/ops/staff-attendance');
+ const attendance=r.attendance||[];
+ inject('Xodimlar davomati',`<div class="grid">${count(attendance.length,'Davomat qaydlari')}${count(attendance.filter(x=>x.check_in&&!x.check_out).length,'Hozir ishda')}</div><div class="card"><h3>Oxirgi davomatlar</h3>${list(attendance,x=>`<strong>${esc(x.employee_name||x.work_date||'Xodim')} <span class="pill">${esc(x.work_date)}</span></strong><div class="sub">Keldi: ${x.check_in?esc(new Date(x.check_in).toLocaleString('uz-UZ')):'—'} · Ketdi: ${x.check_out?esc(new Date(x.check_out).toLocaleString('uz-UZ')):'—'}</div>`)}</div>`);
+ return;
+}
+if(tab==='audit'){
+ const [audit,diag]=await Promise.allSettled([api('/owner/audit'),api('/owner/system-audit')]);
+ const r=audit.status==='fulfilled'?audit.value:{events:[]};
+ const d=diag.status==='fulfilled'?diag.value:null;
+ const safeStatus=(b)=>b?'Yaxshi':'Tekshirish kerak';
+ const roleRows=d?.roles||[];
+ const flags=d?.blockers?Object.entries(d.blockers).filter(([,v])=>v).map(([k])=>({no_education_manager:'O‘quv bo‘limi xodimi biriktirilmagan',no_teacher:'Faol ustoz mavjud emas',no_accountant:'Buxgalter tayinlanmagan',no_director:'Direktor tayinlanmagan',no_payment_data:'To‘lov yozuvlari mavjud emas',no_course_mapping:'Tarif–kurs mosliklari kiritilmagan'}[k]||k)):[];
+ inject('Audit va tizim tekshiruvi',
+ `<div class="card"><h3>12 ta lavozim auditi</h3>${d?`<div class="grid">${count(d.counts?.staff,'Xodimlar')}${count(d.counts?.active_staff,'Faol xodimlar')}${count(d.counts?.groups,'Guruhlar')}${count(d.counts?.approved_payment_records,'To‘lov yozuvlari')}</div><div class="sub">So‘nggi tekshiruv: ${esc(new Date(d.checked_at).toLocaleString('uz-UZ'))}</div>${list(roleRows,x=>`<strong>${esc(roles[x.role]||x.role)} <span class="pill">${esc(safeStatus(x.permission_ok))}</span></strong><div class="sub">Faol xodim: ${esc(x.active)} / jami ${esc(x.total)}${x.missing_permissions?.length?' • Yetishmayotgan ruxsatlar: '+esc(x.missing_permissions.join(', ')):''}</div>`)}`:`<div class="notice error">${esc(diag.reason?.message||'Audit ma’lumotlari yuklanmadi')}</div>`}</div>`+
+ (d?`<div class="card"><h3>Tekshirish kerak bo‘lgan masalalar</h3>${list(flags.map(x=>({name:x})),x=>`<span>${esc(x.name)}</span>`,'Hozircha asosiy bloklovchi muammo yo‘q')}${d.errors?.length?list(d.errors.map(x=>({name:x})),x=>`<span>${esc(x.name)}</span>`):''}<div class="grid">${count(d.alerts?.missing_staff_profiles,'To‘liq bo‘lmagan profillar')}${count(d.alerts?.staff_notifications_pending,'Xodimlar xabarlari navbatda')}${count(d.alerts?.student_notifications_pending,'O‘quvchi xabarlari navbatda')}${count(d.alerts?.group_rule_violations,'Guruh muammolari')}</div><p class="sub">${esc(d.live_test_status)}</p>${d.truncated?'<div class="notice">Tekshiruvdagi ba’zi ro‘yxatlar cheklangan; natija to‘liq emas.</div>':''}</div>`:'')+
+ `<div class="card"><h3>Oxirgi harakatlar</h3>${list(r.events,x=>`<strong>${esc(x.action)}</strong><div class="sub">${esc(x.created_at)}</div>`)}</div>`);
+ return;
+}
+if(tab==='audit-legacy'){const r=await api('/owner/audit');inject('Audit va harakatlar',`<div class="card">${list(r.events,x=>`<strong>${esc(x.action)}</strong><div class="sub">${esc(x.created_at)}</div>`)}</div>`);return;}}
+async function workTime(action){if(state.busy)return;busy(true);try{const r=await api('/staff/'+action);notify(r.message||'Qayd etildi','good');}catch(e){notify(e.message)}finally{busy(false)}}
+window.addEventListener('error',e=>{console.error('QADAM client error',e.message);notify('Ilova xatosi: '+e.message)});window.addEventListener('unhandledrejection',e=>{console.error(e.reason);notify('So‘rov xatosi: '+(e.reason?.message||'Noma’lum xato'))});
+init().catch(e=>{show('auth');notify('Ilova ishga tushmadi: '+e.message)});
+})();
+</script></body></html>
