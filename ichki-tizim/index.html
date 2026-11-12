@@ -576,7 +576,7 @@ const wrapper=(title,html)=>{
 function inject(title,body){
  const quick=state.current==='home'?'<div class="card q90-quick"><h3>Tezkor kirish</h3><p class="sub">Eng muhim amallar bir joyda</p>'+directoryButtons(quickRoutes())+'</div>':'';
  $('section').innerHTML=wrapper(title,quick+body);
- $('refresh').onclick=()=>navigate(state.current);
+ if($('refresh'))$('refresh').onclick=()=>navigate(state.current);
  if($('hubBack'))$('hubBack').onclick=()=>navigate(state.current.startsWith('group:')?'sections':routeCategory(state.current)?'group:'+routeCategory(state.current):'sections');
  if(state.current==='home')bindDirectoryButtons();
 }
@@ -840,6 +840,7 @@ async function render(tab){const owner=state.user.role==='owner';
 
 
 if(tab==='messenger'){
+ const chatRenderSequence=state.navSeq;
  const mode=state.messengerMode||'private';
  const studentChatAllowed=['administrator','accountant','teacher','assistant_teacher'].includes(state.user.role);
  const tabs="<div class='msg-tabs'><button type='button' id='modePrivate' class='btn "+(mode==='private'?'':'alt')+"'>Shaxsiy chatlar</button><button type='button' id='modeGroup' class='btn "+(mode==='group'?'':'alt')+"'>Xodimlar guruhi</button>"+(studentChatAllowed?"<button type='button' id='modeStudents' class='btn "+(mode==='student'?'':'alt')+"'>O‘quvchilar</button>":"")+"</div>";
@@ -848,13 +849,14 @@ if(tab==='messenger'){
 
  if(mode==='group'){
    const [settings,data]=await Promise.all([api('/staff/ops/office-chat-settings'),api('/staff/ops/chat-list',{channel:'general',requester_staff_id:null})]);
+   if(chatRenderSequence!==state.navSeq)return;
    const group=settings.group||{},messages=data.messages||[];
    const groupInfo="<div class='card'><div class='msg-grouphead'><div class='msg-avatar'>Q</div><div><h3>QADAM OFFICE • Xodimlar</h3><p class='sub'>"+(settings.members||[]).length+" ta faol xodim · Admin: Owner</p></div></div><button class='btn alt small' id='groupMembersBtn'>Guruh ma’lumotlari va a’zolar</button></div>";
    const manage="<div class='card' id='groupManage' style='display:none'><h3>Guruh a’zolari</h3>"+list(settings.members||[],x=>"<strong>"+esc(x.full_name)+"</strong><div class='sub'>"+esc(roles[x.role]||x.role)+" · "+esc(x.employee_code)+"</div><div class='actions'><button type='button' class='btn small alt' data-group-profile='"+esc(x.employee_code)+"'>Profil</button>"+(state.user.role==='owner'&&x.role!=='owner'?"<button type='button' class='btn small alt' data-member-mute='"+esc(x.id)+"' data-can-post='"+(x.can_post?'false':'true')+"'>"+(x.can_post?'Yozishni cheklash':'Yozishga ruxsat')+"</button>":'')+"</div>")+
    (state.user.role==='owner'?"<label class='msg-setting'><input id='onlyOwnerPosts' type='checkbox' "+(group.owner_only_post?'checked':'')+"> Faqat Owner xabar yozsin</label><button class='btn small' id='saveGroupSettings'>Saqlash</button>":"<p class='sub'>Guruh yozish huquqlarini faqat Owner o‘zgartiradi.</p>")+"</div>";
    const bubbles="<div class='tg-message-area' id='msgScroll'>"+chatMessagesHTML(messages,'group')+"</div>";
    inject('Chat',chatBack+tabs+groupInfo+manage+"<div class='card'>"+bubbles+(group.can_post?"<form id='staffGroupSend' class='msg-compose'><input class='input' name='message' maxlength='2000' required placeholder='Guruhga xabar yozing...'><button class='btn' type='submit'>➤</button></form>":"<div class='notice'>Hozir guruhga faqat Owner xabar yozishi mumkin.</div>")+"<button class='btn alt small' id='refreshMessages' type='button'>Yangilash</button></div>");
-   $('groupMembersBtn').onclick=()=>{$('groupManage').style.display=$('groupManage').style.display==='none'?'block':'none'};
+   if($('groupMembersBtn'))$('groupMembersBtn').onclick=()=>{$('groupManage').style.display=$('groupManage').style.display==='none'?'block':'none'};
    if($('saveGroupSettings'))$('saveGroupSettings').onclick=()=>submit({preventDefault(){}},async()=>{await api('/staff/ops/office-chat-settings-save',{owner_only_post:$('onlyOwnerPosts').checked});await navigate('messenger')});
    document.querySelectorAll('[data-member-mute]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{await api('/staff/ops/office-chat-member-post-save',{staff_id:btn.dataset.memberMute,can_post:btn.dataset.canPost==='true'});await navigate('messenger')}));
    document.querySelectorAll('[data-group-profile]').forEach(btn=>btn.onclick=()=>submit({preventDefault(){}},async()=>{const worker=(settings.members||[]).find(x=>x.employee_code===btn.dataset.groupProfile);if(!worker)throw Error('Xodim topilmadi');await showPublicStaffProfile(worker.id,$('groupManage'))}));
@@ -864,25 +866,29 @@ if(tab==='messenger'){
  }else if(mode==='student'){
    if(!studentChatAllowed)throw Error('O‘quvchi bilan chat ruxsati yo‘q');
    const r=await api('/staff/ops/office-student-chat-contacts');
+   if(chatRenderSequence!==state.navSeq)return;
    const students=r.students||[],chosen=students.find(x=>x.id===state.selectedChatStudentId);
    const cards="<div class='card'><h3>O‘quvchilar bilan suhbat</h3><p class='sub'>Sizga biriktirilgan guruhlar va ruxsat etilgan o‘quvchilar.</p><input class='input' id='chatStudentSearch' maxlength='80' placeholder='O‘quvchi ismi yoki QADAM ID'><div id='chatStudentContacts'>"+(students.length?students.map(x=>"<button class='msg-contact' type='button' data-chat-student='"+esc(x.id)+"'><span class='msg-avatar'>"+esc((x.full_name||'?').slice(0,1))+"</span><span><strong>"+esc(x.full_name)+"</strong><small>"+esc(x.qadam_id||'')+" · "+esc((x.groups||[]).join(', '))+"</small></span></button>").join(''):"<p class='sub'>Hozircha guruhingizda o‘quvchilar mavjud emas.</p>")+"</div></div>";
    let conversation='';
    if(chosen){
      const data=await api('/staff/ops/office-student-chat-list',{student_id:chosen.id}),messages=data.messages||[];
+     if(chatRenderSequence!==state.navSeq)return;
      conversation="<div class='card'><div class='msg-grouphead'><div class='msg-avatar'>"+esc((chosen.full_name||'?').slice(0,1))+"</div><div><strong>"+esc(chosen.full_name)+"</strong><p class='sub'>"+esc(chosen.qadam_id||'')+" · "+esc((chosen.groups||[]).join(', '))+"</p></div></div><div class='tg-message-area'>"+chatMessagesHTML(messages,'student')+"</div><form class='msg-compose' id='studentStaffSend'><input class='input' maxlength='2000' required name='message' placeholder='O‘quvchiga yozing...'><button class='btn' type='submit'>➤</button></form><button class='btn alt small' id='refreshMessages' type='button'>Yangilash</button></div>";
    }
    inject('Chat',chatBack+tabs+cards+conversation+(r.truncated?"<div class='notice'>Ro‘yxatda 1000 tagacha o‘quvchi ko‘rsatiladi.</div>":""));
    document.querySelectorAll('[data-chat-student]').forEach(btn=>btn.onclick=()=>{state.selectedChatStudentId=btn.dataset.chatStudent;navigate('messenger')});
-   $('chatStudentSearch').oninput=e=>{const q=String(e.target.value||'').toLowerCase();document.querySelectorAll('[data-chat-student]').forEach(btn=>{const s=students.find(x=>x.id===btn.dataset.chatStudent);btn.style.display=s&&[s.full_name,s.qadam_id].some(v=>String(v||'').toLowerCase().includes(q))?'flex':'none'})};
+   if($('chatStudentSearch'))$('chatStudentSearch').oninput=e=>{const q=String(e.target.value||'').toLowerCase();document.querySelectorAll('[data-chat-student]').forEach(btn=>{const s=students.find(x=>x.id===btn.dataset.chatStudent);btn.style.display=s&&[s.full_name,s.qadam_id].some(v=>String(v||'').toLowerCase().includes(q))?'flex':'none'})};
    chatWireDelete();chatScrollEnd();
    if($('studentStaffSend'))formHandler('studentStaffSend',async d=>{await api('/staff/ops/office-student-chat-send',{student_id:chosen.id,message:String(d.get('message')||'').trim()})});
  }else{
    const threads=await api('/staff/ops/office-direct-threads');
+   if(chatRenderSequence!==state.navSeq)return;
    const people=threads.contacts||[],chosen=people.find(x=>x.id===state.directStaffId);
    const listHtml="<div class='tg-list'><div class='tg-titlebar'><h3>Chatlar</h3><span class='tg-write-ico'>✎</span></div><div class='tg-search'><span>⌕</span><input id='contactSearch' placeholder='Qidirish' maxlength='80' aria-label='Suhbatdoshni qidirish'></div><div id='contactList'>"+(people.length?people.map(x=>"<button type='button' class='tg-contact' data-contact='"+esc(x.id)+"'>"+q90Avatar(x)+"<span class='tg-contact-middle'><strong>"+esc(x.full_name)+"</strong><small>"+esc(x.last_message||roles[x.role]||x.role)+"</small></span><span class='tg-contact-meta'><time>"+(x.last_message_at?esc(chatClock(x.last_message_at)):'')+"</time>"+(x.unread_count?"<span class='tg-unread'>"+esc(x.unread_count)+"</span>":"")+"</span></button>").join(''):"<p class='tg-empty'>Hozircha suhbatdosh mavjud emas.</p>")+"</div></div>";
    let chatHtml="";
    if(chosen){
      const [data,portrait]=await Promise.all([api('/staff/ops/office-direct-list',{staff_id:chosen.id}),api('/staff/ops/office-staff-public-profile',{staff_id:chosen.id},10000).catch(()=>null)]),msgs=data.messages||[];
+     if(chatRenderSequence!==state.navSeq)return;
      if(portrait?.photo_signed_url)chosen.photo_signed_url=portrait.photo_signed_url;
      chatHtml="<div class='card q91-chatroom'><div class='q91-chathead'>"+q90Avatar(chosen)+"<div><strong>"+esc(chosen.full_name)+"</strong><small>"+esc(roles[chosen.role]||chosen.role)+" · "+esc(chosen.employee_code)+"</small></div><button type='button' id='contactProfileBtn' class='btn alt small'>Profil</button></div><div class='tg-message-area'>"+chatMessagesHTML(msgs,'direct')+"</div><form class='msg-compose' id='dmForm'><input class='input' name='message' maxlength='2000' required placeholder='Xabar yozing...'><button type='submit' class='btn' aria-label='Xabarni yuborish'>➤</button></form><button type='button' class='btn alt small' id='refreshMessages'>↻ Yangilash</button></div>";
    }
@@ -894,7 +900,7 @@ if(tab==='messenger'){
    if($('dmForm'))formHandler('dmForm',async d=>{await api('/staff/ops/office-direct-send',{staff_id:chosen.id,message:String(d.get('message')||'').trim()})});
    if($('contactProfileBtn'))$('contactProfileBtn').onclick=()=>submit({preventDefault(){}},async()=>{await showPublicStaffProfile(chosen.id,$('contactProfileBtn').closest('.card'))});
  }
- $('tgBack').onclick=()=>{
+ if($('tgBack'))$('tgBack').onclick=()=>{
   if(mode==='private'&&state.directStaffId){state.directStaffId=null;return navigate('messenger')}
   if(mode==='student'&&state.selectedChatStudentId){state.selectedChatStudentId=null;return navigate('messenger')}
   if(state.previousScreen&&state.previousScreen!=='messenger'&&state.allowedRoutes.has(state.previousScreen))return navigate(state.previousScreen);
