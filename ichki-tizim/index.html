@@ -369,7 +369,7 @@ async function qwebShowMethod(method){
  const panel=document.getElementById('qwebPanel');if(!panel)return;
  panel.classList.remove('hidden');
  if(method!=='telegram'){panel.innerHTML='<strong>Google orqali kirish</strong><p>Google OAuth hali ulanmagan. ID, parol va PIN orqali kirishingiz mumkin.</p>';return;}
- panel.innerHTML='<strong>Telegram orqali kirish</strong><p>Telegram telefon raqamingizni kiriting.</p><div class="field" style="margin:12px 0"><label for="qwebTgPhone">Telegram telefon raqami</label><input id="qwebTgPhone" class="input" type="tel" inputmode="tel" autocomplete="tel" maxlength="17" placeholder="+998 90 123 45 67" aria-describedby="qwebPhoneNote"><p class="sub" id="qwebPhoneNote">Raqam faqat shu oynada ko‘rsatiladi va serverga yuborilmaydi. Kirish uchun Telegramning rasmiy tasdig‘i shart.</p></div><div id="qwebOfficialTelegram" style="min-height:44px;padding:10px 0"></div><p class="sub">Boshqa Telegram akkaunt chiqsa, uni tasdiqlamang. Telefon raqamini bu yerga kiritish avtomatik tarzda Telegram akkauntini almashtirmaydi.</p>';
+ panel.innerHTML='<strong>Telegram orqali kirish</strong><p>Telegram orqali ruxsat bersangiz, mavjud xodim akkauntingizga hech qanday qo‘shimcha kodsiz kirasiz.</p><div class="field" style="margin:12px 0"><label for="qwebTgPhone">Telegram telefon raqami</label><input id="qwebTgPhone" class="input" type="tel" inputmode="tel" autocomplete="tel" maxlength="17" placeholder="+998 90 123 45 67" aria-describedby="qwebPhoneNote"><p class="sub" id="qwebPhoneNote">Raqam faqat shu oynada ko‘rsatiladi va serverga yuborilmaydi. Kirish uchun Telegramning rasmiy tasdig‘i shart.</p></div><div id="qwebOfficialTelegram" style="min-height:44px;padding:10px 0"></div><p class="sub">Boshqa Telegram akkaunt chiqsa, uni tasdiqlamang. Telefon raqamini bu yerga kiritish avtomatik tarzda Telegram akkauntini almashtirmaydi.</p>';
  try{
   const config=await api('/telegram/config');
   if(!/^[a-z0-9_]{5,32}$/i.test(config.username||''))throw Error('Bot nomi noto‘g‘ri');
@@ -391,9 +391,11 @@ window.qadamTelegramAuth=async function(user){
   if(!v?.token)throw Error('Kirish sessiyasi yaratilmadi');
   state.webToken=v.token;
   sessionStorage.setItem('qadamOfficeWebToken',v.token);
-  const me=await api('/me');if(!me.staff)throw Error('Xodim ma’lumotlari topilmadi');
-  await enter(me.staff);
-  notify('Telegram orqali kirish muvaffaqiyatli. Telegramga xavfsizlik xabari yuborildi.','good');
+  // A verified Telegram login already returns the existing staff identity and a server session.
+  // Open the same staff dashboard immediately, with no ID, password, PIN or OTP step.
+  if(!v.staff?.role||!v.staff?.employee_code)throw Error('Xodim ma’lumotlari topilmadi');
+  await enter(v.staff);
+  notify('Telegram tasdiqlandi. Ichki tizimga xush kelibsiz!','good');
  }catch(err){notify(err.message||'Telegram tasdig‘i rad etildi');}
  finally{busy(false)}
 };
