@@ -369,7 +369,7 @@ async function qwebShowMethod(method){
  const panel=document.getElementById('qwebPanel');if(!panel)return;
  panel.classList.remove('hidden');
  if(method!=='telegram'){panel.innerHTML='<strong>Google orqali kirish</strong><p>Google OAuth hali ulanmagan. ID, parol va PIN orqali kirishingiz mumkin.</p>';return;}
- panel.innerHTML='<strong>Telegramning rasmiy tasdiqlashi</strong><p>Quyidagi rasmiy Telegram tugmasini bosing. Telegram akkauntingizda ushbu saytga kirishga ruxsat berish so‘rovi paydo bo‘ladi.</p><div id="qwebOfficialTelegram" style="min-height:44px;padding:10px 0"></div><p class="sub">BotFather orqali sayt domeni Telegram botga ruxsat etilgan bo‘lishi kerak.</p>';
+ panel.innerHTML='<strong>Telegram orqali kirish</strong><p>Telegram telefon raqamingizni kiriting.</p><div class="field" style="margin:12px 0"><label for="qwebTgPhone">Telegram telefon raqami</label><input id="qwebTgPhone" class="input" type="tel" inputmode="tel" autocomplete="tel" maxlength="17" placeholder="+998 90 123 45 67" aria-describedby="qwebPhoneNote"><p class="sub" id="qwebPhoneNote">Raqam faqat shu oynada ko‘rsatiladi va serverga yuborilmaydi. Kirish uchun Telegramning rasmiy tasdig‘i shart.</p></div><div id="qwebOfficialTelegram" style="min-height:44px;padding:10px 0"></div><p class="sub">Boshqa Telegram akkaunt chiqsa, uni tasdiqlamang. Telefon raqamini bu yerga kiritish avtomatik tarzda Telegram akkauntini almashtirmaydi.</p>';
  try{
   const config=await api('/telegram/config');
   if(!/^[a-z0-9_]{5,32}$/i.test(config.username||''))throw Error('Bot nomi noto‘g‘ri');
