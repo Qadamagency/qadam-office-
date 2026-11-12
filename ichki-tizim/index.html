@@ -342,7 +342,7 @@ function notify(msg,type='error'){const n=$('banner');n.className='notice '+(typ
 function clearMessage(){$('banner').classList.add('hidden')}
 function busy(flag){state.busy=flag;document.querySelectorAll('button').forEach(x=>x.disabled=flag)}
 async function api(path,data={},timeout=25000){
- const authPaths=['/login','/pin','/telegram/config','/telegram/login'],isPublic=authPaths.includes(path),token=state.webToken;
+ const authPaths=['/login','/pin','/telegram/config','/telegram/login','/telegram/oidc/start','/telegram/oidc/finish'],isPublic=authPaths.includes(path),token=state.webToken;
  if(!isPublic&&!token)throw Error('Avval xodim ID va parol bilan kiring.');
  const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),timeout);
  try{
@@ -368,41 +368,46 @@ async function init(){
 async function qwebShowMethod(method){
  const panel=document.getElementById('qwebPanel');if(!panel)return;
  panel.classList.remove('hidden');
- if(method!=='telegram'){panel.innerHTML='<strong>Google orqali kirish</strong><p>Google OAuth hali ulanmagan. ID, parol va PIN orqali kirishingiz mumkin.</p>';return;}
- panel.innerHTML='<strong>Telegram orqali kirish</strong><p>Telegram tasdiqlagan akkaunt QADAM OFFICE bazasidagi akkauntingiz bilan mos bo‘lsa, kodsiz kabinetingiz ochiladi.</p><div id="qwebOfficialTelegram" style="min-height:44px;padding:10px 0"></div><button type="button" class="btn alt full" id="qwebOtherAccount" style="margin-top:12px">🔄 Boshqa Telegram akkaunt bilan kirish</button><div class="notice hidden" id="qwebOtherHelp" role="status"><strong>Owner akkauntingizni tanlash</strong><p>Bu eski Telegram login tugmasi Chrome’da avval tanlangan akkauntni avtomatik ko‘rsatadi. Sayt unga boshqa raqamni majburan tanlata olmaydi.</p><p>Chrome’da yuqori o‘ngdagi profil belgisini bosib, <b>yangi Chrome profili</b> oching. Shu profilda saytga kiring va Telegram tasdiqlashida Owner akkauntingizni tanlang. Zarur bo‘lsa, Telegram login sessiyasini alohida yangilang.</p><p>“Log in as Boboxon” tugmasini Owner bo‘lib kirmoqchi bo‘lsangiz bosmang. Telefon raqamini saytga yozish akkauntni almashtirmaydi.</p></div><p class="sub" style="margin-top:12px">Yangi Telegram Login (OIDC) usuliga o‘tish uchun BotFather’da beriladigan Client ID va Client Secret kerak. Secret faqat serverda saqlanadi.</p>'; 
- document.getElementById('qwebOtherAccount')?.addEventListener('click',()=>{
-  const guide=document.getElementById('qwebOtherHelp');
-  guide?.classList.toggle('hidden');
- });
- try{
-  const config=await api('/telegram/config');
-  if(!/^[a-z0-9_]{5,32}$/i.test(config.username||''))throw Error('Bot nomi noto‘g‘ri');
-  const script=document.createElement('script');script.async=true;
-  script.src='https://telegram.org/js/telegram-widget.js?22';
-  script.setAttribute('data-telegram-login',config.username);
-  script.setAttribute('data-size','large');
-  script.setAttribute('data-radius','10');
-  script.setAttribute('data-request-access','write');
-  script.setAttribute('data-onauth','qadamTelegramAuth(user)');
-  const host=document.getElementById('qwebOfficialTelegram');if(host)host.append(script);
-  script.onerror=()=>notify('Telegram kirish oynasi yuklanmadi. Tarmoq yoki BotFather sozlamalarini tekshiring.');
- }catch(err){panel.innerHTML='<strong>Telegram kirishi ochilmadi</strong><p>'+esc(err.message||'Serverga ulanib bo‘lmadi')+'</p>';}
+ if(method!=='telegram'){
+  panel.innerHTML='<strong>Google orqali kirish</strong><p>Google OAuth hali ulanmagan. ID, parol va PIN bilan kirish mumkin.</p>';return;
+ }
+ panel.innerHTML='<strong>Telegram orqali rasmiy kirish</strong><p>Pastdagi tugma Telegramning alohida rasmiy oynasini ochadi. Kerakli telefon raqamingiz yoki Telegram akkauntingizni o‘sha oynada tanlaysiz. Saytning o‘zida raqam yoki kod so‘ralmaydi.</p><button type="button" class="btn full" id="qwebStartOfficial">✈ Telegram orqali davom etish</button><p class="sub" style="margin-top:12px">BotFather’da Login Widget → Allowed URLs sozlamasida <b>https://qadamagency.github.io</b> va callback manzili ro‘yxatdan o‘tkazilishi kerak.</p><p class="sub">Kirish Telegramda tasdiqlansa, mavjud xodim kabinetingiz kodsiz ochiladi. Owner akkauntingiz bo‘lmasa, Owner huquqi berilmaydi.</p>';
+ document.getElementById('qwebStartOfficial')?.addEventListener('click',qwebOpenOfficial);
 }
-window.qadamTelegramAuth=async function(user){
+let qwebPopup=null;
+async function qwebOpenOfficial(){
+ const popup=window.open('about:blank','qadamTelegramLogin','width=600,height=760,resizable=yes,scrollbars=yes');
+ if(!popup){notify('Chrome popup oynani blokladi. Sayt uchun popupga ruxsat bering.');return}
+ qwebPopup=popup;
+ try{
+  popup.document.write('<!doctype html><html><head><meta charset="utf-8"></head><body style="font:16px system-ui;text-align:center;padding:60px">Telegram oynasi ochilmoqda...</body></html>');
+  const response=await api('/telegram/oidc/start');
+  if(!response.url||!/^https:\/\/oauth\.telegram\.org\/auth\?/.test(response.url))throw Error('Telegram login manzili xato');
+  popup.location.replace(response.url);
+ }catch(ex){
+  try{popup.close()}catch{}
+  notify(ex.message||'Telegram login ishga tushmadi');
+ }
+}
+window.addEventListener('message',async event=>{
+ if(event.origin!=='https://vpxvazxmidbqajlhdqxz.supabase.co'||event.data?.source!=='qadam-office-telegram-oidc')return;
+ if(!qwebPopup||event.source!==qwebPopup)return;
+ if(!event.data.ticket){
+  notify(event.data.error||'Telegram kirishi bekor qilindi');
+  try{qwebPopup.close()}catch{} qwebPopup=null;return;
+ }
  try{
   busy(true);
-  const v=await api('/telegram/login',{telegram:user});
-  if(!v?.token)throw Error('Kirish sessiyasi yaratilmadi');
+  const v=await api('/telegram/oidc/finish',{ticket:event.data.ticket});
+  if(!v?.token||!v.staff?.role||!v.staff?.employee_code)throw Error('Kirish tasdiqlanmadi');
   state.webToken=v.token;
   sessionStorage.setItem('qadamOfficeWebToken',v.token);
-  // A verified Telegram login already returns the existing staff identity and a server session.
-  // Open the same staff dashboard immediately, with no ID, password, PIN or OTP step.
-  if(!v.staff?.role||!v.staff?.employee_code)throw Error('Xodim ma’lumotlari topilmadi');
   await enter(v.staff);
-  notify('Telegram tasdiqlandi. Ichki tizimga xush kelibsiz!','good');
- }catch(err){notify(err.message||'Telegram tasdig‘i rad etildi');}
- finally{busy(false)}
-};
+  notify('Telegram orqali kirdingiz. Ichki tizimga xush kelibsiz!','good');
+ }catch(ex){notify(ex.message||'Telegram kirish xatosi')}finally{
+  busy(false);try{qwebPopup?.close()}catch{} qwebPopup=null;
+ }
+});
 document.getElementById('qwebTelegram')?.addEventListener('click',()=>qwebShowMethod('telegram'));
 document.getElementById('qwebGoogle')?.addEventListener('click',()=>qwebShowMethod('google'));
 $('retryTelegram').addEventListener('click',()=>init().catch(e=>notify(e.message)));
