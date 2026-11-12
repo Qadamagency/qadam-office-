@@ -900,8 +900,8 @@ if(tab==='messenger'){
   if(state.previousScreen&&state.previousScreen!=='messenger'&&state.allowedRoutes.has(state.previousScreen))return navigate(state.previousScreen);
   return navigate('sections');
  };
- $('modePrivate').onclick=()=>{state.messengerMode='private';navigate('messenger')};
- $('modeGroup').onclick=()=>{state.messengerMode='group';navigate('messenger')};
+ if($('modePrivate'))$('modePrivate').onclick=()=>{state.messengerMode='private';state.directStaffId=null;state.selectedChatStudentId=null;navigate('messenger')};
+ if($('modeGroup'))$('modeGroup').onclick=()=>{state.messengerMode='group';state.directStaffId=null;state.selectedChatStudentId=null;navigate('messenger')};
  if($('modeStudents'))$('modeStudents').onclick=()=>{state.messengerMode='student';navigate('messenger')};
  if($('refreshMessages'))$('refreshMessages').onclick=()=>navigate('messenger');
  return;
