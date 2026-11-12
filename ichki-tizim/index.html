@@ -342,7 +342,7 @@ function notify(msg,type='error'){const n=$('banner');n.className='notice '+(typ
 function clearMessage(){$('banner').classList.add('hidden')}
 function busy(flag){state.busy=flag;document.querySelectorAll('button').forEach(x=>x.disabled=flag)}
 async function api(path,data={},timeout=25000){
- const authPaths=['/login','/pin','/telegram/config','/telegram/login','/telegram/oidc/start','/telegram/oidc/finish'],isPublic=authPaths.includes(path),token=state.webToken;
+ const authPaths=['/login','/pin','/telegram/config','/telegram/login','/telegram/oidc/start','/telegram/oidc/finish','/telegram/oidc/status'],isPublic=authPaths.includes(path),token=state.webToken;
  if(!isPublic&&!token)throw Error('Avval xodim ID va parol bilan kiring.');
  const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),timeout);
  try{
@@ -374,40 +374,56 @@ async function qwebShowMethod(method){
  panel.innerHTML='<strong>Telegram orqali rasmiy kirish</strong><p>Pastdagi tugma Telegramning alohida rasmiy oynasini ochadi. Kerakli telefon raqamingiz yoki Telegram akkauntingizni o‘sha oynada tanlaysiz. Saytning o‘zida raqam yoki kod so‘ralmaydi.</p><button type="button" class="btn full" id="qwebStartOfficial">✈ Telegram orqali davom etish</button><p class="sub" style="margin-top:12px">BotFather’da Login Widget → Allowed URLs sozlamasida <b>https://qadamagency.github.io</b> va callback manzili ro‘yxatdan o‘tkazilishi kerak.</p><p class="sub">Kirish Telegramda tasdiqlansa, mavjud xodim kabinetingiz kodsiz ochiladi. Owner akkauntingiz bo‘lmasa, Owner huquqi berilmaydi.</p>';
  document.getElementById('qwebStartOfficial')?.addEventListener('click',qwebOpenOfficial);
 }
-let qwebPopup=null;
+let qwebPopup=null,qwebLoginSequence=0;
 async function qwebOpenOfficial(){
+ const sequence=++qwebLoginSequence;
  const popup=window.open('about:blank','qadamTelegramLogin','width=600,height=760,resizable=yes,scrollbars=yes');
- if(!popup){notify('Chrome popup oynani blokladi. Sayt uchun popupga ruxsat bering.');return}
+ if(!popup){notify('Chrome Telegram oynasini blokladi. Popupga ruxsat bering.');return}
  qwebPopup=popup;
  try{
   popup.document.write('<!doctype html><html><head><meta charset="utf-8"></head><body style="font:16px system-ui;text-align:center;padding:60px">Telegram oynasi ochilmoqda...</body></html>');
   const response=await api('/telegram/oidc/start');
-  if(!response.url||!/^https:\/\/oauth\.telegram\.org\/auth\?/.test(response.url))throw Error('Telegram login manzili xato');
+  if(!response.url||!/^https:\/\/oauth\.telegram\.org\/auth\?/.test(response.url)||!/^[a-f0-9]{64}$/.test(response.state||''))throw Error('Telegram kirish sozlamasi noto‘g‘ri');
   popup.location.replace(response.url);
+  // Telegram may not preserve window.opener after moving between its OAuth pages.
+  // Poll the server using the unpredictable state created exclusively for this login.
+  const started=Date.now();
+  let closedSince=null;
+  const poll=async()=>{
+   if(sequence!==qwebLoginSequence||state.user)return;
+   if(Date.now()-started>290000){notify('Telegram tasdiqlash muddati tugadi. Qayta urinib ko‘ring.');return}
+   try{
+    if(qwebPopup?.closed)closedSince??=Date.now();
+    else closedSince=null;
+    if(closedSince&&Date.now()-closedSince>15000){notify('Telegram oynasi yopildi. Qaytadan urinib ko‘ring.');return}
+    const v=await api('/telegram/oidc/status',{state:response.state},12000);
+    if(sequence!==qwebLoginSequence)return;
+    if(v.token&&v.staff){
+     if(!v.staff.role||!v.staff.employee_code)throw Error('Xodim ma’lumotlari topilmadi');
+     state.webToken=v.token;
+     sessionStorage.setItem('qadamOfficeWebToken',v.token);
+     await enter(v.staff);
+     notify('Telegram orqali kirildi. Ichki tizimga xush kelibsiz!','good');
+     try{qwebPopup?.close()}catch{}
+     qwebPopup=null;
+     qwebLoginSequence++;
+     return;
+    }
+   }catch(err){
+    if(sequence!==qwebLoginSequence)return;
+    if(/muddati tugagan|allaqachon yakunlangan|bloklangan|faol emas|403|409|410/i.test(err.message||'')){notify(err.message);return}
+    // Brief network faults should not discard a successful Telegram authorization.
+   }
+   if(sequence===qwebLoginSequence)setTimeout(poll,1800);
+  };
+  setTimeout(poll,1000);
+  notify('Telegramda tasdiqlang. Ichki tizim avtomatik ochiladi.','good');
  }catch(ex){
   try{popup.close()}catch{}
-  notify(ex.message||'Telegram login ishga tushmadi');
+  qwebPopup=null;
+  notify(ex.message||'Telegram kirish ishga tushmadi');
  }
 }
-window.addEventListener('message',async event=>{
- if(event.origin!=='https://vpxvazxmidbqajlhdqxz.supabase.co'||event.data?.source!=='qadam-office-telegram-oidc')return;
- if(!qwebPopup||event.source!==qwebPopup)return;
- if(!event.data.ticket){
-  notify(event.data.error||'Telegram kirishi bekor qilindi');
-  try{qwebPopup.close()}catch{} qwebPopup=null;return;
- }
- try{
-  busy(true);
-  const v=await api('/telegram/oidc/finish',{ticket:event.data.ticket});
-  if(!v?.token||!v.staff?.role||!v.staff?.employee_code)throw Error('Kirish tasdiqlanmadi');
-  state.webToken=v.token;
-  sessionStorage.setItem('qadamOfficeWebToken',v.token);
-  await enter(v.staff);
-  notify('Telegram orqali kirdingiz. Ichki tizimga xush kelibsiz!','good');
- }catch(ex){notify(ex.message||'Telegram kirish xatosi')}finally{
-  busy(false);try{qwebPopup?.close()}catch{} qwebPopup=null;
- }
-});
 document.getElementById('qwebTelegram')?.addEventListener('click',()=>qwebShowMethod('telegram'));
 document.getElementById('qwebGoogle')?.addEventListener('click',()=>qwebShowMethod('google'));
 $('retryTelegram').addEventListener('click',()=>init().catch(e=>notify(e.message)));
