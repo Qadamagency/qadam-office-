@@ -874,10 +874,24 @@ if(tab==='chat'){
  return;
 }
 if(tab==='devices'){
- const result=await api('/devices',{all:state.user.role==='owner'});
- const events=result.events||[];
+ const [result,holdsResult]=await Promise.all([
+  api('/devices',{all:state.user.role==='owner'}),
+  state.user.role==='owner'?api('/security-holds').catch(()=>({holds:[]})):Promise.resolve({holds:[]})
+ ]);
+ const events=result.events||[],holds=holdsResult.holds||[];
  const methodName={id_password:'ID va parol',telegram:'Telegram',google:'Google',email_otp:'Email kodi',passkey:'Passkey'};
- inject('Qurilmalar va kirishlar','<div class="card"><h3>Akkauntga kirish tarixi</h3><p class="sub">Qurilma va brauzer ma’lumotlari xavfsizlik uchun saqlanadi. Hudud IP asosidagi taxmin bo‘lib, GPS emas.</p>'+list(events,x=>'<strong>'+esc(x.device_class||'Qurilma')+' · '+esc(x.operating_system||'')+' · '+esc(x.browser_name||'')+'</strong><div class="sub">'+esc(methodName[x.login_method]||x.login_method)+' · '+esc(new Date(x.occurred_at).toLocaleString('uz-UZ',{timeZone:'Asia/Tashkent'}))+'</div><span class="pill">'+esc(x.confirmation_status==='confirmed'?'Tasdiqlangan':x.confirmation_status==='denied'?'Rad etilgan':'Tasdiqlanmagan')+'</span>')+'</div>');
+ const statusName={confirmed:'Tasdiqlangan',denied:'Rad etilgan',pending:'Tasdiqlash kutilmoqda',expired:'Muddati tugagan'};
+ const blocked=state.user.role==='owner'
+  ?'<div class="card"><h3>🔐 Bloklangan akkauntlar ('+holds.length+')</h3><p class="sub">Faqat shaxsini tekshirgandan keyin Owner blokni ochishi mumkin. Oldingi sessiyalar qayta ishlamaydi.</p>'+
+   list(holds,x=>'<strong>'+esc(x.staff?.full_name||'Xodim')+' · '+esc(x.staff?.employee_code||'')+'</strong><div class="sub">'+esc(x.reason)+' · '+esc(new Date(x.locked_at).toLocaleString('uz-UZ',{timeZone:'Asia/Tashkent'}))+'</div>'+((x.staff?.role!=='owner')?'<button type="button" class="btn small alt" data-web-unlock="'+esc(x.staff_id)+'">Tekshirdim, blokdan chiqarish</button>':'<p class="sub">Owner akkaunti alohida tiklanadi</p>'))+'</div>'
+  :'';
+ inject('Qurilmalar va kirishlar',blocked+'<div class="card"><h3>Akkauntga kirish tarixi</h3><p class="sub">Qurilma va brauzer ma’lumotlari xavfsizlik uchun saqlanadi. Hudud IP asosidagi taxmin bo‘lib, GPS emas.</p>'+list(events,x=>'<strong>'+esc(x.device_class||'Qurilma')+' · '+esc(x.operating_system||'')+' · '+esc(x.browser_name||'')+'</strong><div class="sub">'+esc(methodName[x.login_method]||x.login_method)+' · '+esc(new Date(x.occurred_at).toLocaleString('uz-UZ',{timeZone:'Asia/Tashkent'}))+'</div><span class="pill">'+esc(statusName[x.confirmation_status]||x.confirmation_status)+'</span>')+'</div>');
+ document.querySelectorAll('[data-web-unlock]').forEach(btn=>btn.addEventListener('click',()=>submit({preventDefault(){}},async()=>{
+   if(!confirm('Xodim shaxsini tekshirdingizmi? Akkaunt blokini ochishni tasdiqlaysizmi?'))return;
+   await api('/security-unlock',{staff_id:btn.dataset.webUnlock});
+   await navigate('devices');
+   notify('Akkaunt blokdan chiqarildi','good');
+ })));
  return;
 }
 if(tab==='notifications'){
