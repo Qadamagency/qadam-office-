@@ -188,6 +188,42 @@ body,html{background:linear-gradient(160deg,#fdfcff,#f5f0ff);color:var(--text)}
 .q90-live-toast strong{display:block;font-size:13px}.q90-live-toast small{font-size:12px;color:#6d627c}
 #q90-notice-counter{background:#8b45e0;color:#fff;min-width:18px;height:18px;display:inline-grid;place-items:center;border-radius:18px;font-size:10px;padding:0 4px;margin-left:4px}
 @media(max-width:600px){.shell{padding-left:12px;padding-right:12px}.hub-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.hub-card{min-height:105px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12px 6px}.hub-icon{width:35px;height:35px;flex:0 0 35px}.hub-card-body{align-items:center}.hub-card-body small,.hub-chevron{display:none}.hub-card-body strong{font-size:11px;line-height:1.25}#cabinet .nav button{font-size:10px!important}.tg-list{padding-top:8px}}
+</style><style>
+/* QADAM OFFICE v91: photo, modern conversation detail, meaningful statistics */
+.q91-owner-picture{flex:0 0 74px;width:74px;height:74px;display:grid;place-items:center;border-radius:50%;overflow:hidden;background:#ffffff36;border:3px solid #ffffff9e;box-shadow:0 6px 20px #441a742d;color:white}
+.q91-owner-picture img{width:100%;height:100%;object-fit:cover}
+.q91-owner-picture svg{width:43px;height:43px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round}
+.q91-owner-title{font-size:23px!important;line-height:1.23!important}
+.q91-owner-sub{opacity:.95;font-size:13px!important}
+.q91-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:14px 0}
+.q91-metric{border:1px solid #ebe5f5;background:#fff;box-shadow:0 7px 22px #6237a012;border-radius:18px;padding:15px 13px;min-width:0;display:flex;align-items:flex-start;gap:11px}
+.q91-metric-icon{width:39px;height:39px;flex:0 0 39px;display:grid;place-items:center;border-radius:13px;background:#f2e8ff;color:#8142d8}
+.q91-metric-icon svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.q91-metric-content{min-width:0;display:flex;flex-direction:column;gap:5px}
+.q91-metric-label{font-size:11.5px;color:#726883;line-height:1.3}
+.q91-metric-value{font-size:clamp(18px,3.4vw,24px);letter-spacing:-.6px;font-weight:850;color:#29153e;overflow-wrap:anywhere;line-height:1.2}
+.q91-sectionhead{font-weight:850;font-size:16px;color:#2b1c40;display:flex;align-items:center;gap:8px;margin:17px 0 10px}
+.q91-sectionhead svg{width:20px;height:20px;color:#8142d8}
+.q91-chatroom{border:1px solid #e8e0f3!important;border-radius:21px!important;padding:0!important;overflow:hidden;background:white!important}
+.q91-chatroom .q91-chathead{display:flex;gap:12px;align-items:center;padding:15px 16px;border-bottom:1px solid #eee9f5;background:linear-gradient(120deg,#fff,#faf7ff)}
+.q91-chatroom .q91-chathead .msg-avatar{width:53px;height:53px;flex:0 0 53px}
+.q91-chatroom .q91-chathead strong{font-size:15px;color:#241735}
+.q91-chatroom .q91-chathead small{display:block;color:#897d98;margin-top:3px;font-size:11px}
+.q91-chatroom .q91-chathead .btn{margin-left:auto;white-space:nowrap;font-size:11px}
+.q91-chatroom .tg-message-area{border-radius:0;margin:0;height:min(61vh,610px);min-height:285px;padding:16px 13px}
+.q91-chatroom .tg-bubble{max-width:83%;border-radius:16px 16px 16px 5px;padding:11px 12px 8px;box-shadow:0 2px 5px #52317a12}
+.q91-chatroom .tg-bubble.mine{border-radius:16px 16px 5px 16px;background:#e9d7ff}
+.q91-chatroom .msg-compose{margin:11px 12px;border-radius:24px;border:1px solid #e8ddfa}
+.q91-chatroom #refreshMessages{margin:0 13px 12px!important}
+.q91-chatroom .tg-day span{background:#997ab7c9}
+.q91-chatroom .tg-sender{color:#6d32bf}
+.q91-chatroom .tg-foot{font-size:10px}
+.tg-contact .msg-avatar{width:49px;height:49px;flex:0 0 49px}
+.tg-contact-middle{gap:6px}
+.tg-contact-middle strong{color:#261a37}
+.q91-photo-fallback{background:#d9c4f7!important}
+.q91-owner-loading{display:flex;gap:8px;align-items:center}
+@media(max-width:600px){.q91-owner-picture{width:65px;height:65px;flex-basis:65px}.q91-metrics{gap:9px}.q91-metric{padding:12px 10px;gap:8px}.q91-metric-icon{width:32px;height:32px;flex-basis:32px}.q91-metric-icon svg{width:19px;height:19px}.q91-metric-value{font-size:18px}.q91-chatroom .tg-message-area{height:58vh}}
 </style></head><body><main class="shell" id="root"><div class="top"><div class="brand"><img class="official-logo" src="./assets/qadam-logo.svg" alt="QADAM Akademiya"> <span class="brand-office">OFFICE</span></div><span class="pill">QADAM OFFICE</span></div><section id="banner" class="notice hidden" role="alert"></section><div id="loading" class="card"><span class="spin"></span> <span id="loadingText">Mini App ishga tushirilmoqda...</span></div><div id="auth" class="hidden"><div id="tgHelp" class="notice hidden"><strong>Telegram ulanishi aniqlanmadi.</strong><p>QADAM OFFICE Bot 2 ichida /start yuboring va yangi 🔐 Kirish tugmasidan oching.</p><button type="button" class="btn alt small" id="retryTelegram">Qayta tekshirish</button><p class="tiny" id="tgDiagnostics"></p></div><div class="hero"><span class="tag">QADAM AKADEMIYA • OFFICE</span><h1>Xodim kabinetiga kirish</h1><p class="lead">Telegram orqali himoyalangan kirish. Xodim ID, parol va 6 xonali PIN talab qilinadi.</p></div><div class="tabs"><button id="tabLogin" class="active" data-screen="login">Kirish</button><button id="tabActivate" data-screen="activate">Xodim faollashtirish</button><button id="tabOwner" class="hidden" data-screen="owner">Owner birinchi kirish</button></div><div class="card" id="screenLogin"><form id="loginForm"><div class="field"><label for="empCode">Xodim ID</label><input class="input" id="empCode" required autocomplete="username" placeholder="Masalan: NMV007" maxlength="16"></div><div class="field"><label for="empPass">Parol</label><input class="input" id="empPass" required type="password" autocomplete="current-password" placeholder="Parolingiz" maxlength="128"></div><button class="btn full" type="submit">Kirish →</button></form></div><div class="card hidden" id="screenActivate"><h2 class="title">Xodimni faollashtirish</h2><p class="lead">Avval Xodim ID orqali Ownerga tasdiqlash so‘rovini yuboring. Owner shaxsingizni tekshirganidan keyin faollashtirish kodini beradi.</p><form id="activationRequestForm" class="stack"><div class="field"><label for="requestEmployeeCode">Xodim ID</label><input class="input" id="requestEmployeeCode" name="code" required maxlength="16" placeholder="Masalan: SL007"></div><button class="btn alt full" type="submit">Ownerga tasdiqlash so‘rovi yuborish</button></form><div class="notice">Owner tasdiqlamaguncha akkaunt faollashmaydi. Tasdiqdan keyin Ownerdan kodni olib, quyidagi maydonlarni to‘ldiring.</div><form id="activateForm"><div class="field"><label>Xodim ID</label><input class="input" name="code" required></div><div class="field"><label>Faollashtirish kodi</label><input class="input" name="activation" required autocomplete="off" maxlength="8" minlength="8" pattern="[A-Za-z0-9]{8}" autocapitalize="characters" placeholder="8 belgili kod (harf + raqam)" style="text-transform:uppercase"></div><div class="field"><label>Yangi parol (kamida 12 belgi)</label><input class="input" type="password" name="password" minlength="12" required></div><button class="btn full">Faollashtirish</button></form></div><div class="card hidden" id="screenOwner"><h2 class="title">Owner akkauntini birinchi marta faollashtirish</h2><p class="lead">Faqat server belgilagan Owner Telegram akkauntida, bir martalik sozlash uchun.</p><form id="ownerForm"><div class="field"><label>Yangi parol (kamida 12 belgi)</label><input class="input" name="password" type="password" minlength="12" required></div><div class="field"><label>Parolni takrorlang</label><input class="input" name="confirm_password" type="password" minlength="12" required></div><button class="btn full">Owner parolini o‘rnatish</button></form></div></div><section id="mfa" class="hidden"><div class="hero"><span class="tag">2-BOSQICH</span><h1>6 xonali PIN</h1><p id="mfaDesc" class="lead">Tasdiqlash...</p></div><div class="card"><form id="pinForm"><div class="field"><label>PIN kod</label><input class="input" id="pin" type="password" inputmode="numeric" autocomplete="one-time-code" maxlength="6" minlength="6" pattern="[0-9]{6}" required placeholder="● ● ● ● ● ●"></div><div id="confirmPinField" class="field hidden"><label>PIN kodni takrorlang</label><input class="input" id="pinConfirm" type="password" inputmode="numeric" maxlength="6" pattern="[0-9]{6}"></div><button class="btn full" type="submit">Tasdiqlash →</button></form><button id="backLogin" class="btn line full" style="margin-top:10px">Kirishga qaytish</button></div></section><section id="cabinet" class="hidden"><div class="bar"><div class="top"><div><div class="tag">QADAM OFFICE • STAFF</div><div style="font-weight:800;font-size:20px" id="who">Kabinet</div><span class="sub" id="role"></span></div><button class="btn line small" id="logout">Chiqish</button></div></div><div class="nav" id="nav" aria-label="Bo‘limlar"></div><div id="section" aria-live="polite"></div></section><p class="foot">QADAM OFFICE • xavfsiz Telegram Mini App • v55</p></main>
 <script>
 'use strict';
@@ -521,6 +557,18 @@ function q90Avatar(person){
  const image=typeof src==='string'&&/^https:\/\//i.test(src)?'<img loading="lazy" referrerpolicy="no-referrer" alt="" src="'+esc(src)+'">':'';
  return '<span class="msg-avatar" aria-label="'+esc(name)+'">'+(image||initial)+'</span>';
 }
+
+function q91OwnerPortrait(profile){
+ const url=profile?.photo_signed_url||profile?.profile?.photo_signed_url||profile?.photo_url||'';
+ const img=(typeof url==='string'&&/^https:\/\//i.test(url))?'<img src="'+esc(url)+'" alt="Owner profil rasmi" loading="eager">':'<svg viewBox="0 0 24 24" aria-label="Profil rasmi mavjud emas"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-5 3-8 8-8s8 3 8 8"/></svg>';
+ return '<div class="q91-owner-picture">'+img+'</div>';
+}
+function q91Welcome(profile){
+ return '<div class="hero q90-hero"><div><span class="tag">QADAM AKADEMIYA · OWNER</span><h1 class="q91-owner-title">Xush kelibsiz, Owner!</h1><p class="lead q91-owner-sub">'+esc(state.user?.full_name||'Boshqaruv paneli')+'</p></div>'+q91OwnerPortrait(profile)+'</div>';
+}
+function q91Stat(value,label,icon){
+ return '<div class="q91-metric"><div class="q91-metric-icon">'+navIcon(icon)+'</div><div class="q91-metric-content"><span class="q91-metric-value">'+esc(value??'—')+'</span><span class="q91-metric-label">'+esc(label)+'</span></div></div>';
+}
 function chatClock(date){try{return new Date(date).toLocaleTimeString('uz-UZ',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Tashkent'})}catch{return ''}}
 function chatDay(date){try{return new Date(date).toLocaleDateString('uz-UZ',{day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Tashkent'})}catch{return ''}}
 function chatMessagesHTML(messages,kind){
@@ -655,12 +703,13 @@ if(tab==='messenger'){
    const listHtml="<div class='tg-list'><div class='tg-titlebar'><h3>Chatlar</h3><span class='tg-write-ico'>✎</span></div><div class='tg-search'><span>⌕</span><input id='contactSearch' placeholder='Qidirish' maxlength='80' aria-label='Suhbatdoshni qidirish'></div><div id='contactList'>"+(people.length?people.map(x=>"<button type='button' class='tg-contact' data-contact='"+esc(x.id)+"'>"+q90Avatar(x)+"<span class='tg-contact-middle'><strong>"+esc(x.full_name)+"</strong><small>"+esc(x.last_message||roles[x.role]||x.role)+"</small></span><span class='tg-contact-meta'><time>"+(x.last_message_at?esc(chatClock(x.last_message_at)):'')+"</time>"+(x.unread_count?"<span class='tg-unread'>"+esc(x.unread_count)+"</span>":"")+"</span></button>").join(''):"<p class='tg-empty'>Hozircha suhbatdosh mavjud emas.</p>")+"</div></div>";
    let chatHtml="";
    if(chosen){
-     const data=await api('/staff/ops/office-direct-list',{staff_id:chosen.id}),msgs=data.messages||[];
-     chatHtml="<div class='card'><div class='msg-grouphead'>"+q90Avatar(chosen)+"<div><strong>"+esc(chosen.full_name)+"</strong><p class='sub'>"+esc(roles[chosen.role]||chosen.role)+" · "+esc(chosen.employee_code)+"</p></div></div><button type='button' id='contactProfileBtn' class='btn alt small'>Profilini ko‘rish</button><div class='tg-message-area'>"+chatMessagesHTML(msgs,'direct')+"</div><form class='msg-compose' id='dmForm'><input class='input' name='message' maxlength='2000' required placeholder='Xabar yozing...'><button type='submit' class='btn'>➤</button></form><button type='button' class='btn alt small' id='refreshMessages'>Yangilash</button></div>";
+     const [data,portrait]=await Promise.all([api('/staff/ops/office-direct-list',{staff_id:chosen.id}),api('/staff/ops/office-staff-public-profile',{staff_id:chosen.id},10000).catch(()=>null)]),msgs=data.messages||[];
+     if(portrait?.photo_signed_url)chosen.photo_signed_url=portrait.photo_signed_url;
+     chatHtml="<div class='card q91-chatroom'><div class='q91-chathead'>"+q90Avatar(chosen)+"<div><strong>"+esc(chosen.full_name)+"</strong><small>"+esc(roles[chosen.role]||chosen.role)+" · "+esc(chosen.employee_code)+"</small></div><button type='button' id='contactProfileBtn' class='btn alt small'>Profil</button></div><div class='tg-message-area'>"+chatMessagesHTML(msgs,'direct')+"</div><form class='msg-compose' id='dmForm'><input class='input' name='message' maxlength='2000' required placeholder='Xabar yozing...'><button type='submit' class='btn' aria-label='Xabarni yuborish'>➤</button></form><button type='button' class='btn alt small' id='refreshMessages'>↻ Yangilash</button></div>";
    }
-   inject('Chat',chatBack+tabs+listHtml+chatHtml);
+   inject('Chat',chatBack+(chosen?'':tabs+listHtml)+chatHtml);
    document.querySelectorAll('[data-contact]').forEach(btn=>btn.onclick=()=>{state.directStaffId=btn.dataset.contact;navigate('messenger')});
-   $('contactSearch').oninput=e=>{const q=e.target.value.toLocaleLowerCase('uz').trim();document.querySelectorAll('[data-contact]').forEach(btn=>{const p=people.find(x=>x.id===btn.dataset.contact);btn.style.display=p&&[p.full_name,p.employee_code].some(v=>String(v||'').toLocaleLowerCase('uz').includes(q))?'flex':'none'})};
+   if($('contactSearch'))$('contactSearch').oninput=e=>{const q=e.target.value.toLocaleLowerCase('uz').trim();document.querySelectorAll('[data-contact]').forEach(btn=>{const p=people.find(x=>x.id===btn.dataset.contact);btn.style.display=p&&[p.full_name,p.employee_code].some(v=>String(v||'').toLocaleLowerCase('uz').includes(q))?'flex':'none'})};
    chatWireDelete();chatScrollEnd();
    if($('dmForm'))formHandler('dmForm',async d=>{await api('/staff/ops/office-direct-send',{staff_id:chosen.id,message:String(d.get('message')||'').trim()})});
    if($('contactProfileBtn'))$('contactProfileBtn').onclick=()=>submit({preventDefault(){}},async()=>{await showPublicStaffProfile(chosen.id,$('contactProfileBtn').closest('.card'))});
@@ -800,10 +849,11 @@ if(tab==='home'&&state.user.role==='director'){
 if(tab==='home'){if(owner){
  // Show shell immediately; finance and staff data still come from live authorized API calls.
  const ownerRenderSeq=state.navSeq;
- inject('Owner boshqaruv paneli','<div class="hero q90-hero"><div><span class="tag">QADAM AKADEMIYA • OWNER</span><h1>Assalomu alaykum!</h1><p class="lead">Hisobot ma’lumotlari yuklanmoqda...</p></div><div class="q90-symbol" aria-hidden="true">Q</div></div><div class="grid"><div class="metric"><span class="spin"></span><span> Xodimlar</span></div><div class="metric"><span class="spin"></span><span> Guruhlar</span></div></div><div class="card"><h3>Moliyaviy ko‘rsatkichlar</h3><span class="spin"></span><p class="sub">Serverdan yangilanmoqda...</p></div>');
+ inject('Owner boshqaruv paneli',q91Welcome(null)+'<div class="q91-metrics">'+q91Stat('…','Xodimlar','employees')+q91Stat('…','Guruhlar','education')+'</div><div class="card"><h3>Moliyaviy ko‘rsatkichlar</h3><span class="spin"></span><p class="sub">Serverdan yangilanmoqda...</p></div>');
  const results=await Promise.allSettled([
   api('/owner/overview'),
-  api('/owner/executive-dashboard',{from:localDate(-30),to:localDate()})
+  api('/owner/executive-dashboard',{from:localDate(-30),to:localDate()}),
+  api('/staff/ops/my-profile',{},10000)
  ]);
  if(ownerRenderSeq!==state.navSeq||state.current!=='home')return;
  const overview=results[0].status==='fulfilled'?results[0].value:null;
@@ -813,7 +863,7 @@ if(tab==='home'){if(owner){
  if(!overview)errors.push('Xodimlar va CRM: '+(results[0].reason?.message||'yuklanmadi'));
  if(!report)errors.push('Moliyaviy hisobot: '+(results[1].reason?.message||'yuklanmadi'));
  const errorHtml=errors.length?'<div class="notice error">'+errors.map(esc).join('<br>')+'<p class="tiny">Qolgan bo‘limlardan foydalanish mumkin. Yangilash tugmasini bosing.</p></div>':'';
- inject('Owner boshqaruv paneli',`<div class="hero q90-hero"><div><span class="tag">QADAM AKADEMIYA • OWNER</span><h1>Assalomu alaykum!</h1><p class="lead">${esc(state.user.full_name||'Owner')} • Boshqaruv paneli</p></div><div class="q90-symbol" aria-hidden="true">Q</div></div>${errorHtml}<div class="grid">${count(overview?stats.staff:'—','Xodimlar')}${count(overview?stats.active:'—','Faol xodimlar')}${count(overview?stats.leads:'—','CRM lidlar')}${count(overview?stats.groups:'—','Guruhlar')}</div><div class="card"><h3>Moliyaviy ko‘rsatkichlar</h3><div class="grid">${count(report?Number(fin.revenue_uzs||0).toLocaleString('uz-UZ'):'—','Kirim, so‘m')}${count(report?Number(fin.recorded_outflow_uzs||0).toLocaleString('uz-UZ'):'—','Chiqim, so‘m')}${count(report?Number(fin.net_before_payroll_uzs||0).toLocaleString('uz-UZ'):'—','Maoshgacha farq, so‘m')}</div><p class="tiny">Bank balansi yoki auditdan o‘tgan sof foyda emas.</p></div><div class="card"><h3>Xodimlar</h3>${overview?list(overview.employees,x=>`<strong>${esc(x.full_name)} <span class="pill">${esc(x.employee_code)}</span></strong><span class="sub">${esc(roles[x.role]||x.role)} • ${x.is_active?'Faol':'Faol emas'}</span>`):'<div class="empty">Hozircha ma’lumot olinmadi</div>'}</div>`);
+ inject('Owner boshqaruv paneli',q91Welcome(results[2].status==='fulfilled'?results[2].value:null)+errorHtml+`<div class="q91-sectionhead">${navIcon('audit')} Umumiy statistika</div><div class="q91-metrics">${q91Stat(overview?stats.staff:'—','Jami xodimlar','employees')}${q91Stat(overview?stats.active:'—','Faol xodimlar','profile')}${q91Stat(overview?stats.leads:'—','CRM lidlar','crm')}${q91Stat(overview?stats.groups:'—','Guruhlar','education')}</div><div class="card"><h3 class="q91-sectionhead">${navIcon('finance')} Moliyaviy ko‘rsatkichlar</h3><div class="q91-metrics">${q91Stat(report?Number(fin.revenue_uzs||0).toLocaleString('uz-UZ'):'—','Kirim · so‘m','finance')}${q91Stat(report?Number(fin.recorded_outflow_uzs||0).toLocaleString('uz-UZ'):'—','Chiqim · so‘m','finance')}${q91Stat(report?Number(fin.net_before_payroll_uzs||0).toLocaleString('uz-UZ'):'—','Maoshgacha farq · so‘m','audit')}</div><p class="tiny">Bank balansi yoki auditdan o‘tgan sof foyda emas.</p></div><div class="card"><h3>Xodimlar</h3>${overview?list(overview.employees,x=>`<strong>${esc(x.full_name)} <span class="pill">${esc(x.employee_code)}</span></strong><span class="sub">${esc(roles[x.role]||x.role)} • ${x.is_active?'Faol':'Faol emas'}</span>`):'<div class="empty">Hozircha ma’lumot olinmadi</div>'}</div>`);
 
 }else{const d=await api('/staff/my-dashboard');inject('Shaxsiy kabinet',`<div class="hero"><h1>Xush kelibsiz!</h1><p class="lead">${esc(state.user.full_name)} • ${esc(roles[state.user.role]||state.user.role)}</p></div><div class="grid">${count((d.tasks||[]).length,'Vazifalar')}${count((d.attendance||[]).length,'Davomat qaydlari')}</div><div class="card"><h3>Bugungi ish</h3><div class="actions"><button class="btn" id="checkin">Ishga keldim</button><button class="btn alt" id="checkout">Ishdan chiqdim</button></div></div><div class="card"><h3>Vazifalarim</h3>${list(d.tasks,x=>`<strong>${esc(x.title)}</strong><span class="sub">${esc(x.status)} • ${esc(x.priority)}</span>`)}</div>`);$('checkin').onclick=()=>workTime('check-in');$('checkout').onclick=()=>workTime('check-out');}return;}
 if(tab==='employees'&&state.user.role==='director'){
