@@ -357,11 +357,45 @@ function localDate(offset=0){
  const get=t=>p.find(x=>x.type===t)?.value||'';
  return get('year')+'-'+get('month')+'-'+get('day');
 }
+let qwebConfirmationTimer=null,qwebConfirmationBusy=false;
+function qwebStopConfirmationWatch(){if(qwebConfirmationTimer){clearTimeout(qwebConfirmationTimer);qwebConfirmationTimer=null}}
+function qwebForceReLogin(){
+ qwebStopConfirmationWatch();
+ state.webToken='';
+ sessionStorage.removeItem('qadamOfficeWebToken');
+ state.user=null;
+ state.allowedRoutes=null;
+ state.navSeq++;
+ show('auth');authTab('login');
+ notify('⏳ Tasdiqlash muddati tugadi. Tizimdan chiqarildingiz. Qaytadan kiring.');
+}
+function qwebStartConfirmationWatch(deadline,status){
+ qwebStopConfirmationWatch();
+ if(status==='confirmed'||!deadline)return;
+ const limit=Date.parse(deadline);
+ if(!Number.isFinite(limit))return;
+ const verify=async()=>{
+  if(!state.webToken||!state.user||qwebConfirmationBusy)return;
+  qwebConfirmationBusy=true;
+  try{
+   const me=await api('/me',{});
+   if(me.confirmation_status==='confirmed'){qwebStopConfirmationWatch();return}
+   if(me.confirmation_status==='expired'||Date.now()>Date.parse(me.confirmation_deadline||deadline)+1000){
+    qwebForceReLogin();return;
+   }
+   qwebConfirmationTimer=setTimeout(verify,Math.max(900,Math.min(5000,limit-Date.now()+1000)));
+  }catch(err){
+   if(!state.webToken){qwebForceReLogin();return}
+   qwebConfirmationTimer=setTimeout(verify,2500);
+  }finally{qwebConfirmationBusy=false}
+ };
+ qwebConfirmationTimer=setTimeout(verify,Math.max(400,Math.min(5000,limit-Date.now()+1000)));
+}
 async function init(){
  $('tabActivate').classList.add('hidden');$('tabOwner').classList.add('hidden');
  $('tgHelp').classList.add('hidden');
  if(state.webToken){
-  try{const me=await api('/me');if(me?.staff){await enter(me.staff);return}}catch(e){state.webToken='';sessionStorage.removeItem('qadamOfficeWebToken');console.warn('Web session',e.message)}
+  try{const me=await api('/me');if(me?.staff){await enter(me.staff);qwebStartConfirmationWatch(me.confirmation_deadline,me.confirmation_status);return}}catch(e){state.webToken='';sessionStorage.removeItem('qadamOfficeWebToken');console.warn('Web session',e.message)}
  }
  show('auth');authTab('login');
 }
@@ -403,6 +437,7 @@ async function qwebOpenOfficial(){
      state.webToken=v.token;
      sessionStorage.setItem('qadamOfficeWebToken',v.token);
      await enter(v.staff);
+     qwebStartConfirmationWatch(v.confirmation_deadline,'pending');
      notify('Telegram orqali kirildi. Ichki tizimga xush kelibsiz!','good');
      try{qwebPopup?.close()}catch{}
      qwebPopup=null;
@@ -432,12 +467,12 @@ function authTab(screen){['login','activate','owner'].forEach(x=>{$('screen'+x[0
 document.querySelectorAll('[data-screen]').forEach(b=>b.addEventListener('click',()=>authTab(b.dataset.screen)));
 async function submit(event,callback){event.preventDefault();if(state.busy)return;busy(true);clearMessage();try{await callback()}catch(e){notify(e.message||'Noma’lum xato')}finally{busy(false)}}
 $('loginForm').addEventListener('submit',e=>submit(e,async()=>{const v=await api('/login',{code:$('empCode').value.trim().toUpperCase(),password:$('empPass').value});$('empPass').value='';if(!v.pending_id||!['pin_verify','pin_enroll'].includes(v.mode))throw Error('Server PIN bosqichini qaytarmadi');state.pending=v.pending_id;state.mode=v.mode;$('mfaDesc').textContent=v.message||'PIN kiriting';$('confirmPinField').classList.toggle('hidden',v.mode!=='pin_enroll');$('pinConfirm').required=v.mode==='pin_enroll';show('mfa');}));
-$('pinForm').addEventListener('submit',e=>submit(e,async()=>{const pin=$('pin').value;const isNew=state.mode==='pin_enroll';const v=await api('/pin',{pending_id:state.pending,pin});if(!v.ok)throw Error(v.message||'PIN rad etildi');$('pin').value='';$('pinConfirm').value='';state.pending=null;state.webToken=v.token;sessionStorage.setItem('qadamOfficeWebToken',v.token);const me=await api('/me');if(!me.staff)throw Error('PIN tasdiqlandi, lekin sessiya tekshirilmadi. Ilovani yopib, qayta oching.');await enter(me.staff);}));
+$('pinForm').addEventListener('submit',e=>submit(e,async()=>{const pin=$('pin').value;const isNew=state.mode==='pin_enroll';const v=await api('/pin',{pending_id:state.pending,pin});if(!v.ok)throw Error(v.message||'PIN rad etildi');$('pin').value='';$('pinConfirm').value='';state.pending=null;state.webToken=v.token;sessionStorage.setItem('qadamOfficeWebToken',v.token);const me=await api('/me');if(!me.staff)throw Error('PIN tasdiqlandi, lekin sessiya tekshirilmadi. Ilovani yopib, qayta oching.');await enter(me.staff);qwebStartConfirmationWatch(me.confirmation_deadline,me.confirmation_status);}));
 $('ownerForm').addEventListener('submit',e=>submit(e,async()=>{const f=new FormData(e.target);const v=await api('/owner-first-setup',{password:f.get('password'),confirm_password:f.get('confirm_password')});e.target.reset();$('tabOwner').classList.add('hidden');authTab('login');notify(v.message||'Parol o‘rnatildi. Endi ID va parol bilan kiring.','good')}));
 $('activationRequestForm').addEventListener('submit',e=>submit(e,async()=>{const f=new FormData(e.target);const code=String(f.get('code')||'').trim().toUpperCase();const v=await api('/activation-request',{code});document.querySelector('#activateForm [name=code]').value=code;notify(v.message||'Ownerga so‘rov yuborildi','good')}));
 $('activateForm').addEventListener('submit',e=>submit(e,async()=>{const f=new FormData(e.target);const v=await api('/activate',{code:String(f.get('code')).trim().toUpperCase(),activation:String(f.get('activation')||'').trim().toUpperCase(),password:f.get('password')});e.target.reset();authTab('login');notify(v.message||'Xodim faollashtirildi','good')}));
 $('backLogin').addEventListener('click',()=>{state.pending=null;show('auth');authTab('login')});
-$('logout').addEventListener('click',()=>submit({preventDefault(){}},async()=>{await api('/logout');state.webToken='';sessionStorage.removeItem('qadamOfficeWebToken');state.user=null;show('auth');authTab('login')}));
+$('logout').addEventListener('click',()=>submit({preventDefault(){}},async()=>{await api('/logout');qwebStopConfirmationWatch();state.webToken='';sessionStorage.removeItem('qadamOfficeWebToken');state.user=null;show('auth');authTab('login')}));
 
 const MENU_GROUPS=[
  {id:'finance',title:'Moliya',desc:'Oylik, to‘lovlar, chek va Excel',icon:'finance',
